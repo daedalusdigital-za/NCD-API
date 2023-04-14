@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>H:\Saiful\Fiverr\Hernannetang-1\UserManagement\UserManagementApi\UM.Api\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2023-01-17T03:54:58.4859630Z;True|2023-01-16T22:48:10.5348965+06:00;True|2023-01-16T22:23:46.5673442+06:00;True|2023-01-16T22:05:24.6480602+06:00;True|2023-01-16T18:47:33.5423453+06:00;True|2023-01-16T17:21:48.7778940+06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAbJ72Vr8WiUaw2lxaDoWP1AAAAAACAAAAAAAQZgAAAAEAACAAAAC4TO83wgfhjA5ho6Dav0fAvbFBBZSX+Qpg5ubgMWqoCAAAAAAOgAAAAAIAACAAAAALRs6Gn7CJoSPCgRZdEaxHT4weBC8D7uANTgU94Q3ckYAAAABbkB3MH1TStDwCNIODVNqmidMrHN97qW1n2np61YwAvKJ7r+WBBbKeKSTUsQhh7hkUVut4o/67LOJkEX6hToBEDY5y1q22nwvG+qAWo3fztctRqETkETrppPBJxyqqsKstBY31uBlvYZ+zVHNnoqrDEg8leUuWVYh6EreAp1btykAAAABAjp6Y+4Ulj4RSppxCQlODd8oVxC1KIpxqrlj3bbmtFSImOvTIFU6UGf47YyzG/WtUMFexkEEtGnuytodY0AHc</EncryptedPassword>
+    <History>True|2023-04-06T07:18:03.3876663Z;True|2023-04-06T12:43:41.6265588+06:00;True|2023-04-06T12:27:57.9610299+06:00;True|2023-03-22T22:03:39.7239844+06:00;True|2023-03-20T14:44:36.0351851+06:00;True|2023-03-20T14:38:00.2191491+06:00;True|2023-03-20T14:32:54.2271511+06:00;True|2023-03-20T14:28:57.3590286+06:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DBConnectionString">
+      <Value>Data Source=ngcandu.database.windows.net%3bInitial Catalog=MedicalManagementDB%3bPersist Security Info=True%3bUser ID=ngcandu%3bPassword=Pass%40123</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
