@@ -60,7 +60,13 @@ namespace MH.Api.Controllers
                     LastName = registerModel.LastName,
                 }            
             };
-            await CreateNewUser(user);
+            var result = await _userManager.CreateAsync(user, user.PasswordHash);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(x => x.Description).ToList();
+                return BadRequest(errors);
+            }
+            await _userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
             return Ok();
         }
 
@@ -102,17 +108,6 @@ namespace MH.Api.Controllers
                 };
             }
             return null;
-        }
-
-        private async Task CreateNewUser(ApplicationUser user)
-        {
-            var result = await _userManager.CreateAsync(user, user.PasswordHash);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(x => x.Description).ToList();
-                throw new Exception(errors.ToString());
-            }
-            await _userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
         }
     }
 }
