@@ -217,6 +217,57 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("ContactType");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Diagnosis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastAppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("NextAppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Patient");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -568,6 +619,32 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UserProfile");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
+                {
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
+                        .WithOne("CreatedByPatient")
+                        .HasForeignKey("MH.Domain.DBModel.Patient", "CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
+                        .WithOne("UpdatedByPatient")
+                        .HasForeignKey("MH.Domain.DBModel.Patient", "UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
+                        .WithOne("Patient")
+                        .HasForeignKey("MH.Domain.DBModel.Patient", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdateByUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.Permission", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
@@ -688,6 +765,9 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("CreatedByContactDetails")
                         .IsRequired();
 
+                    b.Navigation("CreatedByPatient")
+                        .IsRequired();
+
                     b.Navigation("CreatedByPermission")
                         .IsRequired();
 
@@ -696,9 +776,14 @@ namespace MH.Infrastructure.Migrations
 
                     b.Navigation("Logins");
 
+                    b.Navigation("Patient")
+                        .IsRequired();
+
                     b.Navigation("Tokens");
 
                     b.Navigation("UpdatedByContactDetails");
+
+                    b.Navigation("UpdatedByPatient");
 
                     b.Navigation("UpdatedByPermission");
 

@@ -16,6 +16,7 @@ namespace MH.Application.Dependency
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             #region Services
+            services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IContactDetailsService, ContactDetailsService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
