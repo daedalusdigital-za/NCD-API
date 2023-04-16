@@ -1,11 +1,14 @@
-﻿using MH.Domain.Model;
+﻿using AutoMapper.Configuration.Annotations;
+using MH.Domain.Model;
 
 namespace MH.Domain.DBModel
 {
     public class MedicalHistory : BaseModel<int>
     {
+        [Ignore]
         public byte[]? Documents { get; set; }
         public string? Notes { get; set; }
+        [Ignore]
         public byte[]? Perscription { get; set; }
         public int RecordedBy { get; set; }
         public int PatientId { get; set; }

@@ -54,7 +54,7 @@ public class Program
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseConfiguration(Configuration);
-                })
-                .UseSerilog();
+                });
+                //.UseSerilog();
 }
 

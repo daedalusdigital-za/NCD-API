@@ -1,3 +1,4 @@
+using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Http;
 
 namespace MH.Domain.Model
