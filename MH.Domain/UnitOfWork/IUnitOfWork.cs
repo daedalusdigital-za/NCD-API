@@ -7,6 +7,7 @@ namespace MH.Domain.UnitOfWork
     {
         #region Repositories
         IPositionRepository PositionRepository { get; }
+        IAppointmentRepository AppointmentRepository { get; }
         IMedicalHistoryRepository MedicalHistoryRepository { get; }
         IPatientRepository PatientRepository { get; }
         IContactDetailsRepository ContactDetailsRepository { get; }

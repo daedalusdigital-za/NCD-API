@@ -21,6 +21,9 @@ namespace MH.Infrastructure.UnitOfWork
         }
         #region Repositories
 
+        private IAppointmentRepository _appointmentRepository;
+        public IAppointmentRepository AppointmentRepository => _appointmentRepository ?? new AppointmentRepository(_dbContext);
+
         private IMedicalHistoryRepository _medicalHistoryRepository;
         public IMedicalHistoryRepository MedicalHistoryRepository => _medicalHistoryRepository ?? new MedicalHistoryRepository(_dbContext);
 

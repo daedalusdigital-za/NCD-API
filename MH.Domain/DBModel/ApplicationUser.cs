@@ -31,5 +31,10 @@ namespace MH.Domain.DBModel
         public virtual MedicalHistory MedicalHistory { get; set; }
         public virtual MedicalHistory CreatedByMedicalHistory { get; set; }
         public virtual MedicalHistory? UpdatedByMedicalHistory { get; set; }
+        
+        public virtual Appointment Appointment { get; set; }
+        public virtual Appointment CreatedByAppointment { get; set; }
+        public virtual Appointment? UpdatedByAppointment { get; set; }
+
     }
 }

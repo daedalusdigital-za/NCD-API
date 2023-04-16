@@ -101,6 +101,48 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("DateOfAppointment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Appointment");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.ContactDataType", b =>
                 {
                     b.Property<int>("Id")
@@ -623,6 +665,32 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("Position");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.Appointment", b =>
+                {
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
+                        .WithOne("CreatedByAppointment")
+                        .HasForeignKey("MH.Domain.DBModel.Appointment", "CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
+                        .WithOne("UpdatedByAppointment")
+                        .HasForeignKey("MH.Domain.DBModel.Appointment", "UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
+                        .WithOne("Appointment")
+                        .HasForeignKey("MH.Domain.DBModel.Appointment", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdateByUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.ContactDetails", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ContactDataType", "ContactDataType")
@@ -848,7 +916,13 @@ namespace MH.Infrastructure.Migrations
 
             modelBuilder.Entity("MH.Domain.DBModel.ApplicationUser", b =>
                 {
+                    b.Navigation("Appointment")
+                        .IsRequired();
+
                     b.Navigation("Claims");
+
+                    b.Navigation("CreatedByAppointment")
+                        .IsRequired();
 
                     b.Navigation("CreatedByContactDetails")
                         .IsRequired();
@@ -874,6 +948,8 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Tokens");
+
+                    b.Navigation("UpdatedByAppointment");
 
                     b.Navigation("UpdatedByContactDetails");
 
