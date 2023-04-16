@@ -217,6 +217,60 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("ContactType");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.MedicalHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<byte[]>("Documents")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Perscription")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("RecordedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
+
+                    b.HasIndex("RecordedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.ToTable("MedicalHistory");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
                 {
                     b.Property<int>("Id")
@@ -619,6 +673,40 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UserProfile");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.MedicalHistory", b =>
+                {
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
+                        .WithOne("CreatedByMedicalHistory")
+                        .HasForeignKey("MH.Domain.DBModel.MedicalHistory", "CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.Patient", "Patient")
+                        .WithOne("MedicalHistory")
+                        .HasForeignKey("MH.Domain.DBModel.MedicalHistory", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "RecordedUser")
+                        .WithOne("MedicalHistory")
+                        .HasForeignKey("MH.Domain.DBModel.MedicalHistory", "RecordedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
+                        .WithOne("UpdatedByMedicalHistory")
+                        .HasForeignKey("MH.Domain.DBModel.MedicalHistory", "UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("RecordedUser");
+
+                    b.Navigation("UpdateByUser");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
@@ -765,6 +853,9 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("CreatedByContactDetails")
                         .IsRequired();
 
+                    b.Navigation("CreatedByMedicalHistory")
+                        .IsRequired();
+
                     b.Navigation("CreatedByPatient")
                         .IsRequired();
 
@@ -776,12 +867,17 @@ namespace MH.Infrastructure.Migrations
 
                     b.Navigation("Logins");
 
+                    b.Navigation("MedicalHistory")
+                        .IsRequired();
+
                     b.Navigation("Patient")
                         .IsRequired();
 
                     b.Navigation("Tokens");
 
                     b.Navigation("UpdatedByContactDetails");
+
+                    b.Navigation("UpdatedByMedicalHistory");
 
                     b.Navigation("UpdatedByPatient");
 
@@ -810,6 +906,12 @@ namespace MH.Infrastructure.Migrations
             modelBuilder.Entity("MH.Domain.DBModel.ContactType", b =>
                 {
                     b.Navigation("ContactDetails")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
+                {
+                    b.Navigation("MedicalHistory")
                         .IsRequired();
                 });
 

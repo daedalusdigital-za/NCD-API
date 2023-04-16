@@ -62,7 +62,7 @@ namespace MH.Application.Service
                 existingData.Notes = userProfile.Notes;
                 using (var ms = new MemoryStream())
                 {
-                    userProfile.File.CopyTo(ms);
+                    userProfile.Photo.CopyTo(ms);
                     existingData.Photo = ms.ToArray();
                 }
                 await _unitOfWork.UserProfileRepository.Update(existingData);

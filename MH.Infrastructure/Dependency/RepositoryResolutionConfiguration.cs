@@ -10,6 +10,7 @@ namespace MH.Infrastructure.Dependency
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             #region Repositories
+            services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IContactDetailsRepository, ContactDetailsRepository>();
             services.AddScoped<IPositionRepository, PositionRepository>();

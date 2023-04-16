@@ -27,5 +27,9 @@ namespace MH.Domain.DBModel
         public virtual Patient Patient { get; set; }
         public virtual Patient CreatedByPatient { get; set; }
         public virtual Patient? UpdatedByPatient { get; set; }
+        
+        public virtual MedicalHistory MedicalHistory { get; set; }
+        public virtual MedicalHistory CreatedByMedicalHistory { get; set; }
+        public virtual MedicalHistory? UpdatedByMedicalHistory { get; set; }
     }
 }
