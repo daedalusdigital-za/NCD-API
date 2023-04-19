@@ -129,16 +129,11 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Appointment");
                 });
@@ -321,6 +316,9 @@ namespace MH.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("Age")
+                        .HasColumnType("float");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -330,10 +328,13 @@ namespace MH.Infrastructure.Migrations
                     b.Property<string>("Diagnosis")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastAppointmentDate")
                         .HasColumnType("datetime2");
@@ -341,11 +342,26 @@ namespace MH.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
@@ -673,17 +689,9 @@ namespace MH.Infrastructure.Migrations
                         .HasForeignKey("MH.Domain.DBModel.Appointment", "UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
-                        .WithOne("Appointment")
-                        .HasForeignKey("MH.Domain.DBModel.Appointment", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdateByUser");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.ContactDetails", b =>
@@ -903,9 +911,6 @@ namespace MH.Infrastructure.Migrations
 
             modelBuilder.Entity("MH.Domain.DBModel.ApplicationUser", b =>
                 {
-                    b.Navigation("Appointment")
-                        .IsRequired();
-
                     b.Navigation("Claims");
 
                     b.Navigation("CreatedByAppointment")

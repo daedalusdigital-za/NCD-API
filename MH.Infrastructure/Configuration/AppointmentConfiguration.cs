@@ -12,8 +12,8 @@ namespace MH.Infrastructure.Configuration
                .IsUnique(false);
             builder.HasIndex(x => x.UpdatedBy)
                .IsUnique(false);
-            builder.HasIndex(x => x.UserId)
-               .IsUnique(false);
+            //builder.HasIndex(x => x.UserId)
+            //   .IsUnique(false);
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);

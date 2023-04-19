@@ -35,14 +35,14 @@ namespace MH.Application.Service
 
         public async Task<List<AppointmentViewModel>> GetAll()
         {
-            var data = await _unitOfWork.AppointmentRepository.GetAll(x => !x.IsDeleted, include=> include.User.UserProfile);
+            var data = await _unitOfWork.AppointmentRepository.GetAll(x => !x.IsDeleted);
             var result = _mapper.Map<List<AppointmentViewModel>>(data);
             return result.OrderByDescending(x=> x.DateCreated).ToList();
         }
 
         public async Task<AppointmentViewModel> GetById(int id)
         {
-            var data = await _unitOfWork.AppointmentRepository.FindBy(x => !x.IsDeleted && x.Id == id, include => include.User.UserProfile);
+            var data = await _unitOfWork.AppointmentRepository.FindBy(x => !x.IsDeleted && x.Id == id);
             var result = _mapper.Map<AppointmentViewModel>(data);
             return result;
         }

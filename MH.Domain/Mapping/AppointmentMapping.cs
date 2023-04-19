@@ -12,9 +12,9 @@ namespace MH.Domain.Mapping
         {
             CreateMap<Appointment,AppointmentModel>().ReverseMap();
             CreateMap<Appointment,AppointmentViewModel>()
-                .ForMember(src => src.Name, dest => dest.MapFrom(x => $"{x.User.UserProfile.FirstName} {x.User.UserProfile.LastName}"))
-                .ForMember(src => src.PhoneNumber, dest => dest.MapFrom(x => x.User.PhoneNumber))
-                .ForMember(src => src.Email, dest => dest.MapFrom(x => x.User.Email))
+                //.ForMember(src => src.Name, dest => dest.MapFrom(x => $"{x.User.UserProfile.FirstName} {x.User.UserProfile.LastName}"))
+                //.ForMember(src => src.PhoneNumber, dest => dest.MapFrom(x => x.User.PhoneNumber))
+                //.ForMember(src => src.Email, dest => dest.MapFrom(x => x.User.Email))
                 .ReverseMap();
         }
     }

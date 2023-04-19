@@ -13,8 +13,14 @@ namespace MH.Infrastructure.Configuration
             builder.HasIndex(x => x.UpdatedBy)
                .IsUnique(false);
 
-            builder.Property(x => x.IsDeleted)
-                .HasDefaultValue(false);
+            builder.Property(x => x.Name)
+                .HasMaxLength(250);
+            builder.Property(x => x.Surname)
+                .HasMaxLength(250);
+            builder.Property(x => x.Gender)
+                .HasMaxLength(250);
+            builder.Property(x => x.PhoneNumber)
+                .HasMaxLength(50);
 
             builder.HasOne(x => x.CreatedByUser)
                .WithOne(y => y.CreatedByPatient)
