@@ -45,6 +45,14 @@ namespace MH.Api.Controllers
             var result = await _medicalHistoryService.GetById(id);
             return Ok(result);
         }
+        [HttpGet]
+        [Route("GetByPatientId")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return MedicalHistory data", typeof(MedicalHistoryViewModel))]
+        public async Task<ActionResult> GetByPatientId([FromQuery] int id)
+        {
+            var result = await _medicalHistoryService.GetByPatientId(id);
+            return Ok(result);
+        }
 
         [HttpPatch]
         [Route("Update")]

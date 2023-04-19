@@ -28,10 +28,17 @@ CREATE TABLE [dbo].[Log](
 
 
 SET IDENTITY_INSERT AspNetRoles ON
-
-if not exists (select [name] from AspNetRoles where name='User')
+if not exists (select [name] from AspNetRoles where name='Admin')
 begin
-INSERT INTO [dbo].[AspNetRoles]([Id],[ConcurrencyStamp],[Name],[NormalizedName]) VALUES (1,NEWID(),'User','USER');
+INSERT INTO [dbo].[AspNetRoles]([Id],[ConcurrencyStamp],[Name],[NormalizedName]) VALUES (1,NEWID(),'Admin','ADMIN');
+end
+if not exists (select [name] from AspNetRoles where name='Doctor')
+begin
+INSERT INTO [dbo].[AspNetRoles]([Id],[ConcurrencyStamp],[Name],[NormalizedName]) VALUES (2,NEWID(),'Doctor','DOCTOR');
+end
+if not exists (select [name] from AspNetRoles where name='Nurse')
+begin
+INSERT INTO [dbo].[AspNetRoles]([Id],[ConcurrencyStamp],[Name],[NormalizedName]) VALUES (3,NEWID(),'Nurse','NURSE');
 end
 
 SET IDENTITY_INSERT AspNetRoles OFF

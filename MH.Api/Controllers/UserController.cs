@@ -112,10 +112,13 @@ namespace MH.Api.Controllers
         }
         [HttpPatch]
         [Route("ChangePassword")]
-        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
-            var user = await _userManager.FindByIdAsync(_currentUser.User.Id.ToString());
+            if(!await _userService.CanViewOrEdit(changePasswordModel.UserId))
+            {
+                return Forbid();
+            }
+            var user = await _userManager.FindByIdAsync(changePasswordModel.UserId.ToString());
             await _userManager.ChangePasswordAsync(user, changePasswordModel.CurrentPassword, changePasswordModel.NewPassword);
             return Ok();
         }

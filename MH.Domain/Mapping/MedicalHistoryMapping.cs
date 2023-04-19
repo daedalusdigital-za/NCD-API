@@ -10,12 +10,11 @@ namespace MH.Domain.Mapping
         public MedicalHistoryMapping()
         {
             CreateMap<MedicalHistoryModel, MedicalHistory>();
-                //.ForMember(d => d.Documents, opt => opt.MapFrom(s => {
-                //    MemoryStream ms = new MemoryStream();
-                //    s.Documents.CopyTo(ms);
-                //    return ms.ToArray();
-                //}));
-            CreateMap<MedicalHistory,MedicalHistoryViewModel>().ReverseMap();
+            CreateMap<MedicalHistory,MedicalHistoryViewModel>()
+                .ForMember(src => src.PatientName, dest => dest.MapFrom(x => $"{x.Patient.User.UserProfile.FirstName} {x.Patient.User.UserProfile.LastName}"))
+                .ForMember(src => src.PatientPhoneNumber, dest => dest.MapFrom(x => x.Patient.User.PhoneNumber))
+                .ForMember(src => src.PatientPhoneNumber, dest => dest.MapFrom(x => x.Patient.User.PhoneNumber))
+                .ReverseMap();
         }
     }
 }

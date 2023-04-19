@@ -9,5 +9,6 @@ namespace MH.Application.IService
         Task UpdateUser(UserModel user);
         Task Delete(int id);
         Task<bool> IsAdmin(int userId);
+        Task<bool> CanViewOrEdit(int userId);
     }
 }

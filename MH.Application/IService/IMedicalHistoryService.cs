@@ -13,6 +13,7 @@ namespace MH.Application.IService
     {
         Task<List<MedicalHistoryViewModel>> GetAll();
         Task<MedicalHistoryViewModel> GetById(int id);
+        Task<MedicalHistoryViewModel> GetByPatientId(int id);
         Task Add(MedicalHistoryModel medicalHistory);
         Task Update(MedicalHistoryModel medicalHistory);
         Task Delete(int id); 
