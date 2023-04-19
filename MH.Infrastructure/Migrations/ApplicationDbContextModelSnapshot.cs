@@ -350,16 +350,11 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Patient");
                 });
@@ -788,17 +783,9 @@ namespace MH.Infrastructure.Migrations
                         .HasForeignKey("MH.Domain.DBModel.Patient", "UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
-                        .WithOne("Patient")
-                        .HasForeignKey("MH.Domain.DBModel.Patient", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdateByUser");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Permission", b =>
@@ -942,9 +929,6 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("Logins");
 
                     b.Navigation("MedicalHistory")
-                        .IsRequired();
-
-                    b.Navigation("Patient")
                         .IsRequired();
 
                     b.Navigation("Tokens");

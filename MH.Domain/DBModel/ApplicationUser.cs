@@ -24,7 +24,6 @@ namespace MH.Domain.DBModel
         public virtual ContactDetails CreatedByContactDetails { get; set; }
         public virtual ContactDetails? UpdatedByContactDetails { get; set; }
         
-        public virtual Patient Patient { get; set; }
         public virtual Patient CreatedByPatient { get; set; }
         public virtual Patient? UpdatedByPatient { get; set; }
         

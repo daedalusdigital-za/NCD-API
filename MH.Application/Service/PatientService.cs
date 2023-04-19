@@ -30,14 +30,14 @@ namespace MH.Application.Service
 
         public async Task<List<PatientViewModel>> GetAll()
         {
-            var data = await _unitOfWork.PatientRepository.GetAll(x => !x.IsDeleted, include=> include.User.UserProfile);
+            var data = await _unitOfWork.PatientRepository.GetAll(x => !x.IsDeleted);
             var result = _mapper.Map<List<PatientViewModel>>(data);
             return result.OrderByDescending(x=> x.Id).ToList();
         }
 
         public async Task<PatientViewModel> GetById(int id)
         {
-            var data = await _unitOfWork.PatientRepository.FindBy(x => !x.IsDeleted && x.Id == id, include => include.User.UserProfile);
+            var data = await _unitOfWork.PatientRepository.FindBy(x => !x.IsDeleted && x.Id == id);
             var result = _mapper.Map<PatientViewModel>(data);
             return result;
         }
@@ -47,7 +47,6 @@ namespace MH.Application.Service
             var existingData = await _unitOfWork.PatientRepository.FindBy(x => x.Id == patient.Id && !x.IsDeleted);
             if(existingData != null)
             {
-                existingData.UserId = patient.UserId;
                 existingData.LastAppointmentDate = patient.LastAppointmentDate;
                 existingData.NextAppointmentDate = patient.NextAppointmentDate;
                 existingData.Notes = patient.Notes;

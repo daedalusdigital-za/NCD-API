@@ -43,20 +43,20 @@ namespace MH.Application.Service
 
         public async Task<List<MedicalHistoryViewModel>> GetAll()
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.GetAll(x => !x.IsDeleted, y=> y.Patient.User.UserProfile);
+            var data = await _unitOfWork.MedicalHistoryRepository.GetAll(x => !x.IsDeleted);
             var result = _mapper.Map<List<MedicalHistoryViewModel>>(data);
             return result.OrderByDescending(x=> x.DateCreated).ToList();
         }
 
         public async Task<MedicalHistoryViewModel> GetById(int id)
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.Id == id, y => y.Patient.User.UserProfile);
+            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.Id == id);
             var result = _mapper.Map<MedicalHistoryViewModel>(data);
             return result;
         }
         public async Task<MedicalHistoryViewModel> GetByPatientId(int id)
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.PatientId == id, y => y.Patient.User.UserProfile);
+            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.PatientId == id);
             var result = _mapper.Map<MedicalHistoryViewModel>(data);
             return result;
         }
@@ -70,7 +70,7 @@ namespace MH.Application.Service
                 existingData.Perscription = GetStreamData(medicalHistoryModel?.Perscription);
 
                 existingData.Notes = medicalHistoryModel?.Notes;
-                existingData.RecordedBy = medicalHistoryModel.RecordedBy;
+                existingData.RecordedBy = (int)medicalHistoryModel?.RecordedBy;
                 existingData.PatientId = medicalHistoryModel.PatientId;
 
                 await _unitOfWork.MedicalHistoryRepository.Update(existingData);

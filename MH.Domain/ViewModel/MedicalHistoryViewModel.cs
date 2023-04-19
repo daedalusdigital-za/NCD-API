@@ -14,8 +14,9 @@ namespace MH.Domain.ViewModel
         public byte[]? Perscription { get; set; }
         public int RecordedBy { get; set; }
         public int PatientId { get; set; }
-        public string PatientName { get; set; }
-        public int PatientPhoneNumber { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public int PhoneNumber { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime DateCreated { get; set; }

@@ -11,8 +11,7 @@ namespace MH.Domain.Mapping
         public PatientMapping()
         {
             CreateMap<Patient,PatientModel>().ReverseMap();
-            CreateMap<Patient, PatientViewModel>()
-                .ForMember(src => src.Name, dest => dest.MapFrom(x => $"{x.User.UserProfile.FirstName} {x.User.UserProfile.LastName}"));
+            CreateMap<Patient, PatientViewModel>();
         }
     }
 }
