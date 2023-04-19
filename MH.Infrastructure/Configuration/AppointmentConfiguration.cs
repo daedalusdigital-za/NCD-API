@@ -12,12 +12,17 @@ namespace MH.Infrastructure.Configuration
                .IsUnique(false);
             builder.HasIndex(x => x.UpdatedBy)
                .IsUnique(false);
-            //builder.HasIndex(x => x.UserId)
-            //   .IsUnique(false);
+            builder.HasIndex(x => x.PatientId)
+               .IsUnique(false);
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
 
+
+            builder.HasOne(x => x.Patient)
+               .WithMany(y => y.Appointment)
+               .HasForeignKey(z => z.PatientId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.CreatedByUser)
                .WithOne(y => y.CreatedByAppointment)

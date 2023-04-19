@@ -126,12 +126,17 @@ namespace MH.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("PatientId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -683,12 +688,20 @@ namespace MH.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MH.Domain.DBModel.Patient", "Patient")
+                        .WithMany("Appointment")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
                         .WithOne("UpdatedByAppointment")
                         .HasForeignKey("MH.Domain.DBModel.Appointment", "UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
+
+                    b.Navigation("Patient");
 
                     b.Navigation("UpdateByUser");
                 });
@@ -975,6 +988,8 @@ namespace MH.Infrastructure.Migrations
 
             modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
                 {
+                    b.Navigation("Appointment");
+
                     b.Navigation("MedicalHistory");
                 });
 

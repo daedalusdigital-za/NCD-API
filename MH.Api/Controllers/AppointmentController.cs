@@ -46,6 +46,15 @@ namespace MH.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("GetByPatientId")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return Appointments data", typeof(List<AppointmentViewModel>))]
+        public async Task<ActionResult> GetByPatientId([FromQuery] int patientId)
+        {
+            var result = await _appointmentService.GetByPatientId(patientId);
+            return Ok(result);
+        }
+
         [HttpPatch]
         [Route("Update")]
         public async Task<ActionResult> Update([FromBody] AppointmentModel appointment)

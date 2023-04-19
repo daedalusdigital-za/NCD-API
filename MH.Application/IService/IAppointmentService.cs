@@ -13,6 +13,7 @@ namespace MH.Application.IService
     {
         Task<List<AppointmentViewModel>> GetAll();
         Task<AppointmentViewModel> GetById(int id);
+        Task<List<AppointmentViewModel>> GetByPatientId(int patientId);
         Task Add(AppointmentModel appointment);
         Task Update(AppointmentModel appointment);
         Task Delete(int id); 
