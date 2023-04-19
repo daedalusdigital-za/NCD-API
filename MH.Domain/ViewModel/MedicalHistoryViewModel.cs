@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MH.Domain.ViewModel
 {
@@ -16,7 +11,11 @@ namespace MH.Domain.ViewModel
         public int PatientId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
+        public double Age { get; set; }
+        public string Gender { get; set; }
+        public DateTime? LastAppointmentDate { get; set; }
+        public DateTime? NextAppointmentDate { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime DateCreated { get; set; }

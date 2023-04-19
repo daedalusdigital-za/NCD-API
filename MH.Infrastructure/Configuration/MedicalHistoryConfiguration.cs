@@ -14,6 +14,8 @@ namespace MH.Infrastructure.Configuration
                .IsUnique(false);
             builder.HasIndex(x => x.RecordedBy)
                .IsUnique(false);
+            builder.HasIndex(x => x.PatientId)
+               .IsUnique(false);
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
@@ -23,6 +25,11 @@ namespace MH.Infrastructure.Configuration
                .WithOne(y => y.MedicalHistory)
                .HasForeignKey<MedicalHistory>(z => z.RecordedBy)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Patient)
+               .WithMany(y => y.MedicalHistory)
+               .HasForeignKey(z => z.PatientId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.CreatedByUser)
                .WithOne(y => y.CreatedByMedicalHistory)

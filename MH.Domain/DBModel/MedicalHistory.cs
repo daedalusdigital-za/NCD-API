@@ -12,7 +12,6 @@ namespace MH.Domain.DBModel
         public byte[]? Perscription { get; set; }
         public int RecordedBy { get; set; }
         public int PatientId { get; set; }
-
         public bool IsDeleted { get; set; }
 
 

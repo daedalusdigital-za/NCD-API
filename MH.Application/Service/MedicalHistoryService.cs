@@ -43,21 +43,21 @@ namespace MH.Application.Service
 
         public async Task<List<MedicalHistoryViewModel>> GetAll()
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.GetAll(x => !x.IsDeleted);
+            var data = await _unitOfWork.MedicalHistoryRepository.GetAll(x => !x.IsDeleted, y=> y.Patient);
             var result = _mapper.Map<List<MedicalHistoryViewModel>>(data);
             return result.OrderByDescending(x=> x.DateCreated).ToList();
         }
 
         public async Task<MedicalHistoryViewModel> GetById(int id)
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.Id == id);
+            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.Id == id, y => y.Patient);
             var result = _mapper.Map<MedicalHistoryViewModel>(data);
             return result;
         }
-        public async Task<MedicalHistoryViewModel> GetByPatientId(int id)
+        public async Task<List<MedicalHistoryViewModel>> GetByPatientId(int patientId)
         {
-            var data = await _unitOfWork.MedicalHistoryRepository.FindBy(x => !x.IsDeleted && x.PatientId == id);
-            var result = _mapper.Map<MedicalHistoryViewModel>(data);
+            var data = await _unitOfWork.MedicalHistoryRepository.GetAll(x => !x.IsDeleted && x.PatientId == patientId, y => y.Patient);
+            var result = _mapper.Map<List<MedicalHistoryViewModel>>(data);
             return result;
         }
 

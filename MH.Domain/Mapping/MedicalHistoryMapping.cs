@@ -10,11 +10,16 @@ namespace MH.Domain.Mapping
         public MedicalHistoryMapping()
         {
             CreateMap<MedicalHistoryModel, MedicalHistory>();
-            //CreateMap<MedicalHistory,MedicalHistoryViewModel>()
-            //    .ForMember(src => src.PatientName, dest => dest.MapFrom(x => $"{x.Patient.User.UserProfile.FirstName} {x.Patient.User.UserProfile.LastName}"))
-            //    .ForMember(src => src.PatientPhoneNumber, dest => dest.MapFrom(x => x.Patient.User.PhoneNumber))
-            //    .ForMember(src => src.PatientPhoneNumber, dest => dest.MapFrom(x => x.Patient.User.PhoneNumber))
-            //    .ReverseMap();
+            CreateMap<MedicalHistory, MedicalHistoryViewModel>()
+                .ForMember(src => src.Name, dest => dest.MapFrom(x => x.Patient.Name))
+                .ForMember(src => src.Surname, dest => dest.MapFrom(x => x.Patient.Surname))
+                .ForMember(src => src.PhoneNumber, dest => dest.MapFrom(x => x.Patient.PhoneNumber))
+                .ForMember(src => src.Gender, dest => dest.MapFrom(x => x.Patient.Gender))
+                .ForMember(src => src.Age, dest => dest.MapFrom(x => x.Patient.Age))
+                .ForMember(src => src.Age, dest => dest.MapFrom(x => x.Patient.Age))
+                .ForMember(src => src.LastAppointmentDate, dest => dest.MapFrom(x => x.Patient.LastAppointmentDate))
+                .ForMember(src => src.NextAppointmentDate, dest => dest.MapFrom(x => x.Patient.NextAppointmentDate))
+                .ReverseMap();
         }
     }
 }

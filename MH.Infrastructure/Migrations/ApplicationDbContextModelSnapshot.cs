@@ -298,8 +298,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("PatientId")
-                        .IsUnique();
+                    b.HasIndex("PatientId");
 
                     b.HasIndex("RecordedBy");
 
@@ -753,8 +752,8 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("MH.Domain.DBModel.Patient", "Patient")
-                        .WithOne("MedicalHistory")
-                        .HasForeignKey("MH.Domain.DBModel.MedicalHistory", "PatientId")
+                        .WithMany("MedicalHistory")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -976,8 +975,7 @@ namespace MH.Infrastructure.Migrations
 
             modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>
                 {
-                    b.Navigation("MedicalHistory")
-                        .IsRequired();
+                    b.Navigation("MedicalHistory");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Position", b =>
