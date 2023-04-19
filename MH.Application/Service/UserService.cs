@@ -81,18 +81,21 @@ namespace MH.Application.Service
             {
                 exist.PhoneNumber = user.PhoneNumber;
                 exist.PositionId = user.PositionId;
-                foreach (var existUserRole in exist.UserRoles)
+                if(await IsAdmin(_currentUser.User.Id))
                 {
-                    if (!user.Roles.Any(x => x == existUserRole.RoleId))
+                    foreach (var existUserRole in exist.UserRoles)
                     {
-                        await _userRepository.DeleteUserRole(existUserRole);
+                        if (!user.Roles.Any(x => x == existUserRole.RoleId))
+                        {
+                            await _userRepository.DeleteUserRole(existUserRole);
+                        }
                     }
-                }
-                foreach (var updateRole in user.Roles)
-                {
-                    if (!exist.UserRoles.Any(x => x.RoleId == updateRole))
+                    foreach (var updateRole in user.Roles)
                     {
-                        await _userRepository.AddUserRole(new UserRole() { UserId = user.Id, RoleId = updateRole });
+                        if (!exist.UserRoles.Any(x => x.RoleId == updateRole))
+                        {
+                            await _userRepository.AddUserRole(new UserRole() { UserId = user.Id, RoleId = updateRole });
+                        }
                     }
                 }
                 await _userManager.UpdateAsync(exist);
