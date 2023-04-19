@@ -10,7 +10,7 @@ namespace MH.Domain.Mapping
     {
         public PatientMapping()
         {
-            CreateMap<Patient,PatientModel>().ReverseMap();
+            CreateMap<PatientModel,Patient>();
             CreateMap<Patient, PatientViewModel>();
         }
     }

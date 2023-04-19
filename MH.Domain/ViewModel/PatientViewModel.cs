@@ -7,6 +7,7 @@ namespace MH.Domain.ViewModel
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
         public double Age { get; set; }
         public DateTime? LastAppointmentDate { get; set; }
         public DateTime? NextAppointmentDate { get; set; }
