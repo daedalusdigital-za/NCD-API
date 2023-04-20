@@ -9,6 +9,6 @@ namespace MH.Domain.IRepository
         Task DeleteUserRole(UserRole userRole);
         Task AddUserRole(UserRole userRole);
         Task UpdateUserRole(UserRole userRole);
-        //Task UpdateUser(ApplicationUser user);
+        Task UpdateUser(ApplicationUser user);
     }
 }

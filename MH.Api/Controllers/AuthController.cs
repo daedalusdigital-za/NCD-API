@@ -66,7 +66,7 @@ namespace MH.Api.Controllers
                 var errors = result.Errors.Select(x => x.Description).ToList();
                 return BadRequest(errors);
             }
-            await _userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
+            await _userManager.AddToRoleAsync(user, RoleEnum.Doctor.ToString());
             return Ok();
         }
 
@@ -82,7 +82,7 @@ namespace MH.Api.Controllers
             }
 
             var user = await GetLoginResult(loginModel.Email);
-            if (user == null) return BadRequest();
+            if (user == null) return BadRequest("User not found");
 
             return Ok(user);
         }

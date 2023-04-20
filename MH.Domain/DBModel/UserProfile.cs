@@ -7,7 +7,7 @@ namespace MH.Domain.DBModel
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string IdNumber { get; set; }
+        public string? IdNumber { get; set; }
         public byte[]? Photo { get; set; }
         public string? Notes { get; set; }
         public bool IsDeleted { get; set; }

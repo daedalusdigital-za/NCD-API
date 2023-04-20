@@ -9,6 +9,7 @@ using MH.Domain.Constant;
 using Microsoft.EntityFrameworkCore;
 using MH.Application.Exception;
 using MH.Domain.IEntity;
+using MH.Domain.UnitOfWork;
 
 namespace MH.Application.Service
 {
@@ -17,13 +18,15 @@ namespace MH.Application.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<ApplicationUser> userManager, ICurrentUser currentUser)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<ApplicationUser> userManager, ICurrentUser currentUser, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _mapper = mapper;
             _currentUser = currentUser;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<UserViewModel> GetUserById(int id)
@@ -43,7 +46,7 @@ namespace MH.Application.Service
                 PositionName = user.Position?.Name,
                 PositionDesc = user.Position?.Description,
 
-                ContactName = user.UserProfile.ContactDetails?.Name,
+                ContactName = user.UserProfile?.ContactDetails?.Name,
                 ContactDataTypeId = user.UserProfile.ContactDetails?.ContactDataTypeId,
                 ContactDataTypeName = user.UserProfile.ContactDetails?.ContactDataType.Name,
                 ContactTypeId = user.UserProfile.ContactDetails?.ContactTypeId,
@@ -74,14 +77,31 @@ namespace MH.Application.Service
             return false;
         }
 
-        public async Task UpdateUser(UserModel user)
+        public async Task UpdateUser(UserUpdateModel user)
         {
             var exist = await _userRepository.GetUserById(user.Id);
             if (exist != null)
             {
                 exist.PhoneNumber = user.PhoneNumber;
                 exist.PositionId = user.PositionId;
-                if(await IsAdmin(_currentUser.User.Id))
+                exist.UserProfile.FirstName = user.FirstName;
+                exist.UserProfile.LastName = user.LastName;
+                exist.UserProfile.IdNumber = user.IdNumber;
+                exist.UserProfile.Notes = user.Notes;
+                await _userRepository.UpdateUser(exist);
+                
+
+                //var existUserProfile = await _unitOfWork.UserProfileRepository.FindBy(x => x.UserId == user.Id && !x.IsDeleted);
+                //if(existUserProfile != null)
+                //{
+                //    existUserProfile.FirstName = user.FirstName;
+                //    existUserProfile.LastName = user.LastName;
+                //    existUserProfile.IdNumber = user.IdNumber;
+                //    existUserProfile.Notes = user.Notes;
+                //    await _unitOfWork.UserProfileRepository.Update(existUserProfile);
+                //    await _unitOfWork.CommitAsync();
+                //}
+                if (await IsAdmin(_currentUser.User.Id))
                 {
                     foreach (var existUserRole in exist.UserRoles)
                     {
@@ -98,7 +118,7 @@ namespace MH.Application.Service
                         }
                     }
                 }
-                await _userManager.UpdateAsync(exist);
+
             }
         }
         public async Task Delete(int id)
@@ -107,6 +127,7 @@ namespace MH.Application.Service
             if (exist != null)
             {
                 exist.Status = 0;
+                exist.UserProfile.IsDeleted = true;
                 await _userManager.UpdateAsync(exist);
             }
         }

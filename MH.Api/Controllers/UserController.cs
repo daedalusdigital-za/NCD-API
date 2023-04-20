@@ -11,6 +11,8 @@ using MH.Domain.IEntity;
 using AutoMapper;
 using Swashbuckle.AspNetCore.Annotations;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using MH.Application.Response;
+using MH.Api.Authentication;
 
 namespace MH.Api.Controllers
 {
@@ -22,13 +24,22 @@ namespace MH.Api.Controllers
         private readonly IUserService _userService;
         private readonly ICurrentUser _currentUser;
         private readonly IMapper _mapper;
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager, IUserService userService, ICurrentUser currentUser = null, IMapper mapper = null)
+        private readonly TokenHelper _jwtExt;
+        public UserController(
+            UserManager<ApplicationUser> userManager, 
+            RoleManager<Role> roleManager, 
+            IUserService userService, 
+            ICurrentUser currentUser, 
+            IMapper mapper, 
+            TokenHelper jwtExt
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userService = userService;
             _currentUser = currentUser;
             _mapper = mapper;
+            _jwtExt = jwtExt;
         }
 
         [HttpPost]
@@ -40,9 +51,21 @@ namespace MH.Api.Controllers
                 Email = registerModel.Email,
                 UserName = registerModel.Email,
                 PasswordHash = registerModel.Password,
-                Status = 1
+                PhoneNumber = registerModel.PhoneNumber,
+                Status = 1,
+                UserProfile = new UserProfile()
+                {
+                    FirstName = registerModel.FirstName,
+                    LastName = registerModel.LastName,
+                }
             };
-            await CreateNewUser(user);
+            var result = await _userManager.CreateAsync(user, user.PasswordHash);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(x => x.Description).ToList();
+                return BadRequest(errors);
+            }
+            await _userManager.AddToRoleAsync(user, RoleEnum.Doctor.ToString());
             return Ok();
         }
         [HttpGet]
@@ -97,14 +120,13 @@ namespace MH.Api.Controllers
         }
         [HttpPatch]
         [Route("UpdateUser")]
-        public async Task<IActionResult> UpdateUser(UserModel user)
+        public async Task<IActionResult> UpdateUser(UserUpdateModel user)
         {
             await _userService.UpdateUser(user);
             return Ok();
         }
         [HttpDelete]
         [Route("Delete")]
-        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Delete(int id)
         {
             await _userService.Delete(id);
@@ -122,25 +144,26 @@ namespace MH.Api.Controllers
             await _userManager.ChangePasswordAsync(user, changePasswordModel.CurrentPassword, changePasswordModel.NewPassword);
             return Ok();
         }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPatch]
         [Route("ResetPassword")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
+        [SwaggerResponse(StatusCodes.Status200OK, "Return User data", typeof(string))]
+        public async Task<IActionResult> ResetPassword([FromQuery] int userId)
         {
-            var user = await _userManager.FindByIdAsync(_currentUser.User.Id.ToString());
-            await _userManager.ChangePasswordAsync(user, resetPasswordModel.CurrentPassword, resetPasswordModel.NewPassword);
-            return Ok();
-        }
-
-        private async Task CreateNewUser(ApplicationUser user)
-        {
-            var result = await _userManager.CreateAsync(user, user.PasswordHash);
-            if (!result.Succeeded)
+            if(await _userService.IsAdmin(_currentUser.User.Id))
             {
-                var errors = result.Errors.Select(x => x.Description).ToList();
-                throw new Exception(errors.ToString());
+                var newPassword = "654724135";
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+                if(!result.Succeeded)
+                {
+                    return BadRequest("Failed to reset password");
+                }
+                return Ok(newPassword);
             }
-            await _userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
+            return Forbid("Not authorized to reset password");
         }
     }
 }

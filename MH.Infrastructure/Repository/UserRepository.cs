@@ -33,7 +33,7 @@ namespace MH.Infrastructure.Repository
 
         public async Task<ApplicationUser> GetUserById(int id)
         {
-            return await _context.Users
+            var data= await _context.Users
                 .Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role)
                 .Include(x => x.UserProfile)
@@ -44,6 +44,15 @@ namespace MH.Infrastructure.Repository
                 .Include(x => x.Position)
                 .Where(x => x.Id == id && x.Status == 1)
                 .FirstOrDefaultAsync();
+
+            _context.ChangeTracker.Clear();
+            return data;
+        }
+
+        public async Task UpdateUser(ApplicationUser user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateUserRole(UserRole userRole)

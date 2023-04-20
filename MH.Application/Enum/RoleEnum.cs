@@ -4,6 +4,8 @@ namespace MH.Application.Enum
 {
     public enum RoleEnum
     {
-        User = 1
+        Admin = 1,
+        Doctor = 2,
+        Nurse = 3
     }
 }
