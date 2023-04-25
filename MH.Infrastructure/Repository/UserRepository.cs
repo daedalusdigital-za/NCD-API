@@ -42,7 +42,7 @@ namespace MH.Infrastructure.Repository
                 .Include(x=> x.UserProfile.ContactDetails.ContactType)
                 .Include(x=> x.UserProfile.ContactDetails.ContactEntity)
                 .Include(x => x.Position)
-                .Where(x => x.Id == id && x.Status == 1)
+                .Where(x => x.Id == id && x.Status == 1 && !x.UserProfile.IsDeleted)
                 .FirstOrDefaultAsync();
 
             _context.ChangeTracker.Clear();

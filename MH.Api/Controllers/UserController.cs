@@ -46,6 +46,10 @@ namespace MH.Api.Controllers
         [Route("Add")]
         public async Task<IActionResult> Add(RegisterModel registerModel)
         {
+            if (!await _userService.IsAdmin(_currentUser.User.Id))
+            {
+                return Forbid("Not authorized to add user");
+            }
             var user = new ApplicationUser()
             {
                 Email = registerModel.Email,
@@ -74,6 +78,10 @@ namespace MH.Api.Controllers
 
         public async Task<IActionResult> GetUsers()
         {
+            if (!await _userService.IsAdmin(_currentUser.User.Id))
+            {
+                return Forbid("Not authorized to get users");
+            }
             var users = await _userManager.Users
                 .Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role)
@@ -83,6 +91,7 @@ namespace MH.Api.Controllers
                 .Include(x => x.UserProfile.ContactDetails.ContactType)
                 .Include(x => x.UserProfile.ContactDetails.ContactEntity)
                 .Include(x => x.Position)
+                .Where(x=> x.Status != 0)
                 .Select(user => new UserViewModel {
                     Id = user.Id,
                     FirstName = user.UserProfile != null ? user.UserProfile.FirstName : "",
@@ -113,6 +122,10 @@ namespace MH.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Return User data", typeof(UserViewModel))]
         public async Task<IActionResult> GetUserById(int id)
         {
+            if (!await _userService.CanViewOrEdit(id))
+            {
+                return Forbid("Not authorized to get user");
+            }
             var user = await _userService.GetUserById(id);
             if (user == null) return BadRequest();
 
@@ -122,6 +135,10 @@ namespace MH.Api.Controllers
         [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser(UserUpdateModel user)
         {
+            if (!await _userService.CanViewOrEdit(user.Id))
+            {
+                return Forbid("Not authorized to update password");
+            }
             await _userService.UpdateUser(user);
             return Ok();
         }
@@ -129,6 +146,10 @@ namespace MH.Api.Controllers
         [Route("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!await _userService.IsAdmin(_currentUser.User.Id))
+            {
+                return Forbid("Not authorized to delete user");
+            }
             await _userService.Delete(id);
             return Ok();
         }
@@ -138,7 +159,7 @@ namespace MH.Api.Controllers
         {
             if(!await _userService.CanViewOrEdit(changePasswordModel.UserId))
             {
-                return Forbid();
+                return Forbid("Not authorized to change password");
             }
             var user = await _userManager.FindByIdAsync(changePasswordModel.UserId.ToString());
             await _userManager.ChangePasswordAsync(user, changePasswordModel.CurrentPassword, changePasswordModel.NewPassword);

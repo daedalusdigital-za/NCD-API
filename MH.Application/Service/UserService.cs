@@ -90,17 +90,6 @@ namespace MH.Application.Service
                 exist.UserProfile.Notes = user.Notes;
                 await _userRepository.UpdateUser(exist);
                 
-
-                //var existUserProfile = await _unitOfWork.UserProfileRepository.FindBy(x => x.UserId == user.Id && !x.IsDeleted);
-                //if(existUserProfile != null)
-                //{
-                //    existUserProfile.FirstName = user.FirstName;
-                //    existUserProfile.LastName = user.LastName;
-                //    existUserProfile.IdNumber = user.IdNumber;
-                //    existUserProfile.Notes = user.Notes;
-                //    await _unitOfWork.UserProfileRepository.Update(existUserProfile);
-                //    await _unitOfWork.CommitAsync();
-                //}
                 if (await IsAdmin(_currentUser.User.Id))
                 {
                     foreach (var existUserRole in exist.UserRoles)
