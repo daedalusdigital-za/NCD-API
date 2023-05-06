@@ -17,6 +17,11 @@ namespace MH.Infrastructure.Configuration
             builder.HasIndex(x => x.PatientId)
                .IsUnique(false);
 
+            builder.Property(x => x.AtInstitution)
+                .HasMaxLength(250);
+            builder.Property(x => x.HBA1C)
+                .HasMaxLength(250);
+
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
 

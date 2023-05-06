@@ -267,6 +267,13 @@ namespace MH.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AtInstitution")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("BloodPressue")
+                        .HasColumnType("int");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -276,13 +283,32 @@ namespace MH.Infrastructure.Migrations
                     b.Property<byte[]>("Documents")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int?>("Glucose")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HBA1C")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool?>("IsMedicated")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("KeyTone")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Lactate")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("NextAppointmentDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -293,10 +319,25 @@ namespace MH.Infrastructure.Migrations
                     b.Property<byte[]>("Perscription")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("Recomendations")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RecordedBy")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Remidies")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Symptoms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TotalColestorl")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UricAcid")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -354,9 +395,6 @@ namespace MH.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastAppointmentDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
@@ -364,9 +402,6 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime?>("NextAppointmentDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");

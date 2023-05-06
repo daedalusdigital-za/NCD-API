@@ -37,6 +37,20 @@ namespace MH.Application.Service
             medicalHistory.RecordedBy = medicalHistoryModel.RecordedBy;
             medicalHistory.PatientId = medicalHistoryModel.PatientId;
 
+            medicalHistory.AtInstitution = medicalHistoryModel.AtInstitution;
+            medicalHistory.Glucose = medicalHistoryModel.Glucose;
+            medicalHistory.HBA1C = medicalHistoryModel.HBA1C;
+            medicalHistory.KeyTone = medicalHistoryModel.KeyTone;
+            medicalHistory.TotalColestorl = medicalHistoryModel.TotalColestorl;
+            medicalHistory.UricAcid = medicalHistoryModel.UricAcid;
+            medicalHistory.Lactate = medicalHistoryModel.Lactate;
+            medicalHistory.BloodPressue = medicalHistoryModel.BloodPressue;
+            medicalHistory.Recomendations = medicalHistoryModel.Recomendations;
+            medicalHistory.Symptoms = medicalHistoryModel.Symptoms;
+            medicalHistory.Remidies = medicalHistoryModel.Remidies;
+            medicalHistory.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;
+            medicalHistory.IsMedicated = medicalHistoryModel.IsMedicated;
+
             await _unitOfWork.MedicalHistoryRepository.Insert(medicalHistory);
             await _unitOfWork.CommitAsync();
         }
@@ -72,6 +86,20 @@ namespace MH.Application.Service
                 existingData.Notes = medicalHistoryModel?.Notes;
                 existingData.RecordedBy = (int)medicalHistoryModel?.RecordedBy;
                 existingData.PatientId = medicalHistoryModel.PatientId;
+
+                existingData.AtInstitution = medicalHistoryModel.AtInstitution;
+                existingData.Glucose = medicalHistoryModel.Glucose;
+                existingData.HBA1C = medicalHistoryModel.HBA1C;
+                existingData.KeyTone = medicalHistoryModel.KeyTone;
+                existingData.TotalColestorl = medicalHistoryModel.TotalColestorl;
+                existingData.UricAcid = medicalHistoryModel.UricAcid;
+                existingData.Lactate = medicalHistoryModel.Lactate;
+                existingData.BloodPressue = medicalHistoryModel.BloodPressue;
+                existingData.Recomendations = medicalHistoryModel.Recomendations;
+                existingData.Symptoms = medicalHistoryModel.Symptoms;
+                existingData.Remidies = medicalHistoryModel.Remidies;
+                existingData.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;
+                existingData.IsMedicated = medicalHistoryModel.IsMedicated;
 
                 await _unitOfWork.MedicalHistoryRepository.Update(existingData);
                 await _unitOfWork.CommitAsync();

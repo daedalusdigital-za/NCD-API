@@ -16,9 +16,7 @@ namespace MH.Domain.Mapping
                 .ForMember(src => src.PhoneNumber, dest => dest.MapFrom(x => x.Patient.PhoneNumber))
                 .ForMember(src => src.Gender, dest => dest.MapFrom(x => x.Patient.Gender))
                 .ForMember(src => src.Age, dest => dest.MapFrom(x => x.Patient.Age))
-                .ForMember(src => src.Age, dest => dest.MapFrom(x => x.Patient.Age))
-                .ForMember(src => src.LastAppointmentDate, dest => dest.MapFrom(x => x.Patient.LastAppointmentDate))
-                .ForMember(src => src.NextAppointmentDate, dest => dest.MapFrom(x => x.Patient.NextAppointmentDate))
+                .ForMember(src => src.Province, dest => dest.MapFrom(x => x.Patient.Province))
                 .ReverseMap();
         }
     }
