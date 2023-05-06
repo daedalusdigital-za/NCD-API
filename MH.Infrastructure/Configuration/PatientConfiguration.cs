@@ -22,6 +22,15 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.PhoneNumber)
                 .HasMaxLength(50);
 
+            builder.Property(x => x.PatientNumber)
+                .HasMaxLength(100);
+            builder.Property(x => x.Province)
+                .HasMaxLength(50);
+            builder.Property(x => x.District)
+                .HasMaxLength(50);
+            builder.Property(x => x.Institution)
+                .HasMaxLength(50);  
+
             builder.HasOne(x => x.CreatedByUser)
                .WithOne(y => y.CreatedByPatient)
                .HasForeignKey<Patient>(z => z.CreatedBy)

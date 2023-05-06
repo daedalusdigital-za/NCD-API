@@ -47,15 +47,26 @@ namespace MH.Application.Service
             var existingData = await _unitOfWork.PatientRepository.FindBy(x => x.Id == patient.Id && !x.IsDeleted);
             if(existingData != null)
             {
+                existingData.PatientNumber = patient.PatientNumber;
+
                 existingData.Name = patient.Name;
                 existingData.Surname = patient.Surname;
                 existingData.Gender = patient.Gender;
                 existingData.PhoneNumber = patient.PhoneNumber;
                 existingData.Age = patient.Age;
+
                 existingData.LastAppointmentDate = patient.LastAppointmentDate;
                 existingData.NextAppointmentDate = patient.NextAppointmentDate;
                 existingData.Notes = patient.Notes;
                 existingData.Diagnosis = patient.Diagnosis;
+
+                existingData.Gesttational = patient.Gesttational;
+                existingData.DateOfBirth = patient.DateOfBirth;
+                existingData.Province = patient.Province;
+                existingData.District = patient.District;
+                existingData.Institution = patient.Institution;
+
+
                 await _unitOfWork.PatientRepository.Update(existingData);
                 await _unitOfWork.CommitAsync();
             }
