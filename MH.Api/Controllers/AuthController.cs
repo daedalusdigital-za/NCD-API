@@ -124,7 +124,7 @@ namespace MH.Api.Controllers
         {
             var existingUser = await _userManager.Users
                 .Include(x => x.UserProfile)
-                .Where(x => x.Email == email)
+                .Where(x => x.Email == email && x.Status == 1)
                 .FirstOrDefaultAsync();
             if (existingUser != null)
             {
