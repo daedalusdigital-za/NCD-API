@@ -1,8 +1,5 @@
 ﻿using MH.Api.Authentication;
-using MH.Application.IService;
-using MH.Application.Service;
-using MH.Domain.DBModel;
-using MH.Domain.IRepository;
+using MH.Infrastructure.External;
 
 namespace MH.Api.Dependency
 {
@@ -11,6 +8,7 @@ namespace MH.Api.Dependency
         public static IServiceCollection ApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<TokenHelper>();
+            services.AddScoped<ISmsService, SmsService>();
             return services;
         }
     }

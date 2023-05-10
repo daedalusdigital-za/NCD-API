@@ -14,7 +14,7 @@
 
         public const string AppSettingsConfigName = "AppSettings";
         public const string MailSettingsConfigName = "MailSettings";
-        public const string FacebookAuthConfigName = "FacebookAuth";
+        public const string Twilio = "Twilio";
         public const string GoogleAuthConfigName = "GoogleAuth";
     }
 }

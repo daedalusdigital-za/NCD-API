@@ -56,7 +56,7 @@ namespace MH.Api
             services.AddRepositories();
             services.ApplicationServices();
             services.TokenAuthentication(Configuration);
-            services.AddMailSettingService(Configuration);
+            services.AddConfigurationService(Configuration);
 
             services.AddAutoMapper(typeof(ApplicationUserMapping).Assembly);
             services.AddCors(options =>

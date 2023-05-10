@@ -1,6 +1,6 @@
 ﻿using MH.Domain.Model;
-using MH.Domain.Settings;
 using MailKit.Security;
+using MH.Domain.Configuration;
 using MimeKit;
 using Serilog;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;

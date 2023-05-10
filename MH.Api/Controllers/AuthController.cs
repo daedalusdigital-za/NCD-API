@@ -9,6 +9,7 @@ using MH.Domain.Model;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MH.Domain.ViewModel;
+using MH.Infrastructure.External;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MH.Api.Controllers
@@ -23,6 +24,7 @@ namespace MH.Api.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly ISmsService _smsService;
 
 
         public AuthController(
@@ -32,7 +34,8 @@ namespace MH.Api.Controllers
             RoleManager<Domain.DBModel.Role> roleManager,
             IConfiguration configuration,
             IMapper mapper,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory, 
+            ISmsService smsService)
         {
             _jwtExt = jwtExt;
             _userManager = userManager;
@@ -41,12 +44,15 @@ namespace MH.Api.Controllers
             _configuration = configuration;
             _mapper = mapper;
             _httpClientFactory = httpClientFactory;
+            _smsService = smsService;
         }
 
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(RegisterModel registerModel)
         {
+            var otp = new Random().Next(1000, 9999);
+            await _smsService.SendSms(registerModel.PhoneNumber, $"OTP is : {otp}");
             var user = new ApplicationUser()
             {
                 Email = registerModel.Email,
@@ -67,6 +73,9 @@ namespace MH.Api.Controllers
                 return BadRequest(errors);
             }
             await _userManager.AddToRoleAsync(user, RoleEnum.Doctor.ToString());
+
+            //var otp = new Random().Next(1000,9999);
+            //await _smsService.SendSms(registerModel.PhoneNumber, $"OTP is : {otp}");
             return Ok();
         }
 
@@ -75,6 +84,7 @@ namespace MH.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Return Login data", typeof(LoginResponse))]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
+            await _smsService.SendSms("", "");
             var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, false);
             if (!result.Succeeded)
             {

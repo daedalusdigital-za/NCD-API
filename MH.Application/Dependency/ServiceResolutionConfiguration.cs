@@ -3,7 +3,6 @@ using MH.Application.Mail;
 using MH.Application.Service;
 using MH.Domain.Constant;
 using MH.Domain.IEntity;
-using MH.Domain.Settings;
 using MH.Domain.UnitOfWork;
 using MH.Infrastructure.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
