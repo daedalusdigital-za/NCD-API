@@ -34,7 +34,7 @@ namespace MH.Application.Service
         public async Task<OtpViewModel> GetByMobileNo(string mobileNo)
         {
             var otp = await _dbContext.Otp.Where(x => x.MobileNo == mobileNo)
-                .OrderByDescending(x => x.DateCreated)
+                .OrderByDescending(x => x.Id)
                 .FirstOrDefaultAsync();
             return _mapper.Map<OtpViewModel>(otp);
         }
