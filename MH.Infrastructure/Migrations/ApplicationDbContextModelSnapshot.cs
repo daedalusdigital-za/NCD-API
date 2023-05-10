@@ -373,9 +373,6 @@ namespace MH.Infrastructure.Migrations
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Diagnosis")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("District")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -402,9 +399,6 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientNumber")
                         .IsRequired()

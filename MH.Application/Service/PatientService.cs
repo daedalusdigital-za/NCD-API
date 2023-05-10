@@ -55,9 +55,6 @@ namespace MH.Application.Service
                 existingData.PhoneNumber = patient.PhoneNumber;
                 existingData.Age = patient.Age;
 
-                existingData.Notes = patient.Notes;
-                existingData.Diagnosis = patient.Diagnosis;
-
                 existingData.Gesttational = patient.Gesttational;
                 existingData.DateOfBirth = patient.DateOfBirth;
                 existingData.Province = patient.Province;

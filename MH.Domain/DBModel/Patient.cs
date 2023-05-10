@@ -11,11 +11,6 @@ namespace MH.Domain.DBModel
         public string PhoneNumber { get; set; }
         public double Age { get; set; }
 
-        //public DateTime? LastAppointmentDate { get; set; }
-        //public DateTime? NextAppointmentDate { get; set; }
-        public string? Notes { get; set; }
-        public string? Diagnosis { get; set; }
-
         public bool? Gesttational { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Province { get; set; }
