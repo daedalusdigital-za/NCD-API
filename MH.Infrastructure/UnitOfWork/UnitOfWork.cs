@@ -21,6 +21,9 @@ namespace MH.Infrastructure.UnitOfWork
         }
         #region Repositories
 
+        private IOtpRepository _otpRepository;
+        public IOtpRepository OtpRepository => _otpRepository ?? new OtpRepository(_dbContext);
+
         private IAppointmentRepository _appointmentRepository;
         public IAppointmentRepository AppointmentRepository => _appointmentRepository ?? new AppointmentRepository(_dbContext);
 

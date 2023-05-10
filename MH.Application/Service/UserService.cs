@@ -60,6 +60,11 @@ namespace MH.Application.Service
             return data;
         }
 
+        public async Task<ApplicationUser> GetUserByMobileNo(string mobileNo)
+        {
+            return await _userRepository.GetUserByMobileNo(mobileNo);
+        }
+
         public async Task<bool> IsAdmin(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());

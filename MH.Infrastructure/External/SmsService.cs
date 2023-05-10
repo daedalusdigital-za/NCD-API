@@ -20,7 +20,7 @@ namespace MH.Infrastructure.External
             var response = MessageResource.Create(
                 body: body,
                 from: new PhoneNumber(_twilioConfiguration.PhoneNumber),
-                to: new PhoneNumber(sendTo)
+                to: new PhoneNumber("+"+sendTo)
             );
         }
     }

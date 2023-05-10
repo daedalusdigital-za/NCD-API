@@ -64,7 +64,9 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -95,6 +97,9 @@ namespace MH.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
 
                     b.HasIndex("PositionId");
 
@@ -351,6 +356,40 @@ namespace MH.Infrastructure.Migrations
                     b.HasIndex("UpdatedBy");
 
                     b.ToTable("MedicalHistory");
+                });
+
+            modelBuilder.Entity("MH.Domain.DBModel.Otp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Code")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("MobileNo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Otp");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Patient", b =>

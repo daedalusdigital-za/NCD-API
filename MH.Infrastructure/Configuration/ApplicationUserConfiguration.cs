@@ -10,6 +10,8 @@ namespace MH.Infrastructure.Configuration
         {
             builder.HasIndex(x => x.PositionId)
                .IsUnique(false);
+            builder.HasIndex(x => x.PhoneNumber)
+               .IsUnique(true);
 
             builder.Property(x => x.Email)
                 .IsRequired()
@@ -21,12 +23,15 @@ namespace MH.Infrastructure.Configuration
                .HasMaxLength(10);
             builder.Property(x => x.PositionId)
                .IsRequired(false);
+            builder.Property(x => x.PhoneNumber)
+                .IsRequired()
+                .HasMaxLength(20);
+
 
             builder.HasOne(x => x.Position)
                .WithOne(y => y.User)
                .HasForeignKey<ApplicationUser>(z => z.PositionId)
                .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 }

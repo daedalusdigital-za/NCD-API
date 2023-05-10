@@ -25,6 +25,16 @@ namespace MH.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<ApplicationUser> GetUserByMobileNo(string mobileNo)
+        {
+            var user = await _context.Users.Where(x => x.PhoneNumber == mobileNo).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("No user found with this mobile no");
+            }
+            return user;
+        }
+
         public async Task DeleteUserRole(UserRole userRole)
         {
            _context.UserRoles.Remove(userRole);
