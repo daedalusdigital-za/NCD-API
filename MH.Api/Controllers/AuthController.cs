@@ -91,7 +91,6 @@ namespace MH.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Return Login data", typeof(LoginResponse))]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            await _smsService.SendSms("", "");
             var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, true, false);
             if (!result.Succeeded)
             {
