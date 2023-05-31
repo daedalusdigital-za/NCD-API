@@ -4,9 +4,9 @@ namespace MH.Domain.ViewModel
     public class MedicalHistoryViewModel
     {
         public int? Id { get; set; }
-        public byte[]? Documents { get; set; }
+        //public byte[]? Documents { get; set; }
         public string? Notes { get; set; }
-        public byte[]? Perscription { get; set; }
+        //public byte[]? Perscription { get; set; }
         public int RecordedBy { get; set; }
         public int PatientId { get; set; }
         public string Name { get; set; }

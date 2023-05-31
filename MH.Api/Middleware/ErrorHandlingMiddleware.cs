@@ -35,7 +35,7 @@ namespace MH.Api.Middleware
                 code = (HttpStatusCode)domEx.ToHttpStatusCode();
             }
 
-            var result = JsonConvert.SerializeObject(new { message = ex.Message });
+            var result = JsonConvert.SerializeObject(new { message = ex.ToString() });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 

@@ -22,7 +22,7 @@ namespace MH.Api.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public async Task<ActionResult> Add([FromForm] MedicalHistoryModel model)
+        public async Task<ActionResult> Add([FromBody] MedicalHistoryModel model)
         {
             await _medicalHistoryService.Add(model);
             return Ok();
@@ -56,7 +56,7 @@ namespace MH.Api.Controllers
 
         [HttpPatch]
         [Route("Update")]
-        public async Task<ActionResult> Update([FromForm] MedicalHistoryModel medicalHistory)
+        public async Task<ActionResult> Update([FromBody] MedicalHistoryModel medicalHistory)
         {
             await _medicalHistoryService.Update(medicalHistory);
             return Ok();
