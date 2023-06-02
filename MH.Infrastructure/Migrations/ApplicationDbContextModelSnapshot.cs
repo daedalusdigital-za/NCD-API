@@ -276,8 +276,8 @@ namespace MH.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int?>("BloodPressue")
-                        .HasColumnType("int");
+                    b.Property<double?>("BloodPressue")
+                        .HasColumnType("float");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -285,15 +285,12 @@ namespace MH.Infrastructure.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime");
 
-                    b.Property<byte[]>("Documents")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<double?>("Glucose")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("Glucose")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HBA1C")
+                    b.Property<double?>("HBA1C")
                         .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -303,20 +300,17 @@ namespace MH.Infrastructure.Migrations
                     b.Property<bool?>("IsMedicated")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("KeyTone")
-                        .HasColumnType("int");
+                    b.Property<double?>("KeyTone")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("Lactate")
-                        .HasColumnType("int");
+                    b.Property<double?>("Lactate")
+                        .HasColumnType("float");
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -333,17 +327,14 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("Remidies")
                         .HasColumnType("int");
 
-                    b.Property<string>("Symptoms")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TotalColestorl")
-                        .HasColumnType("int");
+                    b.Property<double?>("TotalColestorl")
+                        .HasColumnType("float");
 
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UricAcid")
-                        .HasColumnType("int");
+                    b.Property<double?>("UricAcid")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

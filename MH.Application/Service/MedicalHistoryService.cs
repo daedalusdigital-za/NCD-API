@@ -24,16 +24,6 @@ namespace MH.Application.Service
         public async Task Add(MedicalHistoryModel medicalHistoryModel)
         {
             var medicalHistory = new MedicalHistory();
-            //if (medicalHistoryModel.Documents?.Length > 0)
-            //{
-            //    medicalHistory.Documents = GetStreamData(medicalHistoryModel?.Documents);
-            //}
-            //if (medicalHistoryModel?.Perscription?.Length > 0)
-            //{
-            //    medicalHistory.Perscription = GetStreamData(medicalHistoryModel?.Perscription);
-            //}
-
-            medicalHistory.Notes = medicalHistoryModel?.Notes;
             medicalHistory.RecordedBy = medicalHistoryModel.RecordedBy;
             medicalHistory.PatientId = medicalHistoryModel.PatientId;
 
@@ -46,7 +36,6 @@ namespace MH.Application.Service
             medicalHistory.Lactate = medicalHistoryModel.Lactate;
             medicalHistory.BloodPressue = medicalHistoryModel.BloodPressue;
             medicalHistory.Recomendations = medicalHistoryModel.Recomendations;
-            medicalHistory.Symptoms = medicalHistoryModel.Symptoms;
             medicalHistory.Remidies = medicalHistoryModel.Remidies;
             medicalHistory.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;
             medicalHistory.IsMedicated = medicalHistoryModel.IsMedicated;
@@ -80,10 +69,6 @@ namespace MH.Application.Service
             var existingData = await _unitOfWork.MedicalHistoryRepository.FindBy(x => x.Id == medicalHistoryModel.Id && !x.IsDeleted);
             if(existingData != null)
             {
-                //existingData.Documents = GetStreamData(medicalHistoryModel?.Documents);
-                //existingData.Perscription = GetStreamData(medicalHistoryModel?.Perscription);
-
-                existingData.Notes = medicalHistoryModel?.Notes;
                 existingData.RecordedBy = (int)medicalHistoryModel?.RecordedBy;
                 existingData.PatientId = medicalHistoryModel.PatientId;
 
@@ -96,7 +81,6 @@ namespace MH.Application.Service
                 existingData.Lactate = medicalHistoryModel.Lactate;
                 existingData.BloodPressue = medicalHistoryModel.BloodPressue;
                 existingData.Recomendations = medicalHistoryModel.Recomendations;
-                existingData.Symptoms = medicalHistoryModel.Symptoms;
                 existingData.Remidies = medicalHistoryModel.Remidies;
                 existingData.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;
                 existingData.IsMedicated = medicalHistoryModel.IsMedicated;
