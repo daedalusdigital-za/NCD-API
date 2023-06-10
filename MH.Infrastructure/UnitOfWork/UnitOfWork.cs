@@ -21,6 +21,9 @@ namespace MH.Infrastructure.UnitOfWork
         }
         #region Repositories
 
+        private ITicketStatusRepository _ticketStatusRepository;
+        public ITicketStatusRepository TicketStatusRepository => _ticketStatusRepository ?? new TicketStatusRepository(_dbContext);
+
         private IOtpRepository _otpRepository;
         public IOtpRepository OtpRepository => _otpRepository ?? new OtpRepository(_dbContext);
 

@@ -618,11 +618,48 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
+                    b.HasIndex("StatusId");
+
                     b.HasIndex("UpdatedBy");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("TicketDetails");
+                });
+
+            modelBuilder.Entity("MH.Domain.DBModel.TicketStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TicketStatus");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.UserProfile", b =>
@@ -991,6 +1028,12 @@ namespace MH.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MH.Domain.DBModel.TicketStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
                         .WithOne("UpdatedByTicketDetails")
                         .HasForeignKey("MH.Domain.DBModel.TicketDetails", "UpdatedBy")
@@ -1003,6 +1046,8 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
+
+                    b.Navigation("Status");
 
                     b.Navigation("UpdateByUser");
 
