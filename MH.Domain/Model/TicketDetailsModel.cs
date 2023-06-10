@@ -1,7 +1,7 @@
 
-namespace MH.Domain.ViewModel
+namespace MH.Domain.Model
 {
-    public class TicketDetailsViewModel
+    public class TicketDetailsModel
     {
         public int? Id { get; set; }
         public int UserId { get; set; }
@@ -10,7 +10,5 @@ namespace MH.Domain.ViewModel
         public int StatusId { get; set; }
         public int IssueId { get; set; }
         public string Description { get; set; }
-
-        public DateTime DateCreated { get; set; }
     }
 }

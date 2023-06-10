@@ -52,7 +52,7 @@ namespace MH.Application.Service
             var existingData = await _unitOfWork.PriorityRepository.FindBy(x => x.Id == priority.Id && !x.IsDeleted);
             if(existingData != null)
             {
-                //existingData.Name = server.Name;
+                existingData.Name = priority.Name;
                 
 
                 await _unitOfWork.PriorityRepository.Update(existingData);

@@ -15,9 +15,9 @@ namespace MH.Domain.DBModel
         public ApplicationUser User { get; set; }
         public virtual Priority Priority { get; set; }
         public virtual TicketStatus Status { get; set; }
-        //public virtual ContactEntity Issue { get; set; }
+        public virtual Issue Issue { get; set; }
 
         public virtual ApplicationUser CreatedByUser { get; set; }
-        public virtual ApplicationUser UpdateByUser { get; set; }
+        public virtual ApplicationUser UpdatedByUser { get; set; }
     }
 }

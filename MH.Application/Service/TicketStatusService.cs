@@ -52,9 +52,8 @@ namespace MH.Application.Service
             var existingData = await _unitOfWork.TicketStatusRepository.FindBy(x => x.Id == ticketStatus.Id && !x.IsDeleted);
             if(existingData != null)
             {
-                //existingData.Name = server.Name;
+                existingData.Name = ticketStatus.Name;
                 
-
                 await _unitOfWork.TicketStatusRepository.Update(existingData);
                 await _unitOfWork.CommitAsync();
             }

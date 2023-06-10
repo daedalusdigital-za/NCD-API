@@ -1,6 +1,6 @@
-﻿using MH.Domain.DBModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MH.Domain.DBModel;
 
 namespace MH.Infrastructure.Configuration
 {
@@ -8,16 +8,16 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TicketDetails> builder)
         {
-            //builder.HasIndex(x => x.ContactDataTypeId)
-            //    .IsUnique(false);
-            //builder.HasIndex(x => x.ContactTypeId)
-            //    .IsUnique(false);
-            //builder.HasIndex(x => x.ContactEntityId)
-            //    .IsUnique(false);
             builder.HasIndex(x => x.CreatedBy)
-                .IsUnique(false);
+               .IsUnique(false);
             builder.HasIndex(x => x.UpdatedBy)
-                .IsUnique(false);
+               .IsUnique(false);
+            builder.HasIndex(x => x.StatusId)
+               .IsUnique(false);
+            builder.HasIndex(x => x.PriorityId)
+               .IsUnique(false);
+            builder.HasIndex(x => x.IssueId)
+               .IsUnique(false);
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
@@ -27,15 +27,16 @@ namespace MH.Infrastructure.Configuration
                 .HasMaxLength(500);
 
 
-            builder.HasOne(x => x.CreatedByUser)
-                .WithOne(y => y.CreatedByTicketDetails)
-                .HasForeignKey<TicketDetails>(z => z.CreatedBy)
-                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.UpdateByUser)
-                .WithOne(y => y.UpdatedByTicketDetails)
-                .HasForeignKey<TicketDetails>(z => z.UpdatedBy)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.CreatedByUser)
+               .WithOne(y => y.CreatedByTicketDetails)
+               .HasForeignKey<TicketDetails>(z => z.CreatedBy)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.UpdatedByUser)
+               .WithOne(y => y.UpdatedByTicketDetails)
+               .HasForeignKey<TicketDetails>(z => z.UpdatedBy)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

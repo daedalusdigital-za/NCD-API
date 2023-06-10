@@ -264,6 +264,41 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("ContactType");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.Issue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Issue");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.MedicalHistory", b =>
                 {
                     b.Property<int>("Id")
@@ -653,11 +688,11 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("PriorityId")
-                        .IsUnique();
+                    b.HasIndex("IssueId");
 
-                    b.HasIndex("StatusId")
-                        .IsUnique();
+                    b.HasIndex("PriorityId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -1067,6 +1102,12 @@ namespace MH.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MH.Domain.DBModel.Issue", "Issue")
+                        .WithOne("TicketDetails")
+                        .HasForeignKey("MH.Domain.DBModel.TicketDetails", "IssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MH.Domain.DBModel.Priority", "Priority")
                         .WithOne("TicketDetails")
                         .HasForeignKey("MH.Domain.DBModel.TicketDetails", "PriorityId")
@@ -1079,7 +1120,7 @@ namespace MH.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdatedByUser")
                         .WithOne("UpdatedByTicketDetails")
                         .HasForeignKey("MH.Domain.DBModel.TicketDetails", "UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1092,11 +1133,13 @@ namespace MH.Infrastructure.Migrations
 
                     b.Navigation("CreatedByUser");
 
+                    b.Navigation("Issue");
+
                     b.Navigation("Priority");
 
                     b.Navigation("Status");
 
-                    b.Navigation("UpdateByUser");
+                    b.Navigation("UpdatedByUser");
 
                     b.Navigation("User");
                 });
@@ -1245,6 +1288,12 @@ namespace MH.Infrastructure.Migrations
             modelBuilder.Entity("MH.Domain.DBModel.ContactType", b =>
                 {
                     b.Navigation("ContactDetails")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MH.Domain.DBModel.Issue", b =>
+                {
+                    b.Navigation("TicketDetails")
                         .IsRequired();
                 });
 
