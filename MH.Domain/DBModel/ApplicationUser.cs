@@ -33,6 +33,8 @@ namespace MH.Domain.DBModel
         
         public virtual Appointment CreatedByAppointment { get; set; }
         public virtual Appointment? UpdatedByAppointment { get; set; }
+        public virtual TicketDetails CreatedByTicketDetails { get; set; }
+        public virtual TicketDetails? UpdatedByTicketDetails { get; set; }
 
     }
 }

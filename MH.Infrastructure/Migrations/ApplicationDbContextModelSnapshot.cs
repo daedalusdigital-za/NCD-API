@@ -567,6 +567,64 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.TicketDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("IssueId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdated")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("PriorityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TicketDetails");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.UserProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -925,6 +983,32 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UpdateByUser");
                 });
 
+            modelBuilder.Entity("MH.Domain.DBModel.TicketDetails", b =>
+                {
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
+                        .WithOne("CreatedByTicketDetails")
+                        .HasForeignKey("MH.Domain.DBModel.TicketDetails", "CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
+                        .WithOne("UpdatedByTicketDetails")
+                        .HasForeignKey("MH.Domain.DBModel.TicketDetails", "UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("UpdateByUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MH.Domain.DBModel.UserProfile", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "User")
@@ -1024,6 +1108,9 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("CreatedByPosition")
                         .IsRequired();
 
+                    b.Navigation("CreatedByTicketDetails")
+                        .IsRequired();
+
                     b.Navigation("Logins");
 
                     b.Navigation("MedicalHistory")
@@ -1042,6 +1129,8 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UpdatedByPermission");
 
                     b.Navigation("UpdatedByPosition");
+
+                    b.Navigation("UpdatedByTicketDetails");
 
                     b.Navigation("UserProfile")
                         .IsRequired();
