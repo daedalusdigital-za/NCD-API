@@ -21,6 +21,9 @@ namespace MH.Infrastructure.UnitOfWork
         }
         #region Repositories
 
+        private IPriorityRepository _priorityRepository;
+        public IPriorityRepository PriorityRepository => _priorityRepository ?? new PriorityRepository(_dbContext);
+
         private ITicketStatusRepository _ticketStatusRepository;
         public ITicketStatusRepository TicketStatusRepository => _ticketStatusRepository ?? new TicketStatusRepository(_dbContext);
 

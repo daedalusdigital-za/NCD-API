@@ -13,7 +13,7 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
 
         public ApplicationUser User { get; set; }
-        //public virtual ContactType Priority { get; set; }
+        public virtual Priority Priority { get; set; }
         public virtual TicketStatus Status { get; set; }
         //public virtual ContactEntity Issue { get; set; }
 
