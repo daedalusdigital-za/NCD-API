@@ -24,7 +24,7 @@ namespace MH.Domain.ViewModel
         public double? TotalColestorl { get; set; }
         public double? UricAcid { get; set; }
         public double? Lactate { get; set; }
-        public int? BloodPressue { get; set; }
+        public int? BloodPressure { get; set; }
         public string? Recomendations { get; set; }
         public int? Remidies { get; set; }
         public string Gender { get; set; }

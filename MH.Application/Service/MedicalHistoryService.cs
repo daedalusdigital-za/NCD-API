@@ -34,7 +34,7 @@ namespace MH.Application.Service
             medicalHistory.TotalColestorl = medicalHistoryModel.TotalColestorl;
             medicalHistory.UricAcid = medicalHistoryModel.UricAcid;
             medicalHistory.Lactate = medicalHistoryModel.Lactate;
-            medicalHistory.BloodPressue = medicalHistoryModel.BloodPressue;
+            medicalHistory.BloodPressure = medicalHistoryModel.BloodPressure;
             medicalHistory.Recomendations = medicalHistoryModel.Recomendations;
             medicalHistory.Remidies = medicalHistoryModel.Remidies;
             medicalHistory.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;
@@ -79,7 +79,7 @@ namespace MH.Application.Service
                 existingData.TotalColestorl = medicalHistoryModel.TotalColestorl;
                 existingData.UricAcid = medicalHistoryModel.UricAcid;
                 existingData.Lactate = medicalHistoryModel.Lactate;
-                existingData.BloodPressue = medicalHistoryModel.BloodPressue;
+                existingData.BloodPressure = medicalHistoryModel.BloodPressure;
                 existingData.Recomendations = medicalHistoryModel.Recomendations;
                 existingData.Remidies = medicalHistoryModel.Remidies;
                 existingData.NextAppointmentDate = medicalHistoryModel.NextAppointmentDate;

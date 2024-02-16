@@ -311,7 +311,7 @@ namespace MH.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int?>("BloodPressue")
+                    b.Property<int?>("BloodPressure")
                         .HasColumnType("int");
 
                     b.Property<int>("CreatedBy")
