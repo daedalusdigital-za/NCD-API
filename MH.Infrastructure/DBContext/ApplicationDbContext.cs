@@ -18,9 +18,23 @@ namespace MH.Infrastructure.DBContext
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Permission> Permission { get; set; }
         public DbSet<Otp> Otp { get; set; }
+        
+        // New entities for comprehensive API
+        public DbSet<TrainingSession> TrainingSessions { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<TrainingRegister> TrainingRegisters { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Hospital> Hospitals { get; set; }
+        public DbSet<Clinic> Clinics { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Sale> Sales { get; set; }
+        public DbSet<SaleItem> SaleItems { get; set; }
+        public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<FileEntity> Files { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

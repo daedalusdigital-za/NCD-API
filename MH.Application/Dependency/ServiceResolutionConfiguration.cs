@@ -32,6 +32,14 @@ namespace MH.Application.Dependency
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IRoleService, RoleService>();
+
+            // New services for NDCANGU functionality
+            services.AddScoped<ITrainingSessionService, TrainingSessionService>();
+            services.AddScoped<ITrainerService, TrainerService>();
+            services.AddScoped<IInventoryItemService, InventoryItemService>();
+            services.AddScoped<ISaleService, SaleService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IDashboardService, DashboardService>();
             #endregion
 
             return services;
