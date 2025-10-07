@@ -42,7 +42,7 @@ namespace MH.Application.Service
             else
                 entity.Status = InventoryStatus.InStock;
 
-            await _inventoryRepository.Add(entity);
+            await _inventoryRepository.Insert(entity);
         }
 
         public async Task Update(InventoryItemModel model)

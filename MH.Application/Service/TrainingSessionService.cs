@@ -33,7 +33,7 @@ namespace MH.Application.Service
             var entity = _mapper.Map<TrainingSession>(model);
             entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
-            await _trainingSessionRepository.Add(entity);
+            await _trainingSessionRepository.Insert(entity);
         }
 
         public async Task Update(TrainingSessionModel model)
@@ -43,7 +43,7 @@ namespace MH.Application.Service
                 throw new ArgumentException("Training session not found");
 
             _mapper.Map(model, existingEntity);
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _trainingSessionRepository.Update(existingEntity);
         }
@@ -55,14 +55,14 @@ namespace MH.Application.Service
                 throw new ArgumentException("Training session not found");
 
             existingEntity.IsDeleted = true;
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _trainingSessionRepository.Update(existingEntity);
         }
 
         public async Task<TrainingSessionViewModel?> GetById(int id)
         {
-            var entity = await _trainingSessionRepository.GetFirst(
+            var entity = await _trainingSessionRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
                 x => x.Trainer, x => x.CreatedByUser);
             

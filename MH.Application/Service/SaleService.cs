@@ -27,9 +27,9 @@ namespace MH.Application.Service
         public async Task Add(SaleModel model)
         {
             var entity = _mapper.Map<Sale>(model);
-            entity.CreatedBy = _currentUser.UserId;
+            entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
-            entity.CreatedByName = _currentUser.User?.UserProfile?.FirstName + " " + _currentUser.User?.UserProfile?.LastName;
+            entity.CreatedByName = _currentUser.User.Id.ToString();
             
             // Calculate totals
             entity.Subtotal = entity.SaleItems.Sum(x => x.TotalPrice);
@@ -40,16 +40,16 @@ namespace MH.Application.Service
             foreach (var item in entity.SaleItems)
             {
                 item.TotalPrice = item.Quantity * item.UnitPrice;
-                item.CreatedBy = _currentUser.UserId;
+                item.CreatedBy = _currentUser.User.Id;
                 item.DateCreated = DateTime.Now;
             }
 
-            await _saleRepository.Add(entity);
+            await _saleRepository.Insert(entity);
         }
 
         public async Task Update(SaleModel model)
         {
-            var existingEntity = await _saleRepository.GetFirst(
+            var existingEntity = await _saleRepository.FindBy(
                 x => x.Id == model.Id.Value,
                 x => x.SaleItems);
                 
@@ -57,7 +57,7 @@ namespace MH.Application.Service
                 throw new ArgumentException("Sale not found");
 
             _mapper.Map(model, existingEntity);
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             
             // Recalculate totals
@@ -75,14 +75,14 @@ namespace MH.Application.Service
                 throw new ArgumentException("Sale not found");
 
             existingEntity.IsDeleted = true;
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _saleRepository.Update(existingEntity);
         }
 
         public async Task<SaleViewModel?> GetById(int id)
         {
-            var entity = await _saleRepository.GetFirst(
+            var entity = await _saleRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
                 x => x.SaleItems, x => x.CreatedByUser);
             

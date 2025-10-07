@@ -27,9 +27,9 @@ namespace MH.Application.Service
         public async Task Add(TrainerModel model)
         {
             var entity = _mapper.Map<Trainer>(model);
-            entity.CreatedBy = _currentUser.UserId;
+            entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
-            await _trainerRepository.Add(entity);
+            await _trainerRepository.Insert(entity);
         }
 
         public async Task Update(TrainerModel model)
@@ -39,7 +39,7 @@ namespace MH.Application.Service
                 throw new ArgumentException("Trainer not found");
 
             _mapper.Map(model, existingEntity);
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _trainerRepository.Update(existingEntity);
         }
@@ -51,14 +51,14 @@ namespace MH.Application.Service
                 throw new ArgumentException("Trainer not found");
 
             existingEntity.IsDeleted = true;
-            existingEntity.UpdatedBy = _currentUser.UserId;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _trainerRepository.Update(existingEntity);
         }
 
         public async Task<TrainerViewModel?> GetById(int id)
         {
-            var entity = await _trainerRepository.GetFirst(
+            var entity = await _trainerRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
                 x => x.CreatedByUser);
             
