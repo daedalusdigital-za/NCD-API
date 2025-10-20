@@ -7,7 +7,6 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: NgCanduAPI
-  AZURE_WEBAPP_PACKAGE_PATH: './MH.Api'
   DOTNET_VERSION: '8.0.x'
 
 jobs:
@@ -29,9 +28,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish -c Release -o ${{ github.workspace }}/publish
+      run: dotnet publish MH.Api/MH.Api.csproj -c Release -o ${{ github.workspace }}/publish
 
-    - name: Deploy to Azure using Publish Profile
+    - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
