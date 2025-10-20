@@ -6,10 +6,14 @@ namespace MH.Domain.ViewModel
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public string? Province { get; set; }
+        public int? ProvinceId { get; set; }
+        public string? Qualification { get; set; }
+        public string? Experience { get; set; }
         public int Status { get; set; }
         public string? StatusText { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public string? Location { get; set; }
+        public string? Bio { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? LastUpdated { get; set; }
     }
 }

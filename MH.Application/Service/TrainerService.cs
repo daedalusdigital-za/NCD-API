@@ -39,7 +39,6 @@ namespace MH.Application.Service
         {
             var trainer = _mapper.Map<Trainer>(model);
             trainer.Status = 1;
-            trainer.CreatedDate = DateTime.Now;
 
             await _unitOfWork.TrainerRepository.Insert(trainer);
             await _unitOfWork.CommitAsync();
@@ -54,9 +53,12 @@ namespace MH.Application.Service
             trainer.Name = model.Name;
             trainer.Email = model.Email;
             trainer.Phone = model.Phone;
-            trainer.Province = model.Province;
+            trainer.ProvinceId = model.ProvinceId;
+            trainer.Qualification = model.Qualification;
+            trainer.Experience = model.Experience;
             trainer.Status = model.Status;
-            trainer.UpdatedDate = DateTime.Now;
+            trainer.Location = model.Location;
+            trainer.Bio = model.Bio;
 
             _unitOfWork.TrainerRepository.Update(trainer);
             await _unitOfWork.CommitAsync();
