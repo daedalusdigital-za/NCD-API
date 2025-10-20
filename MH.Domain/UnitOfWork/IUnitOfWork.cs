@@ -17,6 +17,7 @@ namespace MH.Domain.UnitOfWork
         IPatientRepository PatientRepository { get; }
         IContactDetailsRepository ContactDetailsRepository { get; }
         IUserProfileRepository UserProfileRepository { get; }
+        ITrainerRepository TrainerRepository { get; }
         #endregion
         void ClearChangeTracker();
         void Commit();
