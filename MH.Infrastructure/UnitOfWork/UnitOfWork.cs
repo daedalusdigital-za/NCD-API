@@ -53,7 +53,7 @@ namespace MH.Infrastructure.UnitOfWork
         private IUserProfileRepository _userProfileRepository;
         public IUserProfileRepository UserProfileRepository => _userProfileRepository ?? new UserProfileRepository(_dbContext);
 
-        private ITrainerRepository _trainerRepository;
+        private ITrainerRepository? _trainerRepository;
         public ITrainerRepository TrainerRepository => _trainerRepository ?? new TrainerRepository(_dbContext);
         #endregion
     }

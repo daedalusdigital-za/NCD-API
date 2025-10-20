@@ -8,6 +8,7 @@ namespace MH.Domain.ViewModel
         public string? Phone { get; set; }
         public string? Province { get; set; }
         public int Status { get; set; }
+        public string? StatusText { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }

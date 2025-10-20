@@ -19,10 +19,7 @@ namespace MH.Domain.Mapping
 
             CreateMap<TrainerModel, Trainer>();
             CreateMap<Trainer, TrainerViewModel>()
-                .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()))
-                .ForMember(dest => dest.CreatedByUserName, opt => opt.MapFrom(src => 
-                    src.CreatedByUser != null && src.CreatedByUser.UserProfile != null ? 
-                    src.CreatedByUser.UserProfile.FirstName + " " + src.CreatedByUser.UserProfile.LastName : string.Empty));
+                .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));
 
             CreateMap<TrainingRegister, TrainingRegisterViewModel>()
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));
