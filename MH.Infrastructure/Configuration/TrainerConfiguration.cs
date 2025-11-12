@@ -42,11 +42,9 @@ namespace MH.Infrastructure.Configuration
             builder.Property(t => t.Location)
                 .HasMaxLength(255);
 
-            builder.Property(t => t.Qualification)
-                .HasMaxLength(500);
+            builder.Property(t => t.Qualification);
 
-            builder.Property(t => t.Experience)
-                .HasMaxLength(500);
+            builder.Property(t => t.Experience);
 
             builder.Property(t => t.Bio);
 
