@@ -468,7 +468,7 @@ POST https://ngcanduapi.azurewebsites.net/api/Auth/Login
 ```json
 {
   "saleNumber": "string",              // Required - Unique sale number
-  "saleDate": "2024-01-01",            // Required - Sale date
+  "saleDate": "2025-11-12T00:15:47.898Z", // Required - Sale date (ISO 8601 format)
   "province": "string",                // Required - Province name
   "hospital": "string",                // Required - Hospital name
   "customerContactName": "string",     // Required - Customer contact person
@@ -477,17 +477,52 @@ POST https://ngcanduapi.azurewebsites.net/api/Auth/Login
   "paymentMethod": 1,                  // Required - 1=Cash, 2=Card, 3=EFT, 4=Cheque
   "paymentStatus": 1,                  // Required - 1=Pending, 2=Paid, 3=Overdue
   "deliveryStatus": 1,                 // Required - 1=Pending, 2=InTransit, 3=Delivered
-  "deliveryDate": "2024-01-01",        // Optional - Expected delivery date
+  "deliveryDate": "2025-11-12T00:15:47.898Z", // Optional - Expected delivery date (ISO 8601 format)
   "notes": "string",                   // Optional - Additional notes
   "salesPerson": "string",             // Optional - Sales person name
-  "discount": 0.00,                    // Required - Discount amount (decimal)
+  "discount": 0,                       // Optional - Discount amount (numeric)
   "invoiceNumber": "string",           // Optional - Invoice number
   "saleItems": [                       // Required - Array of sale items
     {
-      "inventoryItemId": 0,            // Required - Valid Inventory Item ID
-      "quantity": 1,                   // Required - Quantity sold
-      "unitPrice": 0.00,               // Required - Unit price (decimal)
-      "totalPrice": 0.00               // Required - Total price (decimal)
+      "productId": 0,                  // Required - Valid Product ID
+      "productName": "string",         // Required - Product name
+      "quantity": 0,                   // Required - Quantity sold
+      "unitPrice": 0                   // Required - Unit price (numeric)
+    }
+  ]
+}
+```
+
+**Example Request:**
+```json
+{
+  "saleNumber": "SALE-2025-001",
+  "saleDate": "2025-11-12T10:30:00Z",
+  "province": "Western Cape",
+  "hospital": "Groote Schuur Hospital",
+  "customerContactName": "Dr. John Smith",
+  "customerContactEmail": "john.smith@hospital.co.za",
+  "customerContactPhone": "+27214061500",
+  "paymentMethod": 3,
+  "paymentStatus": 1,
+  "deliveryStatus": 1,
+  "deliveryDate": "2025-11-15T00:00:00Z",
+  "notes": "Priority delivery requested",
+  "salesPerson": "Jane Doe",
+  "discount": 100,
+  "invoiceNumber": "INV-2025-001",
+  "saleItems": [
+    {
+      "productId": 1,
+      "productName": "HGT Meter Device",
+      "quantity": 5,
+      "unitPrice": 250
+    },
+    {
+      "productId": 2,
+      "productName": "HGT Test Strips",
+      "quantity": 100,
+      "unitPrice": 2.50
     }
   ]
 }
