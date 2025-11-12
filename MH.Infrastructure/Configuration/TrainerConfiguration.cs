@@ -20,9 +20,14 @@ namespace MH.Infrastructure.Configuration
             builder.Property(t => t.LastUpdated)
                 .HasColumnName("UpdatedAt");
 
-            // Ignore CreatedBy and UpdatedBy since they don't exist in the database
-            builder.Ignore(t => t.CreatedBy);
-            builder.Ignore(t => t.UpdatedBy);
+            // CreatedBy and UpdatedBy columns need to be added to database
+            // Run: DatabaseManagement/add-trainer-audit-columns.sql
+            builder.Property(t => t.CreatedBy)
+                .IsRequired()
+                .HasDefaultValue(0);
+            
+            builder.Property(t => t.UpdatedBy)
+                .IsRequired(false);
 
             // Map entity properties
             builder.Property(t => t.Name)
