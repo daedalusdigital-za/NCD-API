@@ -20,11 +20,9 @@ namespace MH.Infrastructure.Configuration
             builder.Property(t => t.LastUpdated)
                 .HasColumnName("UpdatedAt");
 
-            builder.Property(t => t.CreatedBy)
-                .HasDefaultValue(0);
-
-            builder.Property(t => t.UpdatedBy)
-                .HasDefaultValue(null);
+            // Ignore CreatedBy and UpdatedBy since they don't exist in the database
+            builder.Ignore(t => t.CreatedBy);
+            builder.Ignore(t => t.UpdatedBy);
 
             // Map entity properties
             builder.Property(t => t.Name)
