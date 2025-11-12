@@ -8,6 +8,9 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<MedicalHistory> builder)
         {
+            // Apply base model configuration (maps DateCreated->CreatedAt, LastUpdated->UpdatedAt)
+            builder.ConfigureBaseModel<MedicalHistory, int>();
+            
             builder.HasIndex(x => x.CreatedBy)
                .IsUnique(false);
             builder.HasIndex(x => x.UpdatedBy)

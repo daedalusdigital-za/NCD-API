@@ -9,10 +9,9 @@ namespace MH.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Trainer> builder)
         {
             builder.ToTable("Trainers");
-
-            // Map BaseModel audit columns to database column names
-            builder.Property(t => t.DateCreated).HasColumnName("CreatedAt");
-            builder.Property(t => t.LastUpdated).HasColumnName("UpdatedAt");
+            
+            // Apply base model configuration (maps DateCreated->CreatedAt, LastUpdated->UpdatedAt)
+            builder.ConfigureBaseModel<Trainer, int>();
         }
     }
 }
