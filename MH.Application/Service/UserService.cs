@@ -87,15 +87,20 @@ namespace MH.Application.Service
             var exist = await _userRepository.GetUserById(user.Id);
             if (exist != null)
             {
-                exist.PhoneNumber = user.PhoneNumber;
-                exist.PositionId = user.PositionId;
-                exist.UserProfile.FirstName = user.FirstName;
-                exist.UserProfile.LastName = user.LastName;
-                exist.UserProfile.IdNumber = user.IdNumber;
-                exist.UserProfile.Notes = user.Notes;
+                if (user.PhoneNumber != null) exist.PhoneNumber = user.PhoneNumber;
+                if (user.PositionId.HasValue) exist.PositionId = user.PositionId;
+                
+                if (exist.UserProfile != null)
+                {
+                    if (user.FirstName != null) exist.UserProfile.FirstName = user.FirstName;
+                    if (user.LastName != null) exist.UserProfile.LastName = user.LastName;
+                    if (user.IdNumber != null) exist.UserProfile.IdNumber = user.IdNumber;
+                    if (user.Notes != null) exist.UserProfile.Notes = user.Notes;
+                }
+                
                 await _userRepository.UpdateUser(exist);
                 
-                if (await IsAdmin(_currentUser.User.Id))
+                if (await IsAdmin(_currentUser.User.Id) && user.Roles != null)
                 {
                     foreach (var existUserRole in exist.UserRoles)
                     {
