@@ -63,7 +63,7 @@ namespace MH.Api
             {
                 options.AddDefaultPolicy(builder =>
                     {
-                        builder.WithOrigins("*")
+                        builder.AllowAnyOrigin()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });

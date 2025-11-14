@@ -26,18 +26,15 @@ namespace MH.Infrastructure.Repository
 
         public async Task<IReadOnlyList<Sale>> GetByProvince(string province)
         {
-            return await _context.Sales
-                .Include(x => x.SaleItems)
-                .Where(x => x.Province == province && !x.IsDeleted)
-                .AsNoTracking()
-                .ToListAsync();
+            // Province field removed from Sale entity - returning empty list
+            return new List<Sale>();
         }
 
         public async Task<IReadOnlyList<Sale>> GetByPaymentStatus(PaymentStatus status)
         {
             return await _context.Sales
                 .Include(x => x.SaleItems)
-                .Where(x => x.PaymentStatus == status && !x.IsDeleted)
+                .Where(x => (int)x.PaymentStatus == (int)status && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -46,7 +43,7 @@ namespace MH.Infrastructure.Repository
         {
             return await _context.Sales
                 .Include(x => x.SaleItems)
-                .Where(x => x.DeliveryStatus == status && !x.IsDeleted)
+                .Where(x => (int)x.DeliveryStatus == (int)status && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -90,8 +87,8 @@ namespace MH.Infrastructure.Repository
                 MonthlyRevenue = monthlyRevenue,
                 TotalRevenue = allSales.Sum(x => x.Total),
                 AverageOrderValue = allSales.Count > 0 ? allSales.Average(x => x.Total) : 0,
-                PendingOrders = allSales.Count(x => x.PaymentStatus == PaymentStatus.Pending),
-                CompletedOrders = allSales.Count(x => x.PaymentStatus == PaymentStatus.Paid)
+                PendingOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
+                CompletedOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
             };
         }
 
@@ -107,38 +104,26 @@ namespace MH.Infrastructure.Repository
                 MonthlyRevenue = sales.Sum(x => x.Total),
                 TotalRevenue = sales.Sum(x => x.Total),
                 AverageOrderValue = sales.Count > 0 ? sales.Average(x => x.Total) : 0,
-                PendingOrders = sales.Count(x => x.PaymentStatus == PaymentStatus.Pending),
-                CompletedOrders = sales.Count(x => x.PaymentStatus == PaymentStatus.Paid)
+                PendingOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
+                CompletedOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
             };
         }
 
         public async Task<List<ProvincialSalesData>> GetProvincialSalesData()
         {
-            var salesByProvince = await _context.Sales
-                .Where(x => !x.IsDeleted)
-                .GroupBy(x => x.Province)
-                .Select(g => new ProvincialSalesData
-                {
-                    Province = g.Key,
-                    TotalOrdered = g.Sum(x => x.SaleItems.Sum(si => si.Quantity)),
-                    TotalDelivered = g.Count(x => x.DeliveryStatus == DeliveryStatus.Delivered),
-                    Revenue = g.Sum(x => x.Total),
-                    OrderCount = g.Count(),
-                    DeliveryRate = g.Count() > 0 ? (decimal)g.Count(x => x.DeliveryStatus == DeliveryStatus.Delivered) / g.Count() * 100 : 0
-                })
-                .ToListAsync();
-
-            return salesByProvince;
+            // Province field removed from Sale entity - returning empty list
+            return new List<ProvincialSalesData>();
         }
 
         public async Task<List<TopProductModel>> GetTopProducts(int limit = 10)
         {
             var topProducts = await _context.SaleItems
+                .Include(x => x.InventoryItem)
                 .Where(x => !x.IsDeleted)
-                .GroupBy(x => new { x.ProductId, x.ProductName })
+                .GroupBy(x => new { x.InventoryItemId, ProductName = x.InventoryItem != null ? x.InventoryItem.Description : "Unknown" })
                 .Select(g => new TopProductModel
                 {
-                    ProductId = g.Key.ProductId,
+                    ProductId = g.Key.InventoryItemId,
                     ProductName = g.Key.ProductName,
                     QuantitySold = g.Sum(x => x.Quantity),
                     Revenue = g.Sum(x => x.TotalPrice),

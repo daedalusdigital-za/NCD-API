@@ -29,19 +29,21 @@ namespace MH.Application.Service
             var entity = _mapper.Map<Sale>(model);
             entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
-            entity.CreatedByName = _currentUser.User.Id.ToString();
             
             // Calculate totals
-            entity.Subtotal = entity.SaleItems.Sum(x => x.TotalPrice);
+            entity.Subtotal = entity.SaleItems?.Sum(x => x.TotalPrice) ?? 0;
             entity.TaxAmount = entity.Subtotal * 0.15m; // 15% VAT
             entity.Total = entity.Subtotal + entity.TaxAmount - entity.Discount;
             
             // Set each sale item's calculated total
-            foreach (var item in entity.SaleItems)
+            if (entity.SaleItems != null)
             {
-                item.TotalPrice = item.Quantity * item.UnitPrice;
-                item.CreatedBy = _currentUser.User.Id;
-                item.DateCreated = DateTime.Now;
+                foreach (var item in entity.SaleItems)
+                {
+                    item.TotalPrice = item.Quantity * item.UnitPrice;
+                    item.DateCreated = DateTime.Now;
+                    item.CreatedBy = _currentUser.User.Id;
+                }
             }
 
             await _saleRepository.Insert(entity);
@@ -84,14 +86,14 @@ namespace MH.Application.Service
         {
             var entity = await _saleRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
-                x => x.SaleItems, x => x.CreatedByUser);
+                x => x.SaleItems);
             
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<SaleViewModel>(entity);
-            viewModel.PaymentMethodText = entity.PaymentMethod.ToString();
-            viewModel.PaymentStatusText = entity.PaymentStatus.ToString();
-            viewModel.DeliveryStatusText = entity.DeliveryStatus.ToString();
+            viewModel.PaymentMethodText = GetPaymentMethodText(entity.PaymentMethod);
+            viewModel.PaymentStatusText = GetPaymentStatusText(entity.PaymentStatus);
+            viewModel.DeliveryStatusText = GetDeliveryStatusText(entity.DeliveryStatus);
             
             return viewModel;
         }
@@ -100,19 +102,55 @@ namespace MH.Application.Service
         {
             var entities = await _saleRepository.GetAll(
                 x => !x.IsDeleted,
-                x => x.SaleItems, x => x.CreatedByUser);
+                x => x.SaleItems);
 
             var viewModels = _mapper.Map<List<SaleViewModel>>(entities);
             
             // Enhance with text representations
             foreach (var vm in viewModels)
             {
-                vm.PaymentMethodText = ((PaymentMethod)vm.PaymentMethod).ToString();
-                vm.PaymentStatusText = ((PaymentStatus)vm.PaymentStatus).ToString();
-                vm.DeliveryStatusText = ((DeliveryStatus)vm.DeliveryStatus).ToString();
+                vm.PaymentMethodText = GetPaymentMethodText((int)vm.PaymentMethod);
+                vm.PaymentStatusText = GetPaymentStatusText((int)vm.PaymentStatus);
+                vm.DeliveryStatusText = GetDeliveryStatusText((int)vm.DeliveryStatus);
             }
 
             return viewModels;
+        }
+
+        private string GetPaymentMethodText(int paymentMethod)
+        {
+            return paymentMethod switch
+            {
+                1 => "Cash",
+                2 => "Credit Card",
+                3 => "Bank Transfer",
+                4 => "Government Contract",
+                _ => "Unknown"
+            };
+        }
+
+        private string GetPaymentStatusText(int paymentStatus)
+        {
+            return paymentStatus switch
+            {
+                0 => "Pending",
+                1 => "Paid",
+                2 => "Overdue",
+                3 => "Cancelled",
+                _ => "Unknown"
+            };
+        }
+
+        private string GetDeliveryStatusText(int deliveryStatus)
+        {
+            return deliveryStatus switch
+            {
+                0 => "Pending",
+                1 => "Delivered",
+                2 => "In Transit",
+                3 => "Cancelled",
+                _ => "Unknown"
+            };
         }
 
         public async Task<List<SaleViewModel>> GetByDateRange(DateTime startDate, DateTime endDate)
