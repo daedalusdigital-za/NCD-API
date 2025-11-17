@@ -77,21 +77,18 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Trainer' AND xtype='U')
 BEGIN
     CREATE TABLE [dbo].[Trainer](
         [Id] [int] IDENTITY(1,1) NOT NULL,
-        [FirstName] [nvarchar](50) NOT NULL,
-        [LastName] [nvarchar](50) NOT NULL,
-        [Email] [nvarchar](100) NOT NULL,
-        [Phone] [nvarchar](20) NULL,
-        [Specialization] [nvarchar](200) NULL,
-        [Experience] [int] NOT NULL DEFAULT 0,
-        [Certification] [nvarchar](500) NULL,
-        [IsActive] [bit] NOT NULL DEFAULT 1,
-        [IsDeleted] [bit] NOT NULL DEFAULT 0,
-        [CreatedDate] [datetime2](7) NOT NULL DEFAULT GETDATE(),
-        [CreatedBy] [int] NULL,
-        [LastUpdated] [datetime2](7) NULL,
+        [Name] [nvarchar](255) NULL,
+        [Email] [nvarchar](255) NULL,
+        [Phone] [nvarchar](50) NULL,
+        [ProvinceId] [int] NULL,
+        [Status] [int] NOT NULL DEFAULT 1,
+        [Location] [nvarchar](255) NULL,
+        [CreatedAt] [datetime] NOT NULL DEFAULT GETDATE(),
+        [UpdatedAt] [datetime] NULL,
+        [CreatedBy] [int] NOT NULL DEFAULT 0,
         [UpdatedBy] [int] NULL,
-        [ModifiedBy] [int] NULL,
-        CONSTRAINT [PK_Trainer] PRIMARY KEY CLUSTERED ([Id] ASC)
+        CONSTRAINT [PK_Trainer] PRIMARY KEY CLUSTERED ([Id] ASC),
+        CONSTRAINT [FK_Trainer_Province] FOREIGN KEY ([ProvinceId]) REFERENCES [dbo].[Provinces]([Id]) ON DELETE SET NULL
     )
 END
 GO
@@ -101,21 +98,19 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='TrainingSession' AND xtype='
 BEGIN
     CREATE TABLE [dbo].[TrainingSession](
         [Id] [int] IDENTITY(1,1) NOT NULL,
-        [Title] [nvarchar](200) NOT NULL,
-        [Description] [nvarchar](1000) NULL,
+        [TrainingName] [nvarchar](255) NOT NULL,
+        [TrainingType] [nvarchar](255) NOT NULL, -- NDC Training workshop, Virtual training
+        [Date] [datetime] NOT NULL,
+        [Province] [nvarchar](255) NOT NULL,
+        [Venue] [nvarchar](255) NOT NULL,
         [TrainerId] [int] NOT NULL,
-        [StartDate] [datetime2](7) NOT NULL,
-        [EndDate] [datetime2](7) NOT NULL,
-        [Capacity] [int] NOT NULL DEFAULT 0,
-        [Status] [int] NOT NULL DEFAULT 0, -- 0=Scheduled, 1=InProgress, 2=Completed, 3=Cancelled
-        [LocationType] [int] NOT NULL DEFAULT 1, -- 1=InPerson, 2=Virtual, 3=Hybrid
-        [VenueDetails] [nvarchar](500) NULL,
+        [TargetAudience] [nvarchar](max) NOT NULL,
+        [Status] [int] NOT NULL DEFAULT 1,
         [IsDeleted] [bit] NOT NULL DEFAULT 0,
-        [CreatedDate] [datetime2](7) NOT NULL DEFAULT GETDATE(),
-        [CreatedBy] [int] NULL,
-        [LastUpdated] [datetime2](7) NULL,
+        [CreatedAt] [datetime] NOT NULL DEFAULT GETDATE(),
+        [UpdatedAt] [datetime] NULL,
+        [CreatedBy] [int] NOT NULL DEFAULT 0,
         [UpdatedBy] [int] NULL,
-        [ModifiedBy] [int] NULL,
         CONSTRAINT [PK_TrainingSession] PRIMARY KEY CLUSTERED ([Id] ASC),
         CONSTRAINT [FK_TrainingSession_Trainer] FOREIGN KEY ([TrainerId]) REFERENCES [dbo].[Trainer]([Id])
     )

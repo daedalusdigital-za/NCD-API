@@ -22,13 +22,19 @@ namespace MH.Domain.DBModel
         public int DeliveryStatus { get; set; }
         public string? Notes { get; set; }
         public bool IsDeleted { get; set; }
+        
+        // Province tracking
+        public int? ProvinceId { get; set; }
 
         // Navigation properties
+        public virtual Province? Province { get; set; }
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
     }
 
-    public class SaleItem : BaseModel<int>
+    // SaleItem does NOT inherit from BaseModel because the table lacks audit columns
+    public class SaleItem
     {
+        public int Id { get; set; }
         public int SaleId { get; set; }
         public int InventoryItemId { get; set; }
         public int Quantity { get; set; }

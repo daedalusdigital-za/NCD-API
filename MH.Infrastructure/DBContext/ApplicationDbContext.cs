@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Reflection.Emit;
 using MH.Domain.DBModel;
 using MH.Domain.IEntity;
@@ -18,7 +19,7 @@ namespace MH.Infrastructure.DBContext
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public DbSet<ApplicationUser> Users { get; set; }
+        public new DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Permission> Permission { get; set; }
         public DbSet<Otp> Otp { get; set; }
         public DbSet<Trainer> Trainer { get; set; }

@@ -9,7 +9,6 @@ namespace MH.Domain.IRepository
         Task<IReadOnlyList<TrainingSession>> GetByDateRange(DateTime startDate, DateTime endDate);
         Task<IReadOnlyList<TrainingSession>> GetByTrainer(int trainerId);
         Task<IReadOnlyList<TrainingSession>> GetByStatus(TrainingStatus status);
-        Task<int> GetTotalParticipantsByTrainer(int trainerId);
         Task<int> GetCompletedSessionsByTrainer(int trainerId);
     }
 }

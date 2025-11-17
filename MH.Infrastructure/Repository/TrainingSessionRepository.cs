@@ -30,7 +30,7 @@ namespace MH.Infrastructure.Repository
             return await _context.TrainingSessions
                 .Include(x => x.Trainer)
                 .Include(x => x.CreatedByUser)
-                .Where(x => x.StartDate >= startDate && x.EndDate <= endDate && !x.IsDeleted)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -53,13 +53,6 @@ namespace MH.Infrastructure.Repository
                 .Where(x => x.Status == status && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
-        }
-
-        public async Task<int> GetTotalParticipantsByTrainer(int trainerId)
-        {
-            return await _context.TrainingSessions
-                .Where(x => x.TrainerId == trainerId && !x.IsDeleted)
-                .SumAsync(x => x.NumberOfParticipants);
         }
 
         public async Task<int> GetCompletedSessionsByTrainer(int trainerId)

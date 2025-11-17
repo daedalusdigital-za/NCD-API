@@ -118,7 +118,7 @@ namespace MH.Application.Service
                 TotalSessions = allSessions.Count,
                 CompletedSessions = allSessions.Count(x => x.Status == TrainingStatus.Completed),
                 InProgressSessions = allSessions.Count(x => x.Status == TrainingStatus.InProgress),
-                TotalParticipants = allSessions.Sum(x => x.NumberOfParticipants)
+                TotalParticipants = 0 // Field removed from TrainingSession
             };
 
             stats.CompletionRate = stats.TotalSessions > 0 ? 
@@ -126,13 +126,13 @@ namespace MH.Application.Service
 
             // Monthly stats for the last 12 months
             var monthlyStats = allSessions
-                .Where(x => x.StartDate >= DateTime.Now.AddMonths(-12))
-                .GroupBy(x => new { x.StartDate.Year, x.StartDate.Month })
+                .Where(x => x.Date >= DateTime.Now.AddMonths(-12))
+                .GroupBy(x => new { x.Date.Year, x.Date.Month })
                 .Select(g => new MonthlyTrainingStats
                 {
                     Month = $"{g.Key.Year}-{g.Key.Month:00}",
                     Sessions = g.Count(),
-                    Participants = g.Sum(x => x.NumberOfParticipants)
+                    Participants = 0 // Field removed from TrainingSession
                 })
                 .OrderBy(x => x.Month)
                 .ToList();
@@ -146,7 +146,7 @@ namespace MH.Application.Service
                 {
                     Province = g.Key,
                     Sessions = g.Count(),
-                    Participants = g.Sum(x => x.NumberOfParticipants),
+                    Participants = 0, // Field removed from TrainingSession
                     Trainers = g.Select(x => x.TrainerId).Distinct().Count()
                 })
                 .ToList();

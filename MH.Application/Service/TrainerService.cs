@@ -54,13 +54,10 @@ namespace MH.Application.Service
             trainer.Email = model.Email;
             trainer.Phone = model.Phone;
             trainer.ProvinceId = model.ProvinceId;
-            trainer.Qualification = model.Qualification;
-            trainer.Experience = model.Experience;
             trainer.Status = model.Status;
             trainer.Location = model.Location;
-            trainer.Bio = model.Bio;
 
-            _unitOfWork.TrainerRepository.Update(trainer);
+            await _unitOfWork.TrainerRepository.Update(trainer);
             await _unitOfWork.CommitAsync();
         }
 
@@ -70,7 +67,7 @@ namespace MH.Application.Service
             if (trainer == null)
                 throw new System.Exception($"Trainer with ID {id} not found");
 
-            _unitOfWork.TrainerRepository.Delete(trainer);
+            await _unitOfWork.TrainerRepository.Delete(trainer);
             await _unitOfWork.CommitAsync();
         }
     }

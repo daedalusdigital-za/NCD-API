@@ -13,6 +13,11 @@ namespace MH.Domain.Mapping
                 .ForMember(dest => dest.SaleItems, opt => opt.MapFrom(src => src.SaleItems));
                 
             CreateMap<Sale, SaleViewModel>()
+                .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.Province != null ? src.Province.Name : null))
+                .ForMember(dest => dest.Hospital, opt => opt.MapFrom(src => src.CustomerName))
+                .ForMember(dest => dest.CustomerContactName, opt => opt.MapFrom(src => src.CustomerName))
+                .ForMember(dest => dest.CustomerContactEmail, opt => opt.MapFrom(src => src.CustomerEmail))
+                .ForMember(dest => dest.CustomerContactPhone, opt => opt.MapFrom(src => src.CustomerPhone))
                 .ForMember(dest => dest.PaymentMethodText, opt => opt.MapFrom(src => src.PaymentMethod.ToString()))
                 .ForMember(dest => dest.PaymentStatusText, opt => opt.MapFrom(src => src.PaymentStatus.ToString()))
                 .ForMember(dest => dest.DeliveryStatusText, opt => opt.MapFrom(src => src.DeliveryStatus.ToString()))

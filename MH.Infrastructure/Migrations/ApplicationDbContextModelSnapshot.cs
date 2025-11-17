@@ -173,7 +173,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<int?>("DistrictId")
                         .HasColumnType("int");
@@ -185,7 +186,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -219,7 +221,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("Clinics");
+                    b.ToTable("Clinics", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.ContactDataType", b =>
@@ -338,96 +340,6 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("ContactType");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Delivery", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("DeliveryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeliveryNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DriverName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InstitutionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvoiceNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ItemDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ReceivedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RecipientName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RecipientSignature")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SaleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UpdateByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VehicleNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("SaleId");
-
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Deliveries");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.District", b =>
                 {
                     b.Property<int>("Id")
@@ -479,78 +391,6 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("Districts");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.FileEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AssociatedId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AssociatedType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("UpdateByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UploadedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.Hospital", b =>
                 {
                     b.Property<int>("Id")
@@ -579,7 +419,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<int?>("DistrictId")
                         .HasColumnType("int");
@@ -591,7 +432,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<int?>("Level")
                         .HasColumnType("int");
@@ -628,7 +470,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("Hospitals");
+                    b.ToTable("Hospitals", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.InventoryItem", b =>
@@ -649,7 +491,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -669,7 +512,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -721,7 +565,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("InventoryItems");
+                    b.ToTable("InventoryItems", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Issue", b =>
@@ -778,7 +622,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<double?>("Glucose")
                         .HasColumnType("float");
@@ -802,7 +647,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<DateTime?>("NextAppointmentDate")
                         .HasColumnType("datetime2");
@@ -1067,98 +913,6 @@ namespace MH.Infrastructure.Migrations
                     b.ToTable("Priority");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Height")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastRestocked")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("LeadTime")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("Length")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("MinimumOrderQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("SKU")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Supplier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UpdateByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Warranty")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Width")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Products");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.Province", b =>
                 {
                     b.Property<int>("Id")
@@ -1171,44 +925,27 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<int?>("HealthFacilities")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("Population")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("UpdateByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UpdatedBy")
+                    b.Property<int?>("Population")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Provinces");
+                    b.ToTable("Provinces", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Role", b =>
@@ -1250,30 +987,25 @@ namespace MH.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CreatedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatedBy");
+
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedByName")
+                    b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomerContactEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerContactName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerContactPhone")
+                    b.Property<string>("CustomerPhone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
 
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
@@ -1281,18 +1013,12 @@ namespace MH.Infrastructure.Migrations
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Hospital")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvoiceNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastUpdated");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -1303,18 +1029,14 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ProvinceId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SaleNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SalesPerson")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Subtotal")
@@ -1326,75 +1048,62 @@ namespace MH.Infrastructure.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("UpdateByUserId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("UpdatedBy");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("ProvinceId");
 
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Sales");
+                    b.ToTable("Sale", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.SaleItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<int>("InventoryItemId")
+                        .HasColumnType("int")
+                        .HasColumnName("InventoryItemId");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("InventoryItemId")
+                    b.Property<int?>("InventoryItemId1")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("bit")
+                        .HasColumnName("IsDeleted");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Quantity");
 
                     b.Property<int>("SaleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("SaleId");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("TotalPrice");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("UnitPrice");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InventoryItemId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("InventoryItemId1");
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("SaleItems");
+                    b.ToTable("SaleItem", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.TicketDetails", b =>
@@ -1504,53 +1213,33 @@ namespace MH.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Bio")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Experience")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Qualification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
+                    b.Property<int?>("ProvinceId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UpdateByUserId")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int?>("UpdatedBy")
@@ -1558,11 +1247,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("UpdateByUserId");
-
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainers", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.TrainingRegister", b =>
@@ -1648,7 +1333,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("TrainingRegisters");
+                    b.ToTable("TrainingRegister");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.TrainingSession", b =>
@@ -1665,46 +1350,23 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("CreatedByUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("Hospital")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Materials")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfParticipants")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Objectives")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdatedAt");
 
                     b.Property<string>("Province")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1742,7 +1404,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("TrainingSessions");
+                    b.ToTable("TrainingSessions", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.UserProfile", b =>
@@ -2044,29 +1706,6 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UserProfile");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Delivery", b =>
-                {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MH.Domain.DBModel.Sale", "Sale")
-                        .WithMany("Deliveries")
-                        .HasForeignKey("SaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("Sale");
-
-                    b.Navigation("UpdateByUser");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.District", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
@@ -2086,21 +1725,6 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("Province");
-
-                    b.Navigation("UpdateByUser");
-                });
-
-            modelBuilder.Entity("MH.Domain.DBModel.FileEntity", b =>
-                {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
 
                     b.Navigation("UpdateByUser");
                 });
@@ -2237,62 +1861,27 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("UpdateByUser");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Product", b =>
-                {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("UpdateByUser");
-                });
-
-            modelBuilder.Entity("MH.Domain.DBModel.Province", b =>
-                {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("UpdateByUser");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.Sale", b =>
                 {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
+                    b.HasOne("MH.Domain.DBModel.Province", "Province")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId");
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("UpdateByUser");
+                    b.Navigation("Province");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.SaleItem", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.InventoryItem", "InventoryItem")
-                        .WithMany("SaleItems")
-                        .HasForeignKey("InventoryItemId");
-
-                    b.HasOne("MH.Domain.DBModel.Product", "Product")
-                        .WithMany("SaleItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("InventoryItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("MH.Domain.DBModel.InventoryItem", null)
+                        .WithMany("SaleItems")
+                        .HasForeignKey("InventoryItemId1");
 
                     b.HasOne("MH.Domain.DBModel.Sale", "Sale")
                         .WithMany("SaleItems")
@@ -2301,8 +1890,6 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("InventoryItem");
-
-                    b.Navigation("Product");
 
                     b.Navigation("Sale");
                 });
@@ -2357,21 +1944,6 @@ namespace MH.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Trainer", b =>
-                {
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("MH.Domain.DBModel.ApplicationUser", "UpdateByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateByUserId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("UpdateByUser");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.TrainingRegister", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.ApplicationUser", "CreatedByUser")
@@ -2406,7 +1978,7 @@ namespace MH.Infrastructure.Migrations
                         .HasForeignKey("CreatedByUserId");
 
                     b.HasOne("MH.Domain.DBModel.Trainer", "Trainer")
-                        .WithMany("TrainingSessions")
+                        .WithMany()
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2605,11 +2177,6 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MH.Domain.DBModel.Product", b =>
-                {
-                    b.Navigation("SaleItems");
-                });
-
             modelBuilder.Entity("MH.Domain.DBModel.Province", b =>
                 {
                     b.Navigation("Clinics");
@@ -2626,8 +2193,6 @@ namespace MH.Infrastructure.Migrations
 
             modelBuilder.Entity("MH.Domain.DBModel.Sale", b =>
                 {
-                    b.Navigation("Deliveries");
-
                     b.Navigation("SaleItems");
                 });
 
@@ -2635,11 +2200,6 @@ namespace MH.Infrastructure.Migrations
                 {
                     b.Navigation("TicketDetails")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MH.Domain.DBModel.Trainer", b =>
-                {
-                    b.Navigation("TrainingSessions");
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.TrainingSession", b =>

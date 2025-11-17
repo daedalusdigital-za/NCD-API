@@ -41,8 +41,7 @@ namespace MH.Application.Service
                 foreach (var item in entity.SaleItems)
                 {
                     item.TotalPrice = item.Quantity * item.UnitPrice;
-                    item.DateCreated = DateTime.Now;
-                    item.CreatedBy = _currentUser.User.Id;
+                    // Note: SaleItem table doesn't have audit columns, so don't set them
                 }
             }
 
@@ -86,7 +85,8 @@ namespace MH.Application.Service
         {
             var entity = await _saleRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
-                x => x.SaleItems);
+                x => x.SaleItems,
+                x => x.Province);
             
             if (entity == null) return null;
 
@@ -100,9 +100,11 @@ namespace MH.Application.Service
 
         public async Task<List<SaleViewModel>> GetAll()
         {
+            // Get sales WITHOUT SaleItems to avoid EF Core shadow property issues
             var entities = await _saleRepository.GetAll(
                 x => !x.IsDeleted,
-                x => x.SaleItems);
+                // x => x.SaleItems,  // Removed - SaleItem has schema mismatch with BaseModel
+                x => x.Province);
 
             var viewModels = _mapper.Map<List<SaleViewModel>>(entities);
             

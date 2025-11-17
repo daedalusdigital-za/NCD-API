@@ -210,21 +210,13 @@ BEGIN
     CREATE TABLE [dbo].[TrainingSessions] (
         [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
         [TrainingName] NVARCHAR(255) NOT NULL,
-        [TrainingType] NVARCHAR(255) NOT NULL,
-        [Description] NVARCHAR(MAX) NULL,
-        [StartDate] DATETIME NOT NULL,
-        [EndDate] DATETIME NOT NULL,
-        [StartTime] TIME NOT NULL,
-        [EndTime] TIME NOT NULL,
+        [TrainingType] NVARCHAR(255) NOT NULL, -- NDC Training workshop, Virtual training
+        [Date] DATETIME NOT NULL,
         [Province] NVARCHAR(255) NOT NULL,
-        [Hospital] NVARCHAR(255) NOT NULL,
         [Venue] NVARCHAR(255) NOT NULL,
         [TrainerId] INT NOT NULL,
-        [NumberOfParticipants] INT NOT NULL DEFAULT 0,
         [TargetAudience] NVARCHAR(MAX) NOT NULL,
-        [Objectives] NVARCHAR(MAX) NULL,
-        [Materials] NVARCHAR(MAX) NULL,
-        [Status] INT NOT NULL DEFAULT 0,
+        [Status] INT NOT NULL DEFAULT 1,
         [IsDeleted] BIT NOT NULL DEFAULT 0,
         [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
         [UpdatedAt] DATETIME NULL,
@@ -234,7 +226,7 @@ BEGIN
             REFERENCES [dbo].[Trainers]([Id])
     );
     CREATE INDEX [IX_TrainingSessions_TrainerId] ON [dbo].[TrainingSessions] ([TrainerId]);
-    CREATE INDEX [IX_TrainingSessions_StartDate] ON [dbo].[TrainingSessions] ([StartDate]);
+    CREATE INDEX [IX_TrainingSessions_Date] ON [dbo].[TrainingSessions] ([Date]);
     PRINT 'TrainingSessions table created';
 END
 GO
