@@ -30,19 +30,15 @@ namespace MH.Application.Service
             entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
             
-            // Calculate totals
-            entity.Subtotal = entity.SaleItems?.Sum(x => x.TotalPrice) ?? 0;
-            entity.TaxAmount = entity.Subtotal * 0.15m; // 15% VAT
-            entity.Total = entity.Subtotal + entity.TaxAmount - entity.Discount;
-            
-            // Set each sale item's calculated total
+            // Calculate totals from sale items
             if (entity.SaleItems != null)
             {
                 foreach (var item in entity.SaleItems)
                 {
                     item.TotalPrice = item.Quantity * item.UnitPrice;
-                    // Note: SaleItem table doesn't have audit columns, so don't set them
                 }
+                entity.Subtotal = entity.SaleItems.Sum(x => x.TotalPrice);
+                entity.Total = entity.Subtotal;
             }
 
             await _saleRepository.Insert(entity);
@@ -62,9 +58,15 @@ namespace MH.Application.Service
             existingEntity.LastUpdated = DateTime.Now;
             
             // Recalculate totals
-            existingEntity.Subtotal = existingEntity.SaleItems.Sum(x => x.TotalPrice);
-            existingEntity.TaxAmount = existingEntity.Subtotal * 0.15m;
-            existingEntity.Total = existingEntity.Subtotal + existingEntity.TaxAmount - existingEntity.Discount;
+            if (existingEntity.SaleItems != null)
+            {
+                foreach (var item in existingEntity.SaleItems)
+                {
+                    item.TotalPrice = item.Quantity * item.UnitPrice;
+                }
+                existingEntity.Subtotal = existingEntity.SaleItems.Sum(x => x.TotalPrice);
+                existingEntity.Total = existingEntity.Subtotal;
+            }
 
             await _saleRepository.Update(existingEntity);
         }
@@ -90,69 +92,17 @@ namespace MH.Application.Service
             
             if (entity == null) return null;
 
-            var viewModel = _mapper.Map<SaleViewModel>(entity);
-            viewModel.PaymentMethodText = GetPaymentMethodText(entity.PaymentMethod);
-            viewModel.PaymentStatusText = GetPaymentStatusText(entity.PaymentStatus);
-            viewModel.DeliveryStatusText = GetDeliveryStatusText(entity.DeliveryStatus);
-            
-            return viewModel;
+            return _mapper.Map<SaleViewModel>(entity);
         }
 
         public async Task<List<SaleViewModel>> GetAll()
         {
-            // Get sales WITHOUT SaleItems to avoid EF Core shadow property issues
             var entities = await _saleRepository.GetAll(
                 x => !x.IsDeleted,
-                // x => x.SaleItems,  // Removed - SaleItem has schema mismatch with BaseModel
+                x => x.SaleItems,
                 x => x.Province);
 
-            var viewModels = _mapper.Map<List<SaleViewModel>>(entities);
-            
-            // Enhance with text representations
-            foreach (var vm in viewModels)
-            {
-                vm.PaymentMethodText = GetPaymentMethodText((int)vm.PaymentMethod);
-                vm.PaymentStatusText = GetPaymentStatusText((int)vm.PaymentStatus);
-                vm.DeliveryStatusText = GetDeliveryStatusText((int)vm.DeliveryStatus);
-            }
-
-            return viewModels;
-        }
-
-        private string GetPaymentMethodText(int paymentMethod)
-        {
-            return paymentMethod switch
-            {
-                1 => "Cash",
-                2 => "Credit Card",
-                3 => "Bank Transfer",
-                4 => "Government Contract",
-                _ => "Unknown"
-            };
-        }
-
-        private string GetPaymentStatusText(int paymentStatus)
-        {
-            return paymentStatus switch
-            {
-                0 => "Pending",
-                1 => "Paid",
-                2 => "Overdue",
-                3 => "Cancelled",
-                _ => "Unknown"
-            };
-        }
-
-        private string GetDeliveryStatusText(int deliveryStatus)
-        {
-            return deliveryStatus switch
-            {
-                0 => "Pending",
-                1 => "Delivered",
-                2 => "In Transit",
-                3 => "Cancelled",
-                _ => "Unknown"
-            };
+            return _mapper.Map<List<SaleViewModel>>(entities);
         }
 
         public async Task<List<SaleViewModel>> GetByDateRange(DateTime startDate, DateTime endDate)
@@ -161,9 +111,9 @@ namespace MH.Application.Service
             return _mapper.Map<List<SaleViewModel>>(entities);
         }
 
-        public async Task<List<SaleViewModel>> GetByProvince(string province)
+        public async Task<List<SaleViewModel>> GetByProvince(int? provinceId)
         {
-            var entities = await _saleRepository.GetByProvince(province);
+            var entities = await _saleRepository.GetByProvince(provinceId);
             return _mapper.Map<List<SaleViewModel>>(entities);
         }
 

@@ -13,7 +13,7 @@ namespace MH.Application.IService
         Task<SaleViewModel?> GetById(int id);
         Task<List<SaleViewModel>> GetAll();
         Task<List<SaleViewModel>> GetByDateRange(DateTime startDate, DateTime endDate);
-        Task<List<SaleViewModel>> GetByProvince(string province);
+        Task<List<SaleViewModel>> GetByProvince(int? provinceId);
         Task<SalesStatsModel> GetSalesStats();
         Task<List<ProvincialSalesData>> GetProvincialSalesData();
         Task<List<TopProductModel>> GetTopProducts(int limit = 10);

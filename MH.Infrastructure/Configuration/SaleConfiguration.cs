@@ -8,7 +8,7 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Sale> builder)
         {
-            builder.ToTable("Sale");
+            builder.ToTable("Sales");
             
             // Explicitly ignore any user navigation properties that EF might try to infer
             builder.Ignore("CreatedByUser");

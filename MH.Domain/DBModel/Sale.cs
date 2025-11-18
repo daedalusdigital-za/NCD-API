@@ -15,16 +15,10 @@ namespace MH.Domain.DBModel
         // Map to database columns
         public int CustomerId { get; set; }
         public string CustomerName { get; set; } = null!;
-        public string? CustomerEmail { get; set; }
         public string? CustomerPhone { get; set; }
         
         public decimal Subtotal { get; set; }
-        public decimal TaxAmount { get; set; }
-        public decimal Discount { get; set; }
         public decimal Total { get; set; }
-        public int PaymentMethod { get; set; }
-        public int PaymentStatus { get; set; }
-        public int DeliveryStatus { get; set; }
         public string? Notes { get; set; }
         public bool IsDeleted { get; set; }
         

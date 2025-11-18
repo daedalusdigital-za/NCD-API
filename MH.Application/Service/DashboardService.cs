@@ -69,8 +69,7 @@ namespace MH.Application.Service
                 TotalParticipants = trainingStats.TotalParticipants,
                 CompletionRate = trainingStats.CompletionRate,
                 TotalSales = salesStats.TotalSales,
-                TotalRevenue = salesStats.TotalRevenue,
-                TotalDeliveries = salesStats.CompletedOrders
+                TotalRevenue = salesStats.TotalRevenue
             };
         }
 
