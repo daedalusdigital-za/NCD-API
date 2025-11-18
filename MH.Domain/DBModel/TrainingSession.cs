@@ -1,9 +1,14 @@
 using MH.Domain.Model;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MH.Domain.DBModel
 {
     public class TrainingSession : BaseModel<int>
     {
+        // Map DateCreated property to CreatedDate column in database
+        [Column("CreatedDate")]
+        public new DateTime DateCreated { get; set; }
+        
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!; // NDC Training workshop, Virtual training
         public DateTime TrainingDate { get; set; }
