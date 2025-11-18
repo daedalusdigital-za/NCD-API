@@ -11,7 +11,7 @@ namespace MH.Domain.Mapping
         {
             CreateMap<TrainingSessionModel, TrainingSession>();
             CreateMap<TrainingSession, TrainingSessionViewModel>()
-                .ForMember(dest => dest.TrainerName, opt => opt.MapFrom(src => src.Trainer != null ? src.Trainer.Name : string.Empty))
+                .ForMember(dest => dest.Trainer, opt => opt.MapFrom(src => src.Trainer))
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.CreatedByUserName, opt => opt.MapFrom(src => 
                     src.CreatedByUser != null && src.CreatedByUser.UserProfile != null ? 

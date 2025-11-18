@@ -69,7 +69,7 @@ namespace MH.Application.Service
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<TrainingSessionViewModel>(entity);
-            viewModel.TrainerName = entity.Trainer?.Name;
+            viewModel.Trainer = entity.Trainer;
             viewModel.ProvinceName = entity.Province?.Name;
             viewModel.StatusText = entity.Status.ToString();
             viewModel.CreatedByUserName = entity.CreatedByUser?.UserProfile?.FirstName + " " + entity.CreatedByUser?.UserProfile?.LastName;

@@ -16,7 +16,7 @@ namespace MH.Domain.ViewModel
         public string? ProvinceName { get; set; }
         public string Venue { get; set; } = null!;
         public int TrainerId { get; set; }
-        public string? TrainerName { get; set; }
+        public Trainer? Trainer { get; set; }
         public string TargetAudience { get; set; } = null!;
         public TrainingStatus Status { get; set; }
         public string? StatusText { get; set; }
