@@ -1,9 +1,14 @@
 using MH.Domain.Model;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MH.Domain.DBModel
 {
     public class Sale : BaseModel<int>
     {
+        // Map DateCreated property to CreatedDate column in database
+        [Column("CreatedDate")]
+        public new DateTime DateCreated { get; set; }
+        
         public string SaleNumber { get; set; } = null!;
         public DateTime SaleDate { get; set; }
         
