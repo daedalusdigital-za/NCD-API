@@ -70,6 +70,20 @@ namespace MH.Infrastructure.DBContext
                     .IsRequired();
             });
 
+            // Configure TrainingSession navigation properties to use correct FK columns
+            builder.Entity<TrainingSession>(b =>
+            {
+                b.HasOne(e => e.CreatedByUser)
+                    .WithMany()
+                    .HasForeignKey(e => e.CreatedBy)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                b.HasOne(e => e.UpdateByUser)
+                    .WithMany()
+                    .HasForeignKey(e => e.UpdatedBy)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
