@@ -5,9 +5,12 @@ namespace MH.Domain.DBModel
 {
     public class TrainingSession : BaseModel<int>
     {
-        // Map DateCreated property to CreatedDate column in database
-        [Column("CreatedDate")]
+        // Override audit fields to match database column names
+        [Column("CreatedAt")]
         public new DateTime DateCreated { get; set; }
+        
+        [Column("UpdatedAt")]
+        public new DateTime? LastUpdated { get; set; }
         
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!; // NDC Training workshop, Virtual training
