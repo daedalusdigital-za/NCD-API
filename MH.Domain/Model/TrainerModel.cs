@@ -7,7 +7,7 @@ namespace MH.Domain.Model
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public int? ProvinceId { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; } = "Active";
         public string? Location { get; set; }
     }
 }

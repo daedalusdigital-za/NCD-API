@@ -15,12 +15,13 @@ namespace MH.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IReadOnlyList<TrainingSession>> GetByProvince(string province)
+        public async Task<IReadOnlyList<TrainingSession>> GetByProvince(int provinceId)
         {
             return await _context.TrainingSessions
                 .Include(x => x.Trainer)
+                .Include(x => x.Province)
                 .Include(x => x.CreatedByUser)
-                .Where(x => x.Province == province && !x.IsDeleted)
+                .Where(x => x.ProvinceId == provinceId && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -30,7 +31,7 @@ namespace MH.Infrastructure.Repository
             return await _context.TrainingSessions
                 .Include(x => x.Trainer)
                 .Include(x => x.CreatedByUser)
-                .Where(x => x.Date >= startDate && x.Date <= endDate && !x.IsDeleted)
+                .Where(x => x.TrainingDate >= startDate && x.TrainingDate <= endDate && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }

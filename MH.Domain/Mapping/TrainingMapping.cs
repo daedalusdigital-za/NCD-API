@@ -18,8 +18,7 @@ namespace MH.Domain.Mapping
                     src.CreatedByUser.UserProfile.FirstName + " " + src.CreatedByUser.UserProfile.LastName : string.Empty));
 
             CreateMap<TrainerModel, Trainer>();
-            CreateMap<Trainer, TrainerViewModel>()
-                .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));
+            CreateMap<Trainer, TrainerViewModel>();
 
             CreateMap<TrainingRegister, TrainingRegisterViewModel>()
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));

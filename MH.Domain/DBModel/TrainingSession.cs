@@ -6,8 +6,8 @@ namespace MH.Domain.DBModel
     {
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!; // NDC Training workshop, Virtual training
-        public DateTime Date { get; set; }
-        public string Province { get; set; } = null!;
+        public DateTime TrainingDate { get; set; }
+        public int ProvinceId { get; set; }
         public string Venue { get; set; } = null!;
         public int TrainerId { get; set; }
         public string TargetAudience { get; set; } = null!;
@@ -15,6 +15,7 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
 
         // Navigation properties
+        public virtual Province? Province { get; set; }
         public virtual Trainer? Trainer { get; set; }
         public virtual ICollection<TrainingRegister> TrainingRegisters { get; set; } = new List<TrainingRegister>();
         public virtual ApplicationUser? CreatedByUser { get; set; }

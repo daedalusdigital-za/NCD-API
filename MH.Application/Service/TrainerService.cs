@@ -22,7 +22,7 @@ namespace MH.Application.Service
 
         public async Task<TrainerViewModel?> GetById(int id)
         {
-            var trainer = await _unitOfWork.TrainerRepository.FindBy(x => x.Id == id && x.Status == 1);
+            var trainer = await _unitOfWork.TrainerRepository.FindBy(x => x.Id == id && x.Status == "Active");
             if (trainer == null)
                 return null;
 
@@ -31,14 +31,14 @@ namespace MH.Application.Service
 
         public async Task<List<TrainerViewModel>> GetAll()
         {
-            var trainers = await _unitOfWork.TrainerRepository.GetAll(x => x.Status == 1);
+            var trainers = await _unitOfWork.TrainerRepository.GetAll(x => x.Status == "Active");
             return _mapper.Map<List<TrainerViewModel>>(trainers);
         }
 
         public async Task Add(TrainerModel model)
         {
             var trainer = _mapper.Map<Trainer>(model);
-            trainer.Status = 1;
+            trainer.Status = "Active";
 
             await _unitOfWork.TrainerRepository.Insert(trainer);
             await _unitOfWork.CommitAsync();

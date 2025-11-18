@@ -1239,8 +1239,9 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("ProvinceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
@@ -1350,9 +1351,6 @@ namespace MH.Infrastructure.Migrations
                     b.Property<int?>("CreatedByUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime")
                         .HasColumnName("CreatedAt");
@@ -1364,9 +1362,8 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("UpdatedAt");
 
-                    b.Property<string>("Province")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProvinceId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1377,6 +1374,9 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TrainingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TrainingName")
                         .IsRequired()
@@ -1400,11 +1400,13 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
+                    b.HasIndex("ProvinceId");
+
                     b.HasIndex("TrainerId");
 
                     b.HasIndex("UpdateByUserId");
 
-                    b.ToTable("TrainingSessions", (string)null);
+                    b.ToTable("TrainingSession", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.UserProfile", b =>
@@ -1977,6 +1979,12 @@ namespace MH.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedByUserId");
 
+                    b.HasOne("MH.Domain.DBModel.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MH.Domain.DBModel.Trainer", "Trainer")
                         .WithMany()
                         .HasForeignKey("TrainerId")
@@ -1988,6 +1996,8 @@ namespace MH.Infrastructure.Migrations
                         .HasForeignKey("UpdateByUserId");
 
                     b.Navigation("CreatedByUser");
+
+                    b.Navigation("Province");
 
                     b.Navigation("Trainer");
 

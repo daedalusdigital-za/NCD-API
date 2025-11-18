@@ -64,12 +64,13 @@ namespace MH.Application.Service
         {
             var entity = await _trainingSessionRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
-                x => x.Trainer, x => x.CreatedByUser);
+                x => x.Trainer, x => x.Province, x => x.CreatedByUser);
             
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<TrainingSessionViewModel>(entity);
             viewModel.TrainerName = entity.Trainer?.Name;
+            viewModel.ProvinceName = entity.Province?.Name;
             viewModel.StatusText = entity.Status.ToString();
             viewModel.CreatedByUserName = entity.CreatedByUser?.UserProfile?.FirstName + " " + entity.CreatedByUser?.UserProfile?.LastName;
             
@@ -80,14 +81,14 @@ namespace MH.Application.Service
         {
             var entities = await _trainingSessionRepository.GetAll(
                 x => !x.IsDeleted,
-                x => x.Trainer, x => x.CreatedByUser);
+                x => x.Trainer, x => x.Province, x => x.CreatedByUser);
 
             return _mapper.Map<List<TrainingSessionViewModel>>(entities);
         }
 
-        public async Task<List<TrainingSessionViewModel>> GetByProvince(string province)
+        public async Task<List<TrainingSessionViewModel>> GetByProvince(int provinceId)
         {
-            var entities = await _trainingSessionRepository.GetByProvince(province);
+            var entities = await _trainingSessionRepository.GetByProvince(provinceId);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
@@ -111,7 +112,7 @@ namespace MH.Application.Service
 
         public async Task<TrainingStatsModel> GetTrainingStats()
         {
-            var allSessions = await _trainingSessionRepository.GetAll(x => !x.IsDeleted);
+            var allSessions = await _trainingSessionRepository.GetAll(x => !x.IsDeleted, x => x.Province);
             
             var stats = new TrainingStatsModel
             {
@@ -126,8 +127,8 @@ namespace MH.Application.Service
 
             // Monthly stats for the last 12 months
             var monthlyStats = allSessions
-                .Where(x => x.Date >= DateTime.Now.AddMonths(-12))
-                .GroupBy(x => new { x.Date.Year, x.Date.Month })
+                .Where(x => x.TrainingDate >= DateTime.Now.AddMonths(-12))
+                .GroupBy(x => new { x.TrainingDate.Year, x.TrainingDate.Month })
                 .Select(g => new MonthlyTrainingStats
                 {
                     Month = $"{g.Key.Year}-{g.Key.Month:00}",
@@ -141,10 +142,10 @@ namespace MH.Application.Service
 
             // Province stats
             var provinceStats = allSessions
-                .GroupBy(x => x.Province)
+                .GroupBy(x => x.Province?.Name)
                 .Select(g => new ProvinceTrainingStats
                 {
-                    Province = g.Key,
+                    Province = g.Key ?? "Unknown",
                     Sessions = g.Count(),
                     Participants = 0, // Field removed from TrainingSession
                     Trainers = g.Select(x => x.TrainerId).Distinct().Count()

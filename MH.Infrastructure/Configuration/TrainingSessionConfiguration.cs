@@ -8,7 +8,7 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TrainingSession> builder)
         {
-            builder.ToTable("TrainingSessions");
+            builder.ToTable("TrainingSession"); // Use singular name to match existing table
             builder.ConfigureBaseModel<TrainingSession, int>();
         }
     }

@@ -9,7 +9,7 @@ namespace MH.Domain.DBModel
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public int? ProvinceId { get; set; }
-        public int Status { get; set; } // 1 = Active, 0 = Inactive
+        public string Status { get; set; } = "Active"; // Valid values: 'Active', 'Inactive', 'On Leave'
         public string? Location { get; set; }
     }
 }
