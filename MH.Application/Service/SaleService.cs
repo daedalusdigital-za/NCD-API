@@ -111,9 +111,9 @@ namespace MH.Application.Service
             return _mapper.Map<List<SaleViewModel>>(entities);
         }
 
-        public async Task<List<SaleViewModel>> GetByProvince(int? provinceId)
+        public async Task<List<SaleViewModel>> GetByProvince(string province)
         {
-            var entities = await _saleRepository.GetByProvince(provinceId);
+            var entities = await _saleRepository.GetByProvince(province);
             return _mapper.Map<List<SaleViewModel>>(entities);
         }
 

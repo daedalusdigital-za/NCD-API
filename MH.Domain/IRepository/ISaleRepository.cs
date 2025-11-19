@@ -6,7 +6,9 @@ namespace MH.Domain.IRepository
     public interface ISaleRepository : IRepository<Sale, int>
     {
         Task<IReadOnlyList<Sale>> GetByDateRange(DateTime startDate, DateTime endDate);
-        Task<IReadOnlyList<Sale>> GetByProvince(int? provinceId);
+        Task<IReadOnlyList<Sale>> GetByProvince(string province);
+        Task<IReadOnlyList<Sale>> GetByPaymentStatus(PaymentStatus status);
+        Task<IReadOnlyList<Sale>> GetByDeliveryStatus(DeliveryStatus status);
         Task<Sale?> GetBySaleNumber(string saleNumber);
         Task<bool> IsSaleNumberExists(string saleNumber, int? excludeId = null);
         Task<SalesStatsModel> GetSalesStats();
@@ -22,6 +24,8 @@ namespace MH.Domain.IRepository
         public decimal MonthlyRevenue { get; set; }
         public decimal TotalRevenue { get; set; }
         public decimal AverageOrderValue { get; set; }
+        public int PendingOrders { get; set; }
+        public int CompletedOrders { get; set; }
     }
 
     public class ProvincialSalesData

@@ -131,11 +131,11 @@ namespace MH.Api.Controllers
         [HttpGet]
         [Route("GetByProvince")]
         [SwaggerResponse(StatusCodes.Status200OK, "Sales by province", typeof(List<SaleViewModel>))]
-        public async Task<ActionResult> GetByProvince([FromQuery] int? provinceId)
+        public async Task<ActionResult> GetByProvince([FromQuery] string province)
         {
             try
             {
-                var result = await _saleService.GetByProvince(provinceId);
+                var result = await _saleService.GetByProvince(province);
                 return Ok(result);
             }
             catch (Exception ex)

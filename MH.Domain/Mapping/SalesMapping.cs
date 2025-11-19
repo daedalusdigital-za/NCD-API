@@ -20,7 +20,7 @@ namespace MH.Domain.Mapping
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.UnitPrice));
                 
             CreateMap<SaleItem, SaleItemViewModel>()
-                .ForMember(dest => dest.InventoryItemName, opt => opt.MapFrom(src => src.InventoryItem != null ? src.InventoryItem.Description : null));
+                .ForMember(dest => dest.InventoryItemName, opt => opt.MapFrom(src => src.InventoryItem != null ? src.InventoryItem.Name : null));
         }
     }
 }

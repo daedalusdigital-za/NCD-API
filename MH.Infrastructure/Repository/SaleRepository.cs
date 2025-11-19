@@ -24,11 +24,26 @@ namespace MH.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IReadOnlyList<Sale>> GetByProvince(int? provinceId)
+        public async Task<IReadOnlyList<Sale>> GetByProvince(string province)
+        {
+            // Province field removed from Sale entity - returning empty list
+            return new List<Sale>();
+        }
+
+        public async Task<IReadOnlyList<Sale>> GetByPaymentStatus(PaymentStatus status)
         {
             return await _context.Sales
                 .Include(x => x.SaleItems)
-                .Where(x => x.ProvinceId == provinceId && !x.IsDeleted)
+                .Where(x => (int)x.PaymentStatus == (int)status && !x.IsDeleted)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<Sale>> GetByDeliveryStatus(DeliveryStatus status)
+        {
+            return await _context.Sales
+                .Include(x => x.SaleItems)
+                .Where(x => (int)x.DeliveryStatus == (int)status && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -71,7 +86,9 @@ namespace MH.Infrastructure.Repository
                 TotalSales = allSales.Count,
                 MonthlyRevenue = monthlyRevenue,
                 TotalRevenue = allSales.Sum(x => x.Total),
-                AverageOrderValue = allSales.Count > 0 ? allSales.Average(x => x.Total) : 0
+                AverageOrderValue = allSales.Count > 0 ? allSales.Average(x => x.Total) : 0,
+                PendingOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
+                CompletedOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
             };
         }
 
@@ -86,7 +103,9 @@ namespace MH.Infrastructure.Repository
                 TotalSales = sales.Count,
                 MonthlyRevenue = sales.Sum(x => x.Total),
                 TotalRevenue = sales.Sum(x => x.Total),
-                AverageOrderValue = sales.Count > 0 ? sales.Average(x => x.Total) : 0
+                AverageOrderValue = sales.Count > 0 ? sales.Average(x => x.Total) : 0,
+                PendingOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
+                CompletedOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
             };
         }
 
