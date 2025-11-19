@@ -21,12 +21,9 @@ namespace MH.Infrastructure.DBContext
 
         public new DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Permission> Permission { get; set; }
-        public DbSet<Otp> Otp { get; set; }
         public DbSet<Trainer> Trainer { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
-        public DbSet<District> Districts { get; set; }
-        public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SaleItems { get; set; }

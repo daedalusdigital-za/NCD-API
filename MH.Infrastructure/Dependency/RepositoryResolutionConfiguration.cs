@@ -10,13 +10,7 @@ namespace MH.Infrastructure.Dependency
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             #region Repositories
-            services.AddScoped<IIssueRepository, IssueRepository>();
-            services.AddScoped<ITicketDetailsRepository, TicketDetailsRepository>();
             services.AddScoped<IPriorityRepository, PriorityRepository>();
-            services.AddScoped<ITicketStatusRepository, TicketStatusRepository>();
-            services.AddScoped<IOtpRepository, OtpRepository>();
-            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IContactDetailsRepository, ContactDetailsRepository>();
             services.AddScoped<IPositionRepository, PositionRepository>();
@@ -33,8 +27,6 @@ namespace MH.Infrastructure.Dependency
             services.AddScoped<ISaleRepository, SaleRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IRepository<Province, int>, Repository<Province, int>>();
-            services.AddScoped<IRepository<District, int>, Repository<District, int>>();
-            services.AddScoped<IRepository<Hospital, int>, Repository<Hospital, int>>();
             services.AddScoped<IRepository<Clinic, int>, Repository<Clinic, int>>();
             #endregion
             return services;

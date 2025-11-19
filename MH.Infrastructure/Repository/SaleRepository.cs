@@ -32,20 +32,14 @@ namespace MH.Infrastructure.Repository
 
         public async Task<IReadOnlyList<Sale>> GetByPaymentStatus(PaymentStatus status)
         {
-            return await _context.Sales
-                .Include(x => x.SaleItems)
-                .Where(x => (int)x.PaymentStatus == (int)status && !x.IsDeleted)
-                .AsNoTracking()
-                .ToListAsync();
+            // PaymentStatus field removed from Sale entity - returning empty list
+            return new List<Sale>();
         }
 
         public async Task<IReadOnlyList<Sale>> GetByDeliveryStatus(DeliveryStatus status)
         {
-            return await _context.Sales
-                .Include(x => x.SaleItems)
-                .Where(x => (int)x.DeliveryStatus == (int)status && !x.IsDeleted)
-                .AsNoTracking()
-                .ToListAsync();
+            // DeliveryStatus field removed from Sale entity - returning empty list
+            return new List<Sale>();
         }
 
         public async Task<Sale?> GetBySaleNumber(string saleNumber)
@@ -87,8 +81,8 @@ namespace MH.Infrastructure.Repository
                 MonthlyRevenue = monthlyRevenue,
                 TotalRevenue = allSales.Sum(x => x.Total),
                 AverageOrderValue = allSales.Count > 0 ? allSales.Average(x => x.Total) : 0,
-                PendingOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
-                CompletedOrders = allSales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
+                PendingOrders = 0, // PaymentStatus field removed
+                CompletedOrders = allSales.Count // All sales considered completed
             };
         }
 
@@ -104,8 +98,8 @@ namespace MH.Infrastructure.Repository
                 MonthlyRevenue = sales.Sum(x => x.Total),
                 TotalRevenue = sales.Sum(x => x.Total),
                 AverageOrderValue = sales.Count > 0 ? sales.Average(x => x.Total) : 0,
-                PendingOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Pending),
-                CompletedOrders = sales.Count(x => (int)x.PaymentStatus == (int)PaymentStatus.Paid)
+                PendingOrders = 0, // PaymentStatus field removed
+                CompletedOrders = sales.Count // All sales considered completed
             };
         }
 

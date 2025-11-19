@@ -24,44 +24,10 @@ namespace MH.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<IReadOnlyList<District>> GetDistrictsByProvince(string province)
-        {
-            return await _context.Districts
-                .Include(x => x.Province)
-                .Where(x => x.Province!.Name == province && !x.IsDeleted)
-                .OrderBy(x => x.Name)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<Hospital>> GetAllHospitals()
-        {
-            return await _context.Hospitals
-                .Include(x => x.Province)
-                .Include(x => x.District)
-                .Where(x => !x.IsDeleted)
-                .OrderBy(x => x.Province!.Name)
-                .ThenBy(x => x.Name)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<Hospital>> GetHospitalsByProvince(string province)
-        {
-            return await _context.Hospitals
-                .Include(x => x.Province)
-                .Include(x => x.District)
-                .Where(x => x.Province!.Name == province && !x.IsDeleted)
-                .OrderBy(x => x.Name)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
         public async Task<IReadOnlyList<Clinic>> GetAllClinics()
         {
             return await _context.Clinics
                 .Include(x => x.Province)
-                .Include(x => x.District)
                 .Where(x => !x.IsDeleted)
                 .OrderBy(x => x.Province!.Name)
                 .ThenBy(x => x.Name)
@@ -73,7 +39,6 @@ namespace MH.Infrastructure.Repository
         {
             return await _context.Clinics
                 .Include(x => x.Province)
-                .Include(x => x.District)
                 .Where(x => x.Province!.Name == province && !x.IsDeleted)
                 .OrderBy(x => x.Name)
                 .AsNoTracking()

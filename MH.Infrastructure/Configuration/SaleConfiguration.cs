@@ -8,7 +8,7 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Sale> builder)
         {
-            builder.ToTable("Sales");
+            builder.ToTable("Sale");  // Table name is "Sale" not "Sales"
             
             // Explicitly ignore any user navigation properties that EF might try to infer
             builder.Ignore("CreatedByUser");
@@ -24,33 +24,16 @@ namespace MH.Infrastructure.Configuration
             builder.Property(t => t.IsDeleted).IsRequired();
             
             // BaseModel audit properties - map to exact database column names
-            // CRITICAL: Tell EF Core these are plain int columns, NOT foreign keys
             builder.Property(t => t.DateCreated)
                    .HasColumnName("CreatedDate")
                    .HasColumnType("datetime2")
                    .IsRequired();
-            
-            builder.Property(t => t.LastUpdated)
-                   .HasColumnName("LastUpdated")
-                   .HasColumnType("datetime2");
             
             builder.Property(t => t.CreatedBy)
                    .HasColumnName("CreatedBy")
                    .HasColumnType("int")
                    .ValueGeneratedNever()  // This is NOT an auto-generated FK
                    .IsRequired();
-            
-            builder.Property(t => t.UpdatedBy)
-                   .HasColumnName("UpdatedBy")
-                   .HasColumnType("int")
-                   .ValueGeneratedNever();  // This is NOT an auto-generated FK
-            
-            // Province relationship
-            builder.HasOne(s => s.Province)
-                   .WithMany()
-                   .HasForeignKey(s => s.ProvinceId)
-                   .OnDelete(DeleteBehavior.Restrict)
-                   .IsRequired(false);
                    
             // SaleItems relationship
             builder.HasMany(s => s.SaleItems)

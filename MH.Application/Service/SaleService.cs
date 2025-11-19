@@ -37,8 +37,7 @@ namespace MH.Application.Service
                 {
                     item.TotalPrice = item.Quantity * item.UnitPrice;
                 }
-                entity.Subtotal = entity.SaleItems.Sum(x => x.TotalPrice);
-                entity.Total = entity.Subtotal;
+                entity.Total = entity.SaleItems.Sum(x => x.TotalPrice);
             }
 
             await _saleRepository.Insert(entity);
@@ -64,8 +63,7 @@ namespace MH.Application.Service
                 {
                     item.TotalPrice = item.Quantity * item.UnitPrice;
                 }
-                existingEntity.Subtotal = existingEntity.SaleItems.Sum(x => x.TotalPrice);
-                existingEntity.Total = existingEntity.Subtotal;
+                existingEntity.Total = existingEntity.SaleItems.Sum(x => x.TotalPrice);
             }
 
             await _saleRepository.Update(existingEntity);
@@ -87,8 +85,7 @@ namespace MH.Application.Service
         {
             var entity = await _saleRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted,
-                x => x.SaleItems,
-                x => x.Province);
+                x => x.SaleItems);
             
             if (entity == null) return null;
 
@@ -99,8 +96,7 @@ namespace MH.Application.Service
         {
             var entities = await _saleRepository.GetAll(
                 x => !x.IsDeleted,
-                x => x.SaleItems,
-                x => x.Province);
+                x => x.SaleItems);
 
             return _mapper.Map<List<SaleViewModel>>(entities);
         }

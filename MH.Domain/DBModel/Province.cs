@@ -11,8 +11,6 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
 
         // Navigation properties
-        public virtual ICollection<District> Districts { get; set; } = new List<District>();
-        public virtual ICollection<Hospital> Hospitals { get; set; } = new List<Hospital>();
         public virtual ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
         public virtual ApplicationUser? CreatedByUser { get; set; }
         public virtual ApplicationUser? UpdateByUser { get; set; }

@@ -27,14 +27,7 @@ namespace MH.Domain.DBModel
         public virtual Patient CreatedByPatient { get; set; }
         public virtual Patient? UpdatedByPatient { get; set; }
         
-        public virtual MedicalHistory MedicalHistory { get; set; }
-        public virtual MedicalHistory CreatedByMedicalHistory { get; set; }
-        public virtual MedicalHistory? UpdatedByMedicalHistory { get; set; }
-        
-        public virtual Appointment CreatedByAppointment { get; set; }
-        public virtual Appointment? UpdatedByAppointment { get; set; }
-        public virtual TicketDetails CreatedByTicketDetails { get; set; }
-        public virtual TicketDetails? UpdatedByTicketDetails { get; set; }
+
 
     }
 }

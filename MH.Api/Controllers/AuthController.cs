@@ -25,7 +25,6 @@ namespace MH.Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly ISmsService _smsService;
-        private readonly IOtpService _otpService;
         private readonly IUserService _userService;
 
 
@@ -38,7 +37,6 @@ namespace MH.Api.Controllers
             IMapper mapper,
             IHttpClientFactory httpClientFactory, 
             ISmsService smsService, 
-            IOtpService otpService, 
             IUserService userService)
         {
             _jwtExt = jwtExt;
@@ -49,7 +47,6 @@ namespace MH.Api.Controllers
             _mapper = mapper;
             _httpClientFactory = httpClientFactory;
             _smsService = smsService;
-            _otpService = otpService;
             _userService = userService;
         }
 
@@ -78,10 +75,10 @@ namespace MH.Api.Controllers
             }
             await _userManager.AddToRoleAsync(user, RoleEnum.Doctor.ToString());
 
-            var code = new Random().Next(1000, 9999);
-
-            await _otpService.Add(new OtpModel() { Code = code, MobileNo = registerModel.PhoneNumber });
-            await _smsService.SendSms(registerModel.PhoneNumber, $"OTP is : {code}");
+            // User registered successfully - OTP verification removed
+            // You may want to automatically confirm the user or implement a different verification method
+            user.PhoneNumberConfirmed = true;
+            await _userManager.UpdateAsync(user);
             
             return Ok();
         }
@@ -101,23 +98,6 @@ namespace MH.Api.Controllers
             if (user == null) return BadRequest("User not found");
 
             return Ok(user);
-        }
-
-        [HttpPost]
-        [Route("VeifyRegistration")]
-        [SwaggerResponse(StatusCodes.Status200OK, "Return Login data", typeof(bool))]
-        public async Task<bool?> VeifyRegistration([FromQuery] string mobileNo, [FromQuery] int code)
-        {
-            var otp = await _otpService.GetByMobileNo(mobileNo);
-
-            if (otp == null || otp.Code != code) return false;
-
-            var user = await _userService.GetUserByMobileNo(mobileNo);
-            user.Status = 1;
-            user.PhoneNumberConfirmed = true;
-
-            await _userManager.UpdateAsync(user);
-            return true;
         }
         private async Task<LoginResponse?> GetLoginResult(string email)
         {

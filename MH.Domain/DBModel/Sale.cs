@@ -12,21 +12,16 @@ namespace MH.Domain.DBModel
         public string SaleNumber { get; set; } = null!;
         public DateTime SaleDate { get; set; }
         
-        // Map to database columns
-        public int CustomerId { get; set; }
+        // Customer information  
         public string CustomerName { get; set; } = null!;
         public string? CustomerPhone { get; set; }
         
-        public decimal Subtotal { get; set; }
+        // Sale totals and details
         public decimal Total { get; set; }
         public string? Notes { get; set; }
         public bool IsDeleted { get; set; }
-        
-        // Province tracking
-        public int? ProvinceId { get; set; }
 
         // Navigation properties
-        public virtual Province? Province { get; set; }
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
     }
 

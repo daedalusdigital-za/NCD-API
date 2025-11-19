@@ -7,6 +7,5 @@ namespace MH.Domain.DBModel
     {
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public TicketDetails TicketDetails { get; set; }
     }
 }

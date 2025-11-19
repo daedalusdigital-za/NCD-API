@@ -18,7 +18,6 @@ namespace MH.Domain.DBModel
 
         // Navigation properties
         public virtual Province? Province { get; set; }
-        public virtual District? District { get; set; }
         public virtual ApplicationUser? CreatedByUser { get; set; }
         public virtual ApplicationUser? UpdateByUser { get; set; }
     }

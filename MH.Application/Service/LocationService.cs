@@ -24,65 +24,6 @@ namespace MH.Application.Service
             return _mapper.Map<List<ProvinceViewModel>>(entities);
         }
 
-        public async Task<List<DistrictViewModel>> GetDistrictsByProvince(string province)
-        {
-            var entities = await _locationRepository.GetDistrictsByProvince(province);
-            var viewModels = _mapper.Map<List<DistrictViewModel>>(entities);
-            
-            // Add province name to each district
-            foreach (var vm in viewModels)
-            {
-                var district = entities.FirstOrDefault(x => x.Id == vm.Id);
-                vm.ProvinceName = district?.Province?.Name ?? string.Empty;
-            }
-            
-            return viewModels;
-        }
-
-        public async Task<List<HospitalViewModel>> GetAllHospitals()
-        {
-            var entities = await _locationRepository.GetAllHospitals();
-            var viewModels = _mapper.Map<List<HospitalViewModel>>(entities);
-            
-            // Enhance with text representations
-            foreach (var vm in viewModels)
-            {
-                var hospital = entities.FirstOrDefault(x => x.Id == vm.Id);
-                if (hospital != null)
-                {
-                    vm.ProvinceName = hospital.Province?.Name ?? string.Empty;
-                    vm.DistrictName = hospital.District?.Name;
-                    vm.TypeText = hospital.Type.ToString();
-                    vm.LevelText = hospital.Level?.ToString();
-                    vm.StatusText = hospital.Status.ToString();
-                }
-            }
-            
-            return viewModels;
-        }
-
-        public async Task<List<HospitalViewModel>> GetHospitalsByProvince(string province)
-        {
-            var entities = await _locationRepository.GetHospitalsByProvince(province);
-            var viewModels = _mapper.Map<List<HospitalViewModel>>(entities);
-            
-            // Enhance with text representations
-            foreach (var vm in viewModels)
-            {
-                var hospital = entities.FirstOrDefault(x => x.Id == vm.Id);
-                if (hospital != null)
-                {
-                    vm.ProvinceName = hospital.Province?.Name ?? string.Empty;
-                    vm.DistrictName = hospital.District?.Name;
-                    vm.TypeText = hospital.Type.ToString();
-                    vm.LevelText = hospital.Level?.ToString();
-                    vm.StatusText = hospital.Status.ToString();
-                }
-            }
-            
-            return viewModels;
-        }
-
         public async Task<List<ClinicViewModel>> GetAllClinics()
         {
             var entities = await _locationRepository.GetAllClinics();
@@ -95,7 +36,6 @@ namespace MH.Application.Service
                 if (clinic != null)
                 {
                     vm.ProvinceName = clinic.Province?.Name ?? string.Empty;
-                    vm.DistrictName = clinic.District?.Name;
                     vm.TypeText = clinic.Type.ToString();
                     vm.StatusText = clinic.Status.ToString();
                 }
@@ -116,7 +56,6 @@ namespace MH.Application.Service
                 if (clinic != null)
                 {
                     vm.ProvinceName = clinic.Province?.Name ?? string.Empty;
-                    vm.DistrictName = clinic.District?.Name;
                     vm.TypeText = clinic.Type.ToString();
                     vm.StatusText = clinic.Status.ToString();
                 }

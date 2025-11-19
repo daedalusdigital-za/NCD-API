@@ -21,8 +21,6 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
 
 
-        public virtual ICollection<Appointment> Appointment { get; set; }
-        public virtual ICollection<MedicalHistory> MedicalHistory { get; set; }
         public virtual ApplicationUser CreatedByUser { get; set; }
         public virtual ApplicationUser UpdateByUser { get; set; }
 
