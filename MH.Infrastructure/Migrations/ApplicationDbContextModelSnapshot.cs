@@ -132,7 +132,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnName("CreatedDate");
 
                     b.Property<int?>("DistrictId")
                         .HasColumnType("int");
@@ -145,7 +145,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnName("LastUpdated");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -315,7 +315,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnName("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -336,7 +336,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnName("LastUpdated");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -592,27 +592,30 @@ namespace MH.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnName("CreatedDate");
 
-                    b.Property<int?>("HealthFacilities")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnName("LastUpdated");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Population")
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Provinces", (string)null);
+                    b.ToTable("Province", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.Role", b =>
@@ -671,9 +674,6 @@ namespace MH.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime");
-
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -686,9 +686,6 @@ namespace MH.Infrastructure.Migrations
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -708,11 +705,10 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("InventoryItemId");
 
-                    b.Property<int?>("InventoryItemId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
+                        .HasDefaultValue(false)
                         .HasColumnName("IsDeleted");
 
                     b.Property<int>("Quantity")
@@ -733,11 +729,11 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InventoryItemId");
+                    b.HasIndex("InventoryItemId")
+                        .HasDatabaseName("IX_SaleItem_InventoryItemId");
 
-                    b.HasIndex("InventoryItemId1");
-
-                    b.HasIndex("SaleId");
+                    b.HasIndex("SaleId")
+                        .HasDatabaseName("IX_SaleItem_SaleId");
 
                     b.ToTable("SaleItem", (string)null);
                 });
@@ -754,15 +750,15 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedDate");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("datetime")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnName("LastUpdated");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -785,7 +781,7 @@ namespace MH.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainers", (string)null);
+                    b.ToTable("Trainer", (string)null);
                 });
 
             modelBuilder.Entity("MH.Domain.DBModel.TrainingRegister", b =>
@@ -886,15 +882,18 @@ namespace MH.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedDate");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime")
+                        .HasColumnName("LastUpdated");
+
+                    b.Property<int>("NumberOfParticipants")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProvinceId")
                         .HasColumnType("int");
@@ -1279,20 +1278,18 @@ namespace MH.Infrastructure.Migrations
             modelBuilder.Entity("MH.Domain.DBModel.SaleItem", b =>
                 {
                     b.HasOne("MH.Domain.DBModel.InventoryItem", "InventoryItem")
-                        .WithMany()
+                        .WithMany("SaleItems")
                         .HasForeignKey("InventoryItemId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MH.Domain.DBModel.InventoryItem", null)
-                        .WithMany("SaleItems")
-                        .HasForeignKey("InventoryItemId1");
+                        .IsRequired()
+                        .HasConstraintName("FK_SaleItem_InventoryItems_InventoryItemId");
 
                     b.HasOne("MH.Domain.DBModel.Sale", "Sale")
                         .WithMany("SaleItems")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_SaleItem_Sale_SaleId");
 
                     b.Navigation("InventoryItem");
 

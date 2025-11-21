@@ -53,8 +53,7 @@ namespace MH.Application.Service
                 throw new ArgumentException("Sale not found");
 
             _mapper.Map(model, existingEntity);
-            existingEntity.UpdatedBy = _currentUser.User.Id;
-            existingEntity.LastUpdated = DateTime.Now;
+            // Sale table doesn't have UpdatedBy/LastUpdated columns - removed
             
             // Recalculate totals
             if (existingEntity.SaleItems != null)
@@ -76,8 +75,7 @@ namespace MH.Application.Service
                 throw new ArgumentException("Sale not found");
 
             existingEntity.IsDeleted = true;
-            existingEntity.UpdatedBy = _currentUser.User.Id;
-            existingEntity.LastUpdated = DateTime.Now;
+            // Sale table doesn't have UpdatedBy/LastUpdated columns - removed
             await _saleRepository.Update(existingEntity);
         }
 

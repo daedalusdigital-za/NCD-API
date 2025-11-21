@@ -14,6 +14,10 @@ namespace MH.Infrastructure.Configuration
             builder.Ignore("CreatedByUser");
             builder.Ignore("UpdatedByUser");
             
+            // Sale table doesn't have these BaseModel columns - ignore them
+            builder.Ignore(t => t.LastUpdated);
+            builder.Ignore(t => t.UpdatedBy);
+            
             // Key
             builder.HasKey(t => t.Id);
             

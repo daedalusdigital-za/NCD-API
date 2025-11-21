@@ -11,7 +11,7 @@ namespace MH.Application.IService
         Task Delete(int id);
         Task<TrainingSessionViewModel?> GetById(int id);
         Task<List<TrainingSessionViewModel>> GetAll();
-        Task<List<TrainingSessionViewModel>> GetByProvince(int provinceId);
+        Task<List<TrainingSessionViewModel>> GetByProvince(string provinceName);
         Task<List<TrainingSessionViewModel>> GetByDateRange(DateTime startDate, DateTime endDate);
         Task<List<TrainingSessionViewModel>> GetByTrainer(int trainerId);
         Task<List<TrainingSessionViewModel>> GetByStatus(TrainingStatus status);

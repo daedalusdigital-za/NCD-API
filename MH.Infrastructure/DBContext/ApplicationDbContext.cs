@@ -27,7 +27,7 @@ namespace MH.Infrastructure.DBContext
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SaleItems { get; set; }
-        public DbSet<TrainingSession> TrainingSessions { get; set; }
+        public DbSet<TrainingSession> TrainingSession { get; set; } // Match table name
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -67,21 +67,16 @@ namespace MH.Infrastructure.DBContext
                     .IsRequired();
             });
 
-            // Configure TrainingSession navigation properties to use correct FK columns
-            builder.Entity<TrainingSession>(b =>
-            {
-                b.HasOne(e => e.CreatedByUser)
-                    .WithMany()
-                    .HasForeignKey(e => e.CreatedBy)
-                    .OnDelete(DeleteBehavior.NoAction);
-
-                b.HasOne(e => e.UpdateByUser)
-                    .WithMany()
-                    .HasForeignKey(e => e.UpdatedBy)
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
-
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        
+        // Additional explicit configuration for SaleItem to prevent EF from generating unwanted columns
+        builder.Entity<SaleItem>(entity =>
+        {
+            entity.Ignore("InventoryItemId1");
+            entity.Ignore("InventoryItemId2");
+            entity.Ignore("InventoryItemId3");
+            entity.Ignore("InventoryItemId4");
+        });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -93,6 +88,23 @@ namespace MH.Infrastructure.DBContext
 
             foreach (var item in ChangeTracker.Entries<IAuditable>())
             {
+                // Skip UpdatedBy/LastUpdated for Sale entities since those columns were removed
+                if (item.Entity is Sale)
+                {
+                    switch (item.State)
+                    {
+                        case EntityState.Added:
+                            item.Entity.DateCreated = DateTime.Now;
+                            item.Entity.CreatedBy = item.Entity.CreatedBy != 0 ? item.Entity.CreatedBy : _currentUser.User.Id;
+                            break;
+                        case EntityState.Modified:
+                            // Sale table doesn't have LastUpdated/UpdatedBy columns - skip these
+                            break;
+                    }
+                    continue;
+                }
+                
+                // For all other entities, apply the full audit trail
                 switch (item.State)
                 {
                     case EntityState.Added:

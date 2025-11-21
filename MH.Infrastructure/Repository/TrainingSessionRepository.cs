@@ -15,32 +15,28 @@ namespace MH.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IReadOnlyList<TrainingSession>> GetByProvince(int provinceId)
+        public async Task<IReadOnlyList<TrainingSession>> GetByProvince(string provinceName)
         {
-            return await _context.TrainingSessions
-                .Include(x => x.Trainer)
-                .Include(x => x.Province)
-                .Include(x => x.CreatedByUser)
-                .Where(x => x.ProvinceId == provinceId && !x.IsDeleted)
+            return await _context.TrainingSession
+                // .Include(x => x.Trainer) // Temporarily disabled
+                .Where(x => x.Province == provinceName && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<IReadOnlyList<TrainingSession>> GetByDateRange(DateTime startDate, DateTime endDate)
         {
-            return await _context.TrainingSessions
-                .Include(x => x.Trainer)
-                .Include(x => x.CreatedByUser)
-                .Where(x => x.TrainingDate >= startDate && x.TrainingDate <= endDate && !x.IsDeleted)
+            return await _context.TrainingSession
+                // .Include(x => x.Trainer) // Temporarily disabled
+                .Where(x => x.Date >= startDate && x.Date <= endDate && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<IReadOnlyList<TrainingSession>> GetByTrainer(int trainerId)
         {
-            return await _context.TrainingSessions
-                .Include(x => x.Trainer)
-                .Include(x => x.CreatedByUser)
+            return await _context.TrainingSession
+                // .Include(x => x.Trainer) // Temporarily disabled
                 .Where(x => x.TrainerId == trainerId && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
@@ -48,18 +44,17 @@ namespace MH.Infrastructure.Repository
 
         public async Task<IReadOnlyList<TrainingSession>> GetByStatus(TrainingStatus status)
         {
-            return await _context.TrainingSessions
-                .Include(x => x.Trainer)
-                .Include(x => x.CreatedByUser)
-                .Where(x => x.Status == status && !x.IsDeleted)
+            return await _context.TrainingSession
+                // .Include(x => x.Trainer) // Temporarily disabled
+                .Where(x => x.Status == (int)status && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<int> GetCompletedSessionsByTrainer(int trainerId)
         {
-            return await _context.TrainingSessions
-                .Where(x => x.TrainerId == trainerId && x.Status == TrainingStatus.Completed && !x.IsDeleted)
+            return await _context.TrainingSession
+                .Where(x => x.TrainerId == trainerId && x.Status == (int)TrainingStatus.Completed && !x.IsDeleted)
                 .CountAsync();
         }
     }

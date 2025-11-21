@@ -10,6 +10,13 @@ namespace MH.Infrastructure.Configuration
         {
             builder.ToTable("InventoryItems");
             builder.ConfigureBaseModel<InventoryItem, int>();
+            
+            // Explicitly configure the SaleItems relationship
+            builder.HasMany(ii => ii.SaleItems)
+                   .WithOne(si => si.InventoryItem)
+                   .HasForeignKey(si => si.InventoryItemId)
+                   .HasConstraintName("FK_SaleItem_InventoryItems_InventoryItemId")
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

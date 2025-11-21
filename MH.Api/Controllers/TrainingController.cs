@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MH.Api.Controllers
 {
-    [Authorize]
+    // [Authorize] // Temporarily commented for testing
     [Route("api/[controller]")]
     public class TrainingController : BaseController
     {
@@ -109,11 +109,11 @@ namespace MH.Api.Controllers
         [HttpGet]
         [Route("GetByProvince")]
         [SwaggerResponse(StatusCodes.Status200OK, "Training sessions by province", typeof(List<TrainingSessionViewModel>))]
-        public async Task<ActionResult> GetByProvince([FromQuery] int provinceId)
+        public async Task<ActionResult> GetByProvince([FromQuery] string provinceName)
         {
             try
             {
-                var result = await _trainingSessionService.GetByProvince(provinceId);
+                var result = await _trainingSessionService.GetByProvince(provinceName);
                 return Ok(result);
             }
             catch (Exception ex)

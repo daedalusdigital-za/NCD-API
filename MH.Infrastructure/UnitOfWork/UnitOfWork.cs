@@ -37,6 +37,9 @@ namespace MH.Infrastructure.UnitOfWork
 
         private ITrainerRepository? _trainerRepository;
         public ITrainerRepository TrainerRepository => _trainerRepository ?? new TrainerRepository(_dbContext);
+        
+        private ITrainingSessionRepository? _trainingSessionRepository;
+        public ITrainingSessionRepository TrainingSessionRepository => _trainingSessionRepository ?? new TrainingSessionRepository(_dbContext);
         #endregion
     }
 }

@@ -20,7 +20,6 @@ namespace MH.Application.Dependency
             services.AddScoped<IContactDetailsService, ContactDetailsService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
-            services.AddScoped<ITrainerService, TrainerService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICurrentUser, CurrentUser>();
             services.AddScoped<IUserService, UserService>();

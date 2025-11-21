@@ -13,7 +13,8 @@ namespace MH.Infrastructure.Configuration
         public static void ConfigureBaseModel<TEntity, TId>(this EntityTypeBuilder<TEntity> builder) 
             where TEntity : BaseModel<TId>
         {
-            // Map BaseModel audit properties to database column naming convention
+            // Map BaseModel audit properties to standard database column naming convention
+            // Most tables (Trainer, TrainingSession) use CreatedAt/UpdatedAt
             builder.Property(e => e.DateCreated)
                 .HasColumnName("CreatedAt");
 

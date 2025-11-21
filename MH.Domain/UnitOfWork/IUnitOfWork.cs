@@ -12,6 +12,7 @@ namespace MH.Domain.UnitOfWork
         IContactDetailsRepository ContactDetailsRepository { get; }
         IUserProfileRepository UserProfileRepository { get; }
         ITrainerRepository TrainerRepository { get; }
+        ITrainingSessionRepository TrainingSessionRepository { get; }
         #endregion
         void ClearChangeTracker();
         void Commit();

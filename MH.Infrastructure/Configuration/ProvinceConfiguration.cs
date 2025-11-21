@@ -8,30 +8,23 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Province> builder)
         {
-            builder.ToTable("Provinces");
+            builder.ToTable("Province"); // Use singular to match actual database table
             
-            // Province table only has timestamp audit columns, not user ID audit columns
-            // So we ignore the properties that don't exist in the database
-            builder.Ignore(p => p.CreatedBy);         // Province table doesn't have this column
-            builder.Ignore(p => p.UpdatedBy);          // Province table doesn't have this column
-            builder.Ignore(p => p.IsDeleted);          // Province table doesn't have this column
-            builder.Ignore(p => p.CreatedByUser);      // No navigation property either
-            builder.Ignore(p => p.UpdateByUser);       // No navigation property either
+            // Province table uses different column names than the standard BaseModel mapping
+            // Override the base mapping for Province specifically
+            builder.Property(e => e.DateCreated)
+                .HasColumnName("CreatedDate");   // Province uses CreatedDate not CreatedAt
+
+            builder.Property(e => e.LastUpdated)
+                .HasColumnName("LastUpdated");   // Province uses LastUpdated not UpdatedAt
             
-            // Map only the timestamp properties that DO exist
-            builder.Property(p => p.DateCreated)
-                   .HasColumnName("CreatedAt")
-                   .IsRequired();
+            // Province table in database doesn't have these columns, so ignore them
+            builder.Ignore(p => p.Population);         // Not in database table
+            builder.Ignore(p => p.HealthFacilities);   // Not in database table
             
-            builder.Property(p => p.LastUpdated)
-                   .HasColumnName("UpdatedAt");
-            
-            // Fix type mismatch: Population is long? in entity but int in database
-            builder.Property(p => p.Population)
-                   .HasColumnType("int");
-                   
-            builder.Property(p => p.HealthFacilities)
-                   .HasColumnType("int");
+            // Province table doesn't have user navigation properties mapped properly
+            builder.Ignore(p => p.CreatedByUser);      // No proper foreign key setup
+            builder.Ignore(p => p.UpdateByUser);       // No proper foreign key setup
         }
     }
 }

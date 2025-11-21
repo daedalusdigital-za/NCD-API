@@ -9,17 +9,24 @@ namespace MH.Domain.ViewModel
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!;
         
-        [JsonPropertyName("trainingDate")]
-        public DateTime TrainingDate { get; set; }
+        [JsonPropertyName("startDate")]
+        public DateTime StartDate { get; set; }  // Changed from TrainingDate
         
-        public int ProvinceId { get; set; }
+        [JsonPropertyName("endDate")]
+        public DateTime EndDate { get; set; }    // New field
+        
+        public string Province { get; set; } = null!;  // Changed from ProvinceId
         public string? ProvinceName { get; set; }
         public string Venue { get; set; } = null!;
         public int TrainerId { get; set; }
         public Trainer? Trainer { get; set; }
         public string TargetAudience { get; set; } = null!;
-        public TrainingStatus Status { get; set; }
+        public int NumberOfParticipants { get; set; }
+        public int Status { get; set; } = 1;  // Changed from TrainingStatus enum to int
         public string? StatusText { get; set; }
+        public string? Hospital { get; set; }        // New fields from migration
+        public string? TrainingObjectives { get; set; }
+        public string? TrainingMaterials { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string? CreatedByUserName { get; set; }

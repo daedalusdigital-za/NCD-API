@@ -5,7 +5,7 @@ namespace MH.Domain.IRepository
 {
     public interface ITrainingSessionRepository : IRepository<TrainingSession, int>
     {
-        Task<IReadOnlyList<TrainingSession>> GetByProvince(int provinceId);
+        Task<IReadOnlyList<TrainingSession>> GetByProvince(string provinceName);
         Task<IReadOnlyList<TrainingSession>> GetByDateRange(DateTime startDate, DateTime endDate);
         Task<IReadOnlyList<TrainingSession>> GetByTrainer(int trainerId);
         Task<IReadOnlyList<TrainingSession>> GetByStatus(TrainingStatus status);

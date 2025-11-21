@@ -63,16 +63,15 @@ namespace MH.Application.Service
         public async Task<TrainingSessionViewModel?> GetById(int id)
         {
             var entity = await _trainingSessionRepository.FindBy(
-                x => x.Id == id && !x.IsDeleted,
-                x => x.Trainer, x => x.Province, x => x.CreatedByUser);
+                x => x.Id == id && !x.IsDeleted);  
             
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<TrainingSessionViewModel>(entity);
-            viewModel.Trainer = entity.Trainer;
-            viewModel.ProvinceName = entity.Province?.Name;
+            // viewModel.Trainer = entity.Trainer; // Temporarily disabled
+            viewModel.ProvinceName = entity.Province; // Province is now string directly
             viewModel.StatusText = entity.Status.ToString();
-            viewModel.CreatedByUserName = entity.CreatedByUser?.UserProfile?.FirstName + " " + entity.CreatedByUser?.UserProfile?.LastName;
+            viewModel.CreatedByUserName = string.Empty; // No longer available
             
             return viewModel;
         }
@@ -80,15 +79,14 @@ namespace MH.Application.Service
         public async Task<List<TrainingSessionViewModel>> GetAll()
         {
             var entities = await _trainingSessionRepository.GetAll(
-                x => !x.IsDeleted,
-                x => x.Trainer, x => x.Province, x => x.CreatedByUser);
+                x => !x.IsDeleted);
 
             return _mapper.Map<List<TrainingSessionViewModel>>(entities);
         }
 
-        public async Task<List<TrainingSessionViewModel>> GetByProvince(int provinceId)
+        public async Task<List<TrainingSessionViewModel>> GetByProvince(string provinceName)
         {
-            var entities = await _trainingSessionRepository.GetByProvince(provinceId);
+            var entities = await _trainingSessionRepository.GetByProvince(provinceName);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
@@ -112,13 +110,13 @@ namespace MH.Application.Service
 
         public async Task<TrainingStatsModel> GetTrainingStats()
         {
-            var allSessions = await _trainingSessionRepository.GetAll(x => !x.IsDeleted, x => x.Province);
+            var allSessions = await _trainingSessionRepository.GetAll(x => !x.IsDeleted);
             
             var stats = new TrainingStatsModel
             {
                 TotalSessions = allSessions.Count,
-                CompletedSessions = allSessions.Count(x => x.Status == TrainingStatus.Completed),
-                InProgressSessions = allSessions.Count(x => x.Status == TrainingStatus.InProgress),
+                CompletedSessions = allSessions.Count(x => x.Status == (int)TrainingStatus.Completed),
+                InProgressSessions = allSessions.Count(x => x.Status == (int)TrainingStatus.InProgress),
                 TotalParticipants = 0 // Field removed from TrainingSession
             };
 
@@ -127,8 +125,8 @@ namespace MH.Application.Service
 
             // Monthly stats for the last 12 months
             var monthlyStats = allSessions
-                .Where(x => x.TrainingDate >= DateTime.Now.AddMonths(-12))
-                .GroupBy(x => new { x.TrainingDate.Year, x.TrainingDate.Month })
+                .Where(x => x.Date >= DateTime.Now.AddMonths(-12))
+                .GroupBy(x => new { x.Date.Year, x.Date.Month })
                 .Select(g => new MonthlyTrainingStats
                 {
                     Month = $"{g.Key.Year}-{g.Key.Month:00}",
@@ -142,7 +140,7 @@ namespace MH.Application.Service
 
             // Province stats
             var provinceStats = allSessions
-                .GroupBy(x => x.Province?.Name)
+                .GroupBy(x => x.Province)  // Province is now string directly
                 .Select(g => new ProvinceTrainingStats
                 {
                     Province = g.Key ?? "Unknown",

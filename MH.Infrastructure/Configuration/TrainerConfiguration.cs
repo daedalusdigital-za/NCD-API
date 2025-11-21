@@ -8,9 +8,9 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Trainer> builder)
         {
-            builder.ToTable("Trainers");
+            builder.ToTable("Trainer"); // Singular table name as per database
             
-            // Apply base model configuration (maps DateCreated->CreatedAt, LastUpdated->UpdatedAt)
+            // Apply base model configuration - database uses CreatedAt/UpdatedAt
             builder.ConfigureBaseModel<Trainer, int>();
         }
     }

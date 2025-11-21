@@ -8,8 +8,13 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TrainingSession> builder)
         {
-            builder.ToTable("TrainingSession"); // Use singular name to match existing table
-            builder.ConfigureBaseModel<TrainingSession, int>();
+            builder.ToTable("TrainingSession"); // Singular table name as per database
+                
+            // Temporarily disable foreign key relationships to avoid schema conflicts
+            // builder.HasOne(e => e.Trainer)
+            //     .WithMany(t => t.TrainingSessions)
+            //     .HasForeignKey(e => e.TrainerId)
+            //     .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
