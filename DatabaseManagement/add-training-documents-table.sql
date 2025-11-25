@@ -18,7 +18,7 @@ BEGIN
         CONSTRAINT FK_TrainingDocuments_TrainingSession 
             FOREIGN KEY (TrainingSessionId) REFERENCES TrainingSession(Id),
         CONSTRAINT FK_TrainingDocuments_User 
-            FOREIGN KEY (UploadedBy) REFERENCES Users(Id)
+            FOREIGN KEY (UploadedBy) REFERENCES AspNetUsers(Id)
     );
     
     -- Create index for better query performance
