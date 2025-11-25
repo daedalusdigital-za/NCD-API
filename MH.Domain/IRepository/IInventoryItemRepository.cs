@@ -8,9 +8,7 @@ namespace MH.Domain.IRepository
         Task<IReadOnlyList<InventoryItem>> GetByCategory(InventoryCategory category);
         Task<IReadOnlyList<InventoryItem>> GetLowStock();
         Task<IReadOnlyList<InventoryItem>> GetByStatus(InventoryStatus status);
-        Task<InventoryItem?> GetByItemNumber(string itemNumber);
         Task<bool> IsItemNumberExists(string itemNumber, int? excludeId = null);
-        Task UpdateStock(int id, int qtyOnHand, int qtyOnPO, int qtyOnSO, decimal unitCost);
         Task<InventoryStatsModel> GetInventoryStats();
     }
 

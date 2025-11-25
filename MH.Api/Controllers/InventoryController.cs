@@ -10,7 +10,6 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MH.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     public class InventoryController : BaseController
     {
         private readonly IInventoryItemService _inventoryService;
@@ -28,11 +27,11 @@ namespace MH.Api.Controllers
         {
             try
             {
-                // Check if item number already exists
-                var itemExists = await _inventoryService.IsItemNumberExists(model.ItemNumber);
+                // Check if SKU already exists
+                var itemExists = await _inventoryService.IsItemNumberExists(model.SKU);
                 if (itemExists)
                 {
-                    return BadRequest(new { message = "Item number already exists" });
+                    return BadRequest(new { message = "SKU already exists" });
                 }
 
                 await _inventoryService.Add(model);
@@ -52,11 +51,11 @@ namespace MH.Api.Controllers
         {
             try
             {
-                // Check if item number already exists for another item
-                var itemExists = await _inventoryService.IsItemNumberExists(model.ItemNumber, model.Id);
+                // Check if SKU already exists for another item
+                var itemExists = await _inventoryService.IsItemNumberExists(model.SKU, model.Id);
                 if (itemExists)
                 {
-                    return BadRequest(new { message = "Item number already exists" });
+                    return BadRequest(new { message = "SKU already exists" });
                 }
 
                 await _inventoryService.Update(model);
@@ -104,6 +103,7 @@ namespace MH.Api.Controllers
 
         [HttpGet]
         [Route("GetById")]
+        [AllowAnonymous]
         [SwaggerResponse(StatusCodes.Status200OK, "Inventory item data", typeof(InventoryItemViewModel))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Inventory item not found")]
         public async Task<ActionResult> GetById([FromQuery] int id)
@@ -124,6 +124,7 @@ namespace MH.Api.Controllers
 
         [HttpGet]
         [Route("GetAll")]
+        [AllowAnonymous]
         [SwaggerResponse(StatusCodes.Status200OK, "Inventory items data", typeof(List<InventoryItemViewModel>))]
         public async Task<ActionResult> GetAll()
         {

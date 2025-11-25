@@ -28,19 +28,7 @@ namespace MH.Application.Service
         {
             var entity = _mapper.Map<InventoryItem>(model);
             entity.CreatedBy = _currentUser.User.Id;
-            entity.DateCreated = DateTime.Now;
-            
-            // Calculate derived fields
-            entity.StockAvailable = entity.QtyOnHand + entity.QtyOnPO - entity.QtyOnSO;
-            entity.TotalCostForQOH = entity.QtyOnHand * entity.UnitCostForQOH;
-            
-            // Set initial status based on stock levels
-            if (entity.StockAvailable <= 0)
-                entity.Status = InventoryStatus.OutOfStock;
-            else if (entity.StockAvailable <= entity.ReorderLevel)
-                entity.Status = InventoryStatus.LowStock;
-            else
-                entity.Status = InventoryStatus.InStock;
+            entity.CreatedDate = DateTime.Now;
 
             await _inventoryRepository.Insert(entity);
         }
@@ -54,18 +42,6 @@ namespace MH.Application.Service
             _mapper.Map(model, existingEntity);
             existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
-            
-            // Recalculate derived fields
-            existingEntity.StockAvailable = existingEntity.QtyOnHand + existingEntity.QtyOnPO - existingEntity.QtyOnSO;
-            existingEntity.TotalCostForQOH = existingEntity.QtyOnHand * existingEntity.UnitCostForQOH;
-            
-            // Update status based on stock levels
-            if (existingEntity.StockAvailable <= 0)
-                existingEntity.Status = InventoryStatus.OutOfStock;
-            else if (existingEntity.StockAvailable <= existingEntity.ReorderLevel)
-                existingEntity.Status = InventoryStatus.LowStock;
-            else
-                existingEntity.Status = InventoryStatus.InStock;
 
             await _inventoryRepository.Update(existingEntity);
         }
@@ -84,36 +60,38 @@ namespace MH.Application.Service
 
         public async Task<InventoryItemViewModel?> GetById(int id)
         {
-            var entity = await _inventoryRepository.FindBy(
-                x => x.Id == id && !x.IsDeleted,
-                x => x.CreatedByUser);
+            var entity = await _inventoryRepository.FindBy(x => x.Id == id && !x.IsDeleted);
             
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<InventoryItemViewModel>(entity);
             viewModel.CategoryText = entity.Category.ToString();
             viewModel.StatusText = entity.Status.ToString();
-            viewModel.CreatedByUserName = entity.CreatedByUser?.UserProfile?.FirstName + " " + entity.CreatedByUser?.UserProfile?.LastName;
             
             return viewModel;
         }
 
         public async Task<List<InventoryItemViewModel>> GetAll()
         {
-            var entities = await _inventoryRepository.GetAll(
-                x => !x.IsDeleted,
-                x => x.CreatedByUser);
-
-            var viewModels = _mapper.Map<List<InventoryItemViewModel>>(entities);
-            
-            // Enhance with text representations
-            foreach (var vm in viewModels)
+            try
             {
-                vm.CategoryText = ((InventoryCategory)vm.Category).ToString();
-                vm.StatusText = ((InventoryStatus)vm.Status).ToString();
-            }
+                var entities = await _inventoryRepository.GetAll(x => !x.IsDeleted);
 
-            return viewModels;
+                var viewModels = _mapper.Map<List<InventoryItemViewModel>>(entities);
+                
+                // Enhance with text representations
+                foreach (var vm in viewModels)
+                {
+                    vm.CategoryText = ((InventoryCategory)vm.Category).ToString();
+                    vm.StatusText = ((InventoryStatus)vm.Status).ToString();
+                }
+
+                return viewModels;
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception($"Error retrieving inventory items: {ex.Message}", ex);
+            }
         }
 
         public async Task<List<InventoryItemViewModel>> GetByCategory(InventoryCategory category)
@@ -136,12 +114,15 @@ namespace MH.Application.Service
 
         public async Task UpdateStock(InventoryUpdateStockModel model)
         {
-            await _inventoryRepository.UpdateStock(
-                model.Id, 
-                model.QtyOnHand, 
-                model.QtyOnPO, 
-                model.QtyOnSO, 
-                model.UnitCostForQOH);
+            var existingEntity = await _inventoryRepository.GetById(model.Id);
+            if (existingEntity == null)
+                throw new ArgumentException("Inventory item not found");
+
+            existingEntity.StockAvailable = model.StockAvailable;
+            existingEntity.UpdatedBy = _currentUser.User.Id;
+            existingEntity.LastUpdated = DateTime.Now;
+
+            await _inventoryRepository.Update(existingEntity);
         }
 
         public async Task<InventoryStatsModel> GetInventoryStats()

@@ -31,6 +31,7 @@ namespace MH.Api.Controllers
 
         [HttpGet]
         [Route("GetAll")]
+        [AllowAnonymous]
         [SwaggerResponse(StatusCodes.Status200OK, "Return Trainer data", typeof(List<TrainerViewModel>))]
         public async Task<IActionResult> GetAll()
         {
@@ -40,6 +41,7 @@ namespace MH.Api.Controllers
 
         [HttpGet]
         [Route("GetById")]
+        [AllowAnonymous]
         [SwaggerResponse(StatusCodes.Status200OK, "Return Trainer data", typeof(TrainerViewModel))]
         public async Task<IActionResult> GetById([FromQuery] int id)
         {

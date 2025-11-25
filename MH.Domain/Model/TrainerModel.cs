@@ -3,12 +3,18 @@ namespace MH.Domain.Model
     public class TrainerModel
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public int? ProvinceId { get; set; }  // Changed back to ProvinceId to match database
-        public int Status { get; set; } = 1;   // 1 = Active
-        public string? Location { get; set; }
-        // Removed: Qualification, Experience, Bio - not in database
+        public string? Specialization { get; set; }
+        public int? Experience { get; set; }
+        public string? Certification { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; }
+        public DateTime? LastUpdated { get; set; }
+        public int? UpdatedBy { get; set; }
+        public int? ModifiedBy { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }

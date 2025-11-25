@@ -15,8 +15,10 @@ namespace MH.Domain.Mapping
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.CreatedByUserName, opt => opt.MapFrom(src => string.Empty));
 
-            CreateMap<TrainerModel, Trainer>();
-            CreateMap<Trainer, TrainerViewModel>();
+            CreateMap<TrainerModel, Trainer>()
+                .ReverseMap();
+            CreateMap<Trainer, TrainerViewModel>()
+                .ReverseMap();
 
             CreateMap<TrainingRegister, TrainingRegisterViewModel>()
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));

@@ -4,24 +4,24 @@ namespace MH.Domain.DBModel
 {
     public class InventoryItem : BaseModel<int>
     {
-        public string ItemNumber { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public string Location { get; set; } = null!;
-        public string UOM { get; set; } = null!; // Unit of Measure
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
         public InventoryCategory Category { get; set; }
-        public int QtyOnHand { get; set; }
-        public int QtyOnPO { get; set; } // Quantity on Purchase Order
-        public int QtyOnSO { get; set; } // Quantity on Sales Order
-        public int StockAvailable { get; set; } // Calculated: QtyOnHand + QtyOnPO - QtyOnSO
-        public decimal UnitCostForQOH { get; set; }
-        public decimal TotalCostForQOH { get; set; } // Calculated: QtyOnHand * UnitCostForQOH
+        public string SKU { get; set; } = null!;
+        public string UnitOfMeasure { get; set; } = null!;
+        public decimal UnitPrice { get; set; }
+        public int StockAvailable { get; set; }
         public int ReorderLevel { get; set; }
-        public int MaxStockLevel { get; set; }
         public string? Supplier { get; set; }
-        public DateTime? LastRestocked { get; set; }
         public DateTime? ExpiryDate { get; set; }
+        public string? BatchNumber { get; set; }
         public InventoryStatus Status { get; set; }
         public bool IsDeleted { get; set; }
+        public new DateTime CreatedDate { get; set; }
+        public new int? CreatedBy { get; set; }
+        public new DateTime? LastUpdated { get; set; }
+        public new int? UpdatedBy { get; set; }
+        public int? ModifiedBy { get; set; }
 
         // Navigation properties
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();

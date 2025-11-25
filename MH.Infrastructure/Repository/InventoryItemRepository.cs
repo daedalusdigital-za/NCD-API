@@ -26,7 +26,7 @@ namespace MH.Infrastructure.Repository
         public async Task<IReadOnlyList<InventoryItem>> GetLowStock()
         {
             return await _context.InventoryItems
-                .Where(x => x.QtyOnHand <= x.ReorderLevel && !x.IsDeleted)
+                .Where(x => x.StockAvailable <= x.ReorderLevel && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -39,15 +39,9 @@ namespace MH.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<InventoryItem?> GetByItemNumber(string itemNumber)
-        {
-            return await _context.InventoryItems
-                .FirstOrDefaultAsync(x => x.ItemNumber == itemNumber && !x.IsDeleted);
-        }
-
         public async Task<bool> IsItemNumberExists(string itemNumber, int? excludeId = null)
         {
-            var query = _context.InventoryItems.Where(x => x.ItemNumber == itemNumber && !x.IsDeleted);
+            var query = _context.InventoryItems.Where(x => x.SKU == itemNumber && !x.IsDeleted);
             
             if (excludeId.HasValue)
             {
@@ -55,32 +49,6 @@ namespace MH.Infrastructure.Repository
             }
             
             return await query.AnyAsync();
-        }
-
-        public async Task UpdateStock(int id, int qtyOnHand, int qtyOnPO, int qtyOnSO, decimal unitCost)
-        {
-            var item = await _context.InventoryItems.FindAsync(id);
-            if (item != null)
-            {
-                item.QtyOnHand = qtyOnHand;
-                item.QtyOnPO = qtyOnPO;
-                item.QtyOnSO = qtyOnSO;
-                item.StockAvailable = qtyOnHand + qtyOnPO - qtyOnSO;
-                item.UnitCostForQOH = unitCost;
-                item.TotalCostForQOH = qtyOnHand * unitCost;
-                item.LastRestocked = DateTime.Now;
-                item.LastUpdated = DateTime.Now;
-
-                // Update status based on stock levels
-                if (item.StockAvailable <= 0)
-                    item.Status = InventoryStatus.OutOfStock;
-                else if (item.StockAvailable <= item.ReorderLevel)
-                    item.Status = InventoryStatus.LowStock;
-                else
-                    item.Status = InventoryStatus.InStock;
-
-                await _context.SaveChangesAsync();
-            }
         }
 
         public async Task<InventoryStatsModel> GetInventoryStats()
@@ -95,7 +63,7 @@ namespace MH.Infrastructure.Repository
                 InStockItems = allItems.Count(x => x.Status == InventoryStatus.InStock),
                 LowStockItems = allItems.Count(x => x.Status == InventoryStatus.LowStock),
                 OutOfStockItems = allItems.Count(x => x.Status == InventoryStatus.OutOfStock),
-                TotalValue = allItems.Sum(x => x.TotalCostForQOH)
+                TotalValue = allItems.Sum(x => x.UnitPrice * x.StockAvailable)
             };
 
             // Category statistics
@@ -106,7 +74,7 @@ namespace MH.Infrastructure.Repository
                     Category = g.Key,
                     CategoryName = g.Key.ToString(),
                     ItemCount = g.Count(),
-                    TotalValue = g.Sum(x => x.TotalCostForQOH)
+                    TotalValue = g.Sum(x => x.UnitPrice * x.StockAvailable)
                 })
                 .ToList();
 
