@@ -6,26 +6,20 @@ namespace MH.Domain.DBModel
     [Table("TrainingSession")]
     public class TrainingSession : BaseModel<int>
     {
-        // Override BaseModel audit properties with explicit column mapping
-        [Column("CreatedAt")]
+        // Override BaseModel audit properties
         public new DateTime DateCreated { get; set; }
         
-        [Column("UpdatedAt")]  
         public new DateTime? LastUpdated { get; set; }
         
-        [Column("CreatedBy")]
         public new int CreatedBy { get; set; }
         
-        [Column("UpdatedBy")]
         public new int? UpdatedBy { get; set; }
         
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!;
         
-        [Column("TrainingDate")]
         public DateTime Date { get; set; }
         
-        [Column("ProvinceId")]
         public string Province { get; set; } = null!;
         
         public string Venue { get; set; } = null!;

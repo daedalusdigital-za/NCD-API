@@ -8,7 +8,20 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TrainingSession> builder)
         {
-            builder.ToTable("TrainingSession"); // Singular table name as per database
+            builder.ToTable("TrainingSession");
+            builder.HasKey(x => x.Id);
+            
+            // Configure base model properties with correct column mappings
+            builder.Property(x => x.DateCreated).HasColumnName("CreatedDate");
+            builder.Property(x => x.LastUpdated).HasColumnName("LastUpdated");
+            builder.Property(x => x.CreatedBy).HasColumnName("CreatedBy");
+            builder.Property(x => x.UpdatedBy).HasColumnName("UpdatedBy");
+            
+            // Configure other properties
+            builder.Property(x => x.TrainingName);
+            builder.Property(x => x.TrainingType);
+            builder.Property(x => x.Date).HasColumnName("TrainingDate");
+            builder.Property(x => x.Province).HasColumnName("ProvinceId");
                 
             // Temporarily disable foreign key relationships to avoid schema conflicts
             // builder.HasOne(e => e.Trainer)
