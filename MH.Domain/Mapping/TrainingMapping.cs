@@ -22,6 +22,12 @@ namespace MH.Domain.Mapping
 
             CreateMap<TrainingRegister, TrainingRegisterViewModel>()
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()));
+
+            // TrainingDocument mappings
+            CreateMap<TrainingDocumentModel, TrainingDocument>()
+                .ReverseMap();
+            CreateMap<TrainingDocument, TrainingDocumentViewModel>()
+                .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.DateCreated));
         }
     }
 

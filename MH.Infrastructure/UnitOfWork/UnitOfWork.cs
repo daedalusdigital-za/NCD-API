@@ -40,6 +40,9 @@ namespace MH.Infrastructure.UnitOfWork
         
         private ITrainingSessionRepository? _trainingSessionRepository;
         public ITrainingSessionRepository TrainingSessionRepository => _trainingSessionRepository ?? new TrainingSessionRepository(_dbContext);
+
+        private ITrainingDocumentRepository? _trainingDocumentRepository;
+        public ITrainingDocumentRepository TrainingDocumentRepository => _trainingDocumentRepository ?? new TrainingDocumentRepository(_dbContext);
         #endregion
     }
 }
