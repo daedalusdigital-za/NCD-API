@@ -16,7 +16,7 @@ BEGIN
         IsDeleted BIT NOT NULL DEFAULT 0,
         
         CONSTRAINT FK_TrainingDocuments_TrainingSession 
-            FOREIGN KEY (TrainingSessionId) REFERENCES TrainingSessions(Id),
+            FOREIGN KEY (TrainingSessionId) REFERENCES TrainingSession(Id),
         CONSTRAINT FK_TrainingDocuments_User 
             FOREIGN KEY (UploadedBy) REFERENCES Users(Id)
     );
