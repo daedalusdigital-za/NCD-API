@@ -18,11 +18,11 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.FileSize);
             builder.Property(x => x.FilePath);
             builder.Property(x => x.DocumentType);
-            builder.Property(x => x.MimeType);
-            builder.Property(x => x.IsDeleted);
+            builder.Property(x => x.MimeType).HasDefaultValue("application/pdf");
+            builder.Property(x => x.IsDeleted).HasDefaultValue(false);
             builder.Property(x => x.UploadedBy);
 
-            // Base model properties
+            // Base model audit properties - map to database column names
             builder.Property(x => x.DateCreated).HasColumnName("UploadedAt");
             builder.Property(x => x.CreatedBy).HasColumnName("CreatedBy");
 
