@@ -12,6 +12,7 @@ namespace MH.Domain.Model
         public string? Certification { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; }
+        public int? ProvinceId { get; set; }
         public DateTime? LastUpdated { get; set; }
         public int? UpdatedBy { get; set; }
         public int? ModifiedBy { get; set; }

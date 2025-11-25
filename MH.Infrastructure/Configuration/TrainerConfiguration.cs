@@ -21,6 +21,7 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.Certification);
             builder.Property(x => x.IsActive);
             builder.Property(x => x.IsDeleted);
+            builder.Property(x => x.ProvinceId);
             builder.Property(x => x.LastUpdated);
             builder.Property(x => x.UpdatedBy);
             builder.Property(x => x.ModifiedBy);
