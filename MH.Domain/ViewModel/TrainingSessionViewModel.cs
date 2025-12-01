@@ -15,8 +15,8 @@ namespace MH.Domain.ViewModel
         [JsonPropertyName("endDate")]
         public DateTime EndDate { get; set; }    // New field
         
-        public string Province { get; set; } = null!;  // Changed from ProvinceId
-        public string? ProvinceName { get; set; }
+        public int ProvinceId { get; set; }  // Foreign key
+        public string? ProvinceName { get; set; }  // Resolved province name
         public string Venue { get; set; } = null!;
         public int TrainerId { get; set; }
         public Trainer? Trainer { get; set; }

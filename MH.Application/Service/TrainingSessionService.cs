@@ -68,10 +68,8 @@ namespace MH.Application.Service
             if (entity == null) return null;
 
             var viewModel = _mapper.Map<TrainingSessionViewModel>(entity);
-            // viewModel.Trainer = entity.Trainer; // Temporarily disabled
-            viewModel.ProvinceName = entity.Province; // Province is now string directly
             viewModel.StatusText = entity.Status.ToString();
-            viewModel.CreatedByUserName = string.Empty; // No longer available
+            viewModel.CreatedByUserName = string.Empty;
             
             return viewModel;
         }
@@ -140,10 +138,10 @@ namespace MH.Application.Service
 
             // Province stats
             var provinceStats = allSessions
-                .GroupBy(x => x.Province)  // Province is now string directly
+                .GroupBy(x => x.ProvinceId)
                 .Select(g => new ProvinceTrainingStats
                 {
-                    Province = g.Key ?? "Unknown",
+                    Province = g.Key.ToString(),  // ProvinceId as string for now
                     Sessions = g.Count(),
                     Participants = 0, // Field removed from TrainingSession
                     Trainers = g.Select(x => x.TrainerId).Distinct().Count()

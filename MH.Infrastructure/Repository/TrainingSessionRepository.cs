@@ -18,8 +18,8 @@ namespace MH.Infrastructure.Repository
         public async Task<IReadOnlyList<TrainingSession>> GetByProvince(string provinceName)
         {
             return await _context.TrainingSession
-                // .Include(x => x.Trainer) // Temporarily disabled
-                .Where(x => x.Province == provinceName && !x.IsDeleted)
+                .Include(x => x.Province)
+                .Where(x => x.Province != null && x.Province.Name == provinceName && !x.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
         }

@@ -15,7 +15,7 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.TrainingName);
             builder.Property(x => x.TrainingType);
             builder.Property(x => x.Date).HasColumnName("TrainingDate");
-            builder.Property(x => x.Province).HasColumnName("ProvinceId");
+            builder.Property(x => x.ProvinceId).HasColumnName("ProvinceId");
             builder.Property(x => x.Venue);
             builder.Property(x => x.TrainerId);
             builder.Property(x => x.TargetAudience);
@@ -23,11 +23,11 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.IsDeleted);
             builder.Property(x => x.NumberOfParticipants);
                 
-            // Temporarily disable foreign key relationships to avoid schema conflicts
-            // builder.HasOne(e => e.Trainer)
-            //     .WithMany(t => t.TrainingSessions)
-            //     .HasForeignKey(e => e.TrainerId)
-            //     .OnDelete(DeleteBehavior.Restrict);
+            // Province navigation property
+            builder.HasOne(e => e.Province)
+                .WithMany()
+                .HasForeignKey(e => e.ProvinceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

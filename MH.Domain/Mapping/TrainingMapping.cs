@@ -9,9 +9,11 @@ namespace MH.Domain.Mapping
     {
         public TrainingMapping()
         {
-            CreateMap<TrainingSessionModel, TrainingSession>();
+            CreateMap<TrainingSessionModel, TrainingSession>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.StartDate));
             CreateMap<TrainingSession, TrainingSessionViewModel>()
-                // .ForMember(dest => dest.Trainer, opt => opt.MapFrom(src => src.Trainer)) // Temporarily disabled
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Date))
+                .ForMember(dest => dest.ProvinceName, opt => opt.MapFrom(src => src.Province != null ? src.Province.Name : null))
                 .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.CreatedByUserName, opt => opt.MapFrom(src => string.Empty));
 

@@ -20,7 +20,7 @@ namespace MH.Domain.DBModel
         
         public DateTime Date { get; set; }
         
-        public string Province { get; set; } = null!;
+        public int ProvinceId { get; set; }  // Changed from string Province to int ProvinceId
         
         public string Venue { get; set; } = null!;
         public int TrainerId { get; set; }
@@ -29,8 +29,8 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
         public int NumberOfParticipants { get; set; }
 
-        // Temporarily comment out navigation properties to avoid schema conflicts
-        // public virtual Trainer? Trainer { get; set; }
+        // Navigation property
+        public virtual Province? Province { get; set; }
     }
 
     public enum TrainingStatus
