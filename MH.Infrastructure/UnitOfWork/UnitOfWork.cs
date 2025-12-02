@@ -24,9 +24,6 @@ namespace MH.Infrastructure.UnitOfWork
         private IPriorityRepository? _priorityRepository;
         public IPriorityRepository PriorityRepository => _priorityRepository ?? new PriorityRepository(_dbContext);
 
-        private IPatientRepository? _patientRepository;
-        public IPatientRepository PatientRepository => _patientRepository ?? new PatientRepository(_dbContext);
-
         private IContactDetailsRepository? _contactDetailsRepository;
         public IContactDetailsRepository ContactDetailsRepository => _contactDetailsRepository ?? new ContactDetailsRepository(_dbContext);
 

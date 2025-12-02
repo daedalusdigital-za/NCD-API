@@ -16,7 +16,6 @@ namespace MH.Application.Dependency
         {
             #region Services
             services.AddScoped<IPriorityService, PriorityService>();
-            services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IContactDetailsService, ContactDetailsService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<IUserProfileService, UserProfileService>();

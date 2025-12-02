@@ -11,7 +11,6 @@ namespace MH.Infrastructure.Dependency
         {
             #region Repositories
             services.AddScoped<IPriorityRepository, PriorityRepository>();
-            services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IContactDetailsRepository, ContactDetailsRepository>();
             services.AddScoped<IPositionRepository, PositionRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
