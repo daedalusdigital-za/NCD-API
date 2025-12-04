@@ -191,7 +191,7 @@ namespace MH.Api.Controllers
         // PDF Upload/Download Endpoints
         [HttpPost]
         [Route("UploadPDF")]
-        // [Authorize] // Temporarily disabled for testing
+        [Authorize]
         [Consumes("multipart/form-data")]
         [SwaggerResponse(StatusCodes.Status200OK, "PDF uploaded successfully", typeof(TrainingDocumentViewModel))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid file or training session")]
@@ -201,9 +201,12 @@ namespace MH.Api.Controllers
         {
             try
             {
-                // Use test user ID since auth is disabled for testing
-                int userId = 1; // Test user ID
+                // Get current user ID from JWT claims
+                int userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
                 
+                if (userId == 0)
+                    return Unauthorized(new { message = "User ID not found in token" });
+
                 var result = await _trainingDocumentService.UploadPDFAsync(file, trainingSessionId, documentType, fileName, userId);
                 return Ok(result);
             }
