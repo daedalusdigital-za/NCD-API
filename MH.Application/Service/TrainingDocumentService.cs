@@ -116,7 +116,7 @@ namespace MH.Application.Service
             foreach (var vm in viewModels)
             {
                 vm.FileUrl = $"/api/Training/DownloadPDF/{vm.Id}";
-                vm.UploadedAt = DateTime.Now;
+                vm.UploadedAt = vm.UploadedAt; // Use the mapped value from AutoMapper
             }
 
             return new TrainingDocumentsListViewModel

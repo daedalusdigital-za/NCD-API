@@ -28,6 +28,7 @@ namespace MH.Infrastructure.DBContext
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SaleItem> SaleItems { get; set; }
         public DbSet<TrainingSession> TrainingSession { get; set; } // Match table name
+        public DbSet<TrainingDocument> TrainingDocuments { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
