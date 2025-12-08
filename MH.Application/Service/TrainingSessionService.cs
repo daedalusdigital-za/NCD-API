@@ -31,8 +31,19 @@ namespace MH.Application.Service
         public async Task Add(TrainingSessionModel model)
         {
             var entity = _mapper.Map<TrainingSession>(model);
-            entity.CreatedBy = _currentUser.User.Id;
+            
+            // ✅ Handle audit fields safely when no authentication
+            try
+            {
+                entity.CreatedBy = _currentUser.User.Id;
+            }
+            catch
+            {
+                // No authentication - use default value
+                entity.CreatedBy = 1; // System user
+            }
             entity.DateCreated = DateTime.Now;
+            
             await _trainingSessionRepository.Insert(entity);
         }
 
@@ -60,8 +71,16 @@ namespace MH.Application.Service
             existingEntity.Status = model.Status;
             existingEntity.Date = model.StartDate;
             
-            // Set audit fields
-            existingEntity.UpdatedBy = _currentUser.User.Id;
+            // ✅ Handle audit fields safely when no authentication
+            try
+            {
+                existingEntity.UpdatedBy = _currentUser.User.Id;
+            }
+            catch
+            {
+                // No authentication - use default value
+                existingEntity.UpdatedBy = 1; // System user
+            }
             existingEntity.LastUpdated = DateTime.Now;
             
             // ✅ Add debugging after mapping
