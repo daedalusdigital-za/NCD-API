@@ -73,7 +73,7 @@ namespace MH.Application.Service
                 existingEntity.NumberOfParticipants = model.NumberOfParticipants;
             if (model.Status > 0)
                 existingEntity.Status = model.Status;
-            if (model.StartDate != DateTime.MinValue)
+            if (model.StartDate != DateTime.MinValue && model.StartDate > DateTime.MinValue.AddYears(1))
                 existingEntity.Date = model.StartDate;
             
             // ✅ Handle audit fields safely when no authentication

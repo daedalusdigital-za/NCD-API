@@ -76,6 +76,8 @@ namespace MH.Api.Controllers
                     model.NumberOfParticipants = participants;
                 if (root.TryGetProperty("status", out var statusElement) && statusElement.TryGetInt32(out int status))
                     model.Status = status;
+                if (root.TryGetProperty("startDate", out var startDateElement) && startDateElement.TryGetDateTime(out DateTime startDate))
+                    model.StartDate = startDate;
                 
                 // ✅ Add debugging logs
                 Console.WriteLine($"[TRAINING UPDATE] Received request for ID: {model.Id}");
