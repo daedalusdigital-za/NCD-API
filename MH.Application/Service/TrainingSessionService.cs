@@ -5,25 +5,23 @@ using MH.Domain.IEntity;
 using MH.Domain.IRepository;
 using MH.Domain.Model;
 using MH.Domain.ViewModel;
+using MH.Domain.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace MH.Application.Service
 {
     public class TrainingSessionService : ITrainingSessionService
     {
-        private readonly ITrainingSessionRepository _trainingSessionRepository;
-        private readonly ITrainerRepository _trainerRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
 
         public TrainingSessionService(
-            ITrainingSessionRepository trainingSessionRepository,
-            ITrainerRepository trainerRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper,
             ICurrentUser currentUser)
         {
-            _trainingSessionRepository = trainingSessionRepository;
-            _trainerRepository = trainerRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _currentUser = currentUser;
         }
@@ -44,12 +42,13 @@ namespace MH.Application.Service
             }
             entity.DateCreated = DateTime.Now;
             
-            await _trainingSessionRepository.Insert(entity);
+            await _unitOfWork.TrainingSessionRepository.Insert(entity);
+            await _unitOfWork.CommitAsync(); // ✅ Commit the transaction
         }
 
         public async Task<TrainingSessionViewModel> Update(TrainingSessionModel model)
         {
-            var existingEntity = await _trainingSessionRepository.GetById(model.Id.Value);
+            var existingEntity = await _unitOfWork.TrainingSessionRepository.GetById(model.Id.Value);
             if (existingEntity == null)
                 throw new ArgumentException("Training session not found");
 
@@ -86,9 +85,10 @@ namespace MH.Application.Service
             // ✅ Add debugging after mapping
             Console.WriteLine($"[SERVICE UPDATE] After mapping - Entity TrainerId: {existingEntity.TrainerId}, ProvinceId: {existingEntity.ProvinceId}");
             
-            await _trainingSessionRepository.Update(existingEntity);
+            await _unitOfWork.TrainingSessionRepository.Update(existingEntity);
+            await _unitOfWork.CommitAsync(); // ✅ This was the missing piece!
             
-            Console.WriteLine($"[SERVICE UPDATE] Database update completed for ID: {model.Id}");
+            Console.WriteLine($"[SERVICE UPDATE] Database update committed for ID: {model.Id}");
             
             // ✅ Return the updated entity as a view model
             var updatedViewModel = _mapper.Map<TrainingSessionViewModel>(existingEntity);
@@ -100,19 +100,27 @@ namespace MH.Application.Service
 
         public async Task Delete(int id)
         {
-            var existingEntity = await _trainingSessionRepository.GetById(id);
+            var existingEntity = await _unitOfWork.TrainingSessionRepository.GetById(id);
             if (existingEntity == null)
                 throw new ArgumentException("Training session not found");
 
             existingEntity.IsDeleted = true;
-            existingEntity.UpdatedBy = _currentUser.User.Id;
+            try
+            {
+                existingEntity.UpdatedBy = _currentUser.User.Id;
+            }
+            catch
+            {
+                existingEntity.UpdatedBy = 1; // System user
+            }
             existingEntity.LastUpdated = DateTime.Now;
-            await _trainingSessionRepository.Update(existingEntity);
+            await _unitOfWork.TrainingSessionRepository.Update(existingEntity);
+            await _unitOfWork.CommitAsync(); // ✅ Commit the transaction
         }
 
         public async Task<TrainingSessionViewModel?> GetById(int id)
         {
-            var entity = await _trainingSessionRepository.FindBy(
+            var entity = await _unitOfWork.TrainingSessionRepository.FindBy(
                 x => x.Id == id && !x.IsDeleted);  
             
             if (entity == null) return null;
@@ -126,7 +134,7 @@ namespace MH.Application.Service
 
         public async Task<List<TrainingSessionViewModel>> GetAll()
         {
-            var entities = await _trainingSessionRepository.GetAll(
+            var entities = await _unitOfWork.TrainingSessionRepository.GetAll(
                 x => !x.IsDeleted);
 
             return _mapper.Map<List<TrainingSessionViewModel>>(entities);
@@ -134,31 +142,31 @@ namespace MH.Application.Service
 
         public async Task<List<TrainingSessionViewModel>> GetByProvince(string provinceName)
         {
-            var entities = await _trainingSessionRepository.GetByProvince(provinceName);
+            var entities = await _unitOfWork.TrainingSessionRepository.GetByProvince(provinceName);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
         public async Task<List<TrainingSessionViewModel>> GetByDateRange(DateTime startDate, DateTime endDate)
         {
-            var entities = await _trainingSessionRepository.GetByDateRange(startDate, endDate);
+            var entities = await _unitOfWork.TrainingSessionRepository.GetByDateRange(startDate, endDate);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
         public async Task<List<TrainingSessionViewModel>> GetByTrainer(int trainerId)
         {
-            var entities = await _trainingSessionRepository.GetByTrainer(trainerId);
+            var entities = await _unitOfWork.TrainingSessionRepository.GetByTrainer(trainerId);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
         public async Task<List<TrainingSessionViewModel>> GetByStatus(TrainingStatus status)
         {
-            var entities = await _trainingSessionRepository.GetByStatus(status);
+            var entities = await _unitOfWork.TrainingSessionRepository.GetByStatus(status);
             return _mapper.Map<List<TrainingSessionViewModel>>(entities.Where(x => !x.IsDeleted));
         }
 
         public async Task<TrainingStatsModel> GetTrainingStats()
         {
-            var allSessions = await _trainingSessionRepository.GetAll(x => !x.IsDeleted);
+            var allSessions = await _unitOfWork.TrainingSessionRepository.GetAll(x => !x.IsDeleted);
             
             var stats = new TrainingStatsModel
             {
