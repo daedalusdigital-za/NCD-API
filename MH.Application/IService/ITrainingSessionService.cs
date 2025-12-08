@@ -7,7 +7,7 @@ namespace MH.Application.IService
     public interface ITrainingSessionService
     {
         Task Add(TrainingSessionModel model);
-        Task Update(TrainingSessionModel model);
+        Task<TrainingSessionViewModel> Update(TrainingSessionModel model);  // ✅ Return updated entity
         Task Delete(int id);
         Task<TrainingSessionViewModel?> GetById(int id);
         Task<List<TrainingSessionViewModel>> GetAll();

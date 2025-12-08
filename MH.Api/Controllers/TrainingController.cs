@@ -46,11 +46,29 @@ namespace MH.Api.Controllers
         {
             try
             {
-                await _trainingSessionService.Update(model);
-                return Ok(new { message = "Training session updated successfully" });
+                // ✅ Add debugging logs
+                Console.WriteLine($"[TRAINING UPDATE] Received request for ID: {model.Id}");
+                Console.WriteLine($"[TRAINING UPDATE] TrainerId: {model.TrainerId}");
+                Console.WriteLine($"[TRAINING UPDATE] ProvinceId: {model.ProvinceId}");
+                Console.WriteLine($"[TRAINING UPDATE] TrainingName: {model.TrainingName}");
+                Console.WriteLine($"[TRAINING UPDATE] Venue: {model.Venue}");
+                
+                var updatedSession = await _trainingSessionService.Update(model);
+                
+                Console.WriteLine($"[TRAINING UPDATE] Update completed successfully for ID: {model.Id}");
+                Console.WriteLine($"[TRAINING UPDATE] Confirmed updated TrainerId: {updatedSession.TrainerId}");
+                Console.WriteLine($"[TRAINING UPDATE] Confirmed updated ProvinceId: {updatedSession.ProvinceId}");
+                
+                return Ok(new { 
+                    message = "Training session updated successfully",
+                    data = updatedSession,
+                    updatedTrainerId = updatedSession.TrainerId,
+                    updatedProvinceId = updatedSession.ProvinceId
+                });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[TRAINING UPDATE ERROR] {ex.Message}");
                 return BadRequest(new { message = ex.Message });
             }
         }

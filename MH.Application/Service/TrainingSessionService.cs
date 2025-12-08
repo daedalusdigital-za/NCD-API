@@ -36,16 +36,47 @@ namespace MH.Application.Service
             await _trainingSessionRepository.Insert(entity);
         }
 
-        public async Task Update(TrainingSessionModel model)
+        public async Task<TrainingSessionViewModel> Update(TrainingSessionModel model)
         {
             var existingEntity = await _trainingSessionRepository.GetById(model.Id.Value);
             if (existingEntity == null)
                 throw new ArgumentException("Training session not found");
 
+            // ✅ Add debugging before update
+            Console.WriteLine($"[SERVICE UPDATE] Before mapping - Entity TrainerId: {existingEntity.TrainerId}, ProvinceId: {existingEntity.ProvinceId}");
+            Console.WriteLine($"[SERVICE UPDATE] Model data - TrainerId: {model.TrainerId}, ProvinceId: {model.ProvinceId}");
+            
+            // Map the model to the existing entity
             _mapper.Map(model, existingEntity);
+            
+            // ✅ Explicitly ensure critical fields are updated (in case AutoMapper fails)
+            existingEntity.TrainerId = model.TrainerId;
+            existingEntity.ProvinceId = model.ProvinceId;
+            existingEntity.TrainingName = model.TrainingName;
+            existingEntity.TrainingType = model.TrainingType;
+            existingEntity.Venue = model.Venue;
+            existingEntity.TargetAudience = model.TargetAudience;
+            existingEntity.NumberOfParticipants = model.NumberOfParticipants;
+            existingEntity.Status = model.Status;
+            existingEntity.Date = model.StartDate;
+            
+            // Set audit fields
             existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
+            
+            // ✅ Add debugging after mapping
+            Console.WriteLine($"[SERVICE UPDATE] After mapping - Entity TrainerId: {existingEntity.TrainerId}, ProvinceId: {existingEntity.ProvinceId}");
+            
             await _trainingSessionRepository.Update(existingEntity);
+            
+            Console.WriteLine($"[SERVICE UPDATE] Database update completed for ID: {model.Id}");
+            
+            // ✅ Return the updated entity as a view model
+            var updatedViewModel = _mapper.Map<TrainingSessionViewModel>(existingEntity);
+            updatedViewModel.StatusText = existingEntity.Status.ToString();
+            updatedViewModel.CreatedByUserName = string.Empty;
+            
+            return updatedViewModel;
         }
 
         public async Task Delete(int id)

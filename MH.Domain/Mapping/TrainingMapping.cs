@@ -9,8 +9,17 @@ namespace MH.Domain.Mapping
     {
         public TrainingMapping()
         {
+            // ✅ Enhanced mapping to ensure ALL fields are mapped during updates
             CreateMap<TrainingSessionModel, TrainingSession>()
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.StartDate));
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.TrainerId, opt => opt.MapFrom(src => src.TrainerId))
+                .ForMember(dest => dest.ProvinceId, opt => opt.MapFrom(src => src.ProvinceId))
+                .ForMember(dest => dest.TrainingName, opt => opt.MapFrom(src => src.TrainingName))
+                .ForMember(dest => dest.TrainingType, opt => opt.MapFrom(src => src.TrainingType))
+                .ForMember(dest => dest.Venue, opt => opt.MapFrom(src => src.Venue))
+                .ForMember(dest => dest.TargetAudience, opt => opt.MapFrom(src => src.TargetAudience))
+                .ForMember(dest => dest.NumberOfParticipants, opt => opt.MapFrom(src => src.NumberOfParticipants))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
             CreateMap<TrainingSession, TrainingSessionViewModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Date))
                 .ForMember(dest => dest.ProvinceName, opt => opt.MapFrom(src => src.Province != null ? src.Province.Name : null))
