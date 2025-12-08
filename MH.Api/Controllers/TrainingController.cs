@@ -5,6 +5,7 @@ using MH.Domain.Model;
 using MH.Domain.ViewModel;
 using MH.Domain.DBModel;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
 
 namespace MH.Api.Controllers
 {
@@ -42,15 +43,44 @@ namespace MH.Api.Controllers
         [Route("Update")]
         [SwaggerResponse(StatusCodes.Status200OK, "Training session updated successfully")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Training session not found")]
-        public async Task<ActionResult> Update([FromBody] TrainingSessionModel model)
+        public async Task<ActionResult> Update()
         {
             try
             {
+                // Read the raw JSON to bypass model validation
+                using var reader = new StreamReader(Request.Body);
+                var json = await reader.ReadToEndAsync();
+                var jsonDocument = JsonDocument.Parse(json);
+                var root = jsonDocument.RootElement;
+                
+                // Extract required ID
+                if (!root.TryGetProperty("id", out var idElement) || !idElement.TryGetInt32(out int id))
+                    return BadRequest(new { message = "ID is required for updates" });
+                
+                // Create model with only provided fields
+                var model = new TrainingSessionModel { Id = id };
+                
+                if (root.TryGetProperty("trainerId", out var trainerIdElement) && trainerIdElement.TryGetInt32(out int trainerId))
+                    model.TrainerId = trainerId;
+                if (root.TryGetProperty("provinceId", out var provinceIdElement) && provinceIdElement.TryGetInt32(out int provinceId))
+                    model.ProvinceId = provinceId;
+                if (root.TryGetProperty("trainingName", out var trainingNameElement))
+                    model.TrainingName = trainingNameElement.GetString();
+                if (root.TryGetProperty("trainingType", out var trainingTypeElement))
+                    model.TrainingType = trainingTypeElement.GetString();
+                if (root.TryGetProperty("venue", out var venueElement))
+                    model.Venue = venueElement.GetString();
+                if (root.TryGetProperty("targetAudience", out var targetAudienceElement))
+                    model.TargetAudience = targetAudienceElement.GetString();
+                if (root.TryGetProperty("numberOfParticipants", out var participantsElement) && participantsElement.TryGetInt32(out int participants))
+                    model.NumberOfParticipants = participants;
+                if (root.TryGetProperty("status", out var statusElement) && statusElement.TryGetInt32(out int status))
+                    model.Status = status;
+                
                 // ✅ Add debugging logs
                 Console.WriteLine($"[TRAINING UPDATE] Received request for ID: {model.Id}");
                 Console.WriteLine($"[TRAINING UPDATE] TrainerId: {model.TrainerId}");
                 Console.WriteLine($"[TRAINING UPDATE] ProvinceId: {model.ProvinceId}");
-                Console.WriteLine($"[TRAINING UPDATE] TrainingName: {model.TrainingName}");
                 Console.WriteLine($"[TRAINING UPDATE] Venue: {model.Venue}");
                 
                 var updatedSession = await _trainingSessionService.Update(model);
