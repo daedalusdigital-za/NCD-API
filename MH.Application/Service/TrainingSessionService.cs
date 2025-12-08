@@ -56,19 +56,25 @@ namespace MH.Application.Service
             Console.WriteLine($"[SERVICE UPDATE] Before mapping - Entity TrainerId: {existingEntity.TrainerId}, ProvinceId: {existingEntity.ProvinceId}");
             Console.WriteLine($"[SERVICE UPDATE] Model data - TrainerId: {model.TrainerId}, ProvinceId: {model.ProvinceId}");
             
-            // Map the model to the existing entity
-            _mapper.Map(model, existingEntity);
-            
-            // ✅ Explicitly ensure critical fields are updated (in case AutoMapper fails)
-            existingEntity.TrainerId = model.TrainerId;
-            existingEntity.ProvinceId = model.ProvinceId;
-            existingEntity.TrainingName = model.TrainingName;
-            existingEntity.TrainingType = model.TrainingType;
-            existingEntity.Venue = model.Venue;
-            existingEntity.TargetAudience = model.TargetAudience;
-            existingEntity.NumberOfParticipants = model.NumberOfParticipants;
-            existingEntity.Status = model.Status;
-            existingEntity.Date = model.StartDate;
+            // ✅ Only update fields that are provided (non-null/non-empty)
+            if (model.TrainerId > 0)
+                existingEntity.TrainerId = model.TrainerId;
+            if (model.ProvinceId > 0)
+                existingEntity.ProvinceId = model.ProvinceId;
+            if (!string.IsNullOrEmpty(model.TrainingName))
+                existingEntity.TrainingName = model.TrainingName;
+            if (!string.IsNullOrEmpty(model.TrainingType))
+                existingEntity.TrainingType = model.TrainingType;
+            if (!string.IsNullOrEmpty(model.Venue))
+                existingEntity.Venue = model.Venue;
+            if (!string.IsNullOrEmpty(model.TargetAudience))
+                existingEntity.TargetAudience = model.TargetAudience;
+            if (model.NumberOfParticipants > 0)
+                existingEntity.NumberOfParticipants = model.NumberOfParticipants;
+            if (model.Status > 0)
+                existingEntity.Status = model.Status;
+            if (model.StartDate != DateTime.MinValue)
+                existingEntity.Date = model.StartDate;
             
             // ✅ Handle audit fields safely when no authentication
             try
