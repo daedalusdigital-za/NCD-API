@@ -11,15 +11,7 @@ namespace MH.Infrastructure.Configuration
             builder.ToTable("TrainingSession");
             builder.HasKey(x => x.Id);
             
-            // ✅ CRITICAL: Map base model properties to ACTUAL database column names
-            // Database columns: CreatedAt, UpdatedAt (not DateCreated, LastUpdated)
-            builder.Property(x => x.DateCreated)
-                .HasColumnName("CreatedAt");
-                
-            builder.Property(x => x.LastUpdated)
-                .HasColumnName("UpdatedAt");
-            
-            // Map data properties to correct column names
+            // Map data properties to actual database column names
             builder.Property(x => x.TrainingName);
             builder.Property(x => x.TrainingType);
             builder.Property(x => x.Date).HasColumnName("TrainingDate");  // Date → TrainingDate
@@ -30,8 +22,6 @@ namespace MH.Infrastructure.Configuration
             builder.Property(x => x.NumberOfParticipants);
             builder.Property(x => x.Status);
             builder.Property(x => x.IsDeleted);
-            builder.Property(x => x.CreatedBy);
-            builder.Property(x => x.UpdatedBy);
                 
             // Province navigation property
             builder.HasOne(e => e.Province)
