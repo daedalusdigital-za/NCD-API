@@ -11,10 +11,14 @@ namespace MH.Infrastructure.Configuration
             builder.ToTable("TrainingSession");
             builder.HasKey(x => x.Id);
             
+            // Map base model properties to actual database columns
+            builder.Property(x => x.DateCreated).HasColumnName("CreatedAt");
+            builder.Property(x => x.LastUpdated).HasColumnName("UpdatedAt");
+            
             // Configure properties - DO NOT map base properties as they use default conventions
             builder.Property(x => x.TrainingName);
             builder.Property(x => x.TrainingType);
-            builder.Property(x => x.Date).HasColumnName("TrainingDate");
+            builder.Property(x => x.Date).HasColumnName("Date");
             builder.Property(x => x.ProvinceId).HasColumnName("ProvinceId");
             builder.Property(x => x.Venue);
             builder.Property(x => x.TrainerId);
