@@ -11,17 +11,8 @@ namespace MH.Infrastructure.Configuration
             builder.ToTable("TrainingSession");
             builder.HasKey(x => x.Id);
             
-            // Map data properties to actual database column names
-            builder.Property(x => x.TrainingName);
-            builder.Property(x => x.TrainingType);
-            builder.Property(x => x.Date).HasColumnName("TrainingDate");  // Date → TrainingDate
-            builder.Property(x => x.ProvinceId);
-            builder.Property(x => x.Venue);
-            builder.Property(x => x.TrainerId);
-            builder.Property(x => x.TargetAudience);
-            builder.Property(x => x.NumberOfParticipants);
-            builder.Property(x => x.Status);
-            builder.Property(x => x.IsDeleted);
+            // Map Date property to TrainingDate column
+            builder.Property(x => x.Date).HasColumnName("TrainingDate");
                 
             // Province navigation property
             builder.HasOne(e => e.Province)
@@ -35,7 +26,8 @@ namespace MH.Infrastructure.Configuration
                 .HasForeignKey(e => e.TrainerId)
                 .OnDelete(DeleteBehavior.SetNull);
             
-            // Make TrainerId nullable
+            // Make foreign keys nullable
+            builder.Property(x => x.ProvinceId).IsRequired(false);
             builder.Property(x => x.TrainerId).IsRequired(false);
             builder.Property(x => x.Status).IsRequired(false);
         }

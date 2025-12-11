@@ -4,14 +4,6 @@ namespace MH.Domain.DBModel
 {
     public class TrainingSession : BaseModel<int>
     {
-        // Override BaseModel audit properties
-        public new DateTime DateCreated { get; set; }
-        
-        public new DateTime? LastUpdated { get; set; }
-        
-        public new int? CreatedBy { get; set; }
-        
-        public new int? UpdatedBy { get; set; }
         
         public string TrainingName { get; set; } = null!;
         public string TrainingType { get; set; } = null!;
