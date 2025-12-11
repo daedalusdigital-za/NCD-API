@@ -11,6 +11,13 @@ namespace MH.Infrastructure.Configuration
             builder.ToTable("TrainingSession");
             builder.HasKey(x => x.Id);
             
+            // ⚠️ CRITICAL: Ignore audit properties from BaseModel - let EF use shadow properties
+            // The database schema doesn't match the BaseModel audit property names
+            builder.Ignore(x => x.DateCreated);
+            builder.Ignore(x => x.LastUpdated);
+            builder.Ignore(x => x.CreatedBy);
+            builder.Ignore(x => x.UpdatedBy);
+            
             // Map Date property to TrainingDate column
             builder.Property(x => x.Date).HasColumnName("TrainingDate");
                 
