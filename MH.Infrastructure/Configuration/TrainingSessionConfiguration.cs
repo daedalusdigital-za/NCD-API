@@ -8,7 +8,7 @@ namespace MH.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<TrainingSession> builder)
         {
-            builder.ToTable("TrainingSession");
+            builder.ToTable("TrainingSessions");  // Changed from "TrainingSession" to "TrainingSessions"
             builder.HasKey(x => x.Id);
             
             // Map base model properties to actual database columns

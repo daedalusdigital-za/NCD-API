@@ -1,9 +1,7 @@
 using MH.Domain.Model;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MH.Domain.DBModel
 {
-    [Table("TrainingSession")]
     public class TrainingSession : BaseModel<int>
     {
         // Override BaseModel audit properties
