@@ -11,35 +11,27 @@ namespace MH.Infrastructure.Configuration
             builder.ToTable("TrainingSession");
             builder.HasKey(x => x.Id);
             
-            // ✅ CRITICAL: Map base model properties to match ACTUAL database column names after migrations
-            // Migrations renamed: DateCreated → CreatedAt, LastUpdated → UpdatedAt
+            // ✅ CRITICAL: Map base model properties to ACTUAL database column names
+            // Database columns: CreatedAt, UpdatedAt (not DateCreated, LastUpdated)
             builder.Property(x => x.DateCreated)
-                .HasColumnName("CreatedAt")
-                .HasColumnType("datetime2")
-                .IsRequired();
+                .HasColumnName("CreatedAt");
                 
             builder.Property(x => x.LastUpdated)
-                .HasColumnName("UpdatedAt")
-                .HasColumnType("datetime2")
-                .IsRequired(false);
-                
-            builder.Property(x => x.CreatedBy)
-                .IsRequired(false);  // Database allows NULL
-                
-            builder.Property(x => x.UpdatedBy)
-                .IsRequired(false);  // Database allows NULL
+                .HasColumnName("UpdatedAt");
             
-            // Map other properties
-            builder.Property(x => x.TrainingName).IsRequired();
-            builder.Property(x => x.TrainingType).IsRequired();
-            builder.Property(x => x.Date).HasColumnName("Date");  // StartDate → Date
-            builder.Property(x => x.ProvinceId).IsRequired(false);  // Allow NULL
-            builder.Property(x => x.Venue).IsRequired();
-            builder.Property(x => x.TrainerId).IsRequired(false);  // Allow NULL
-            builder.Property(x => x.TargetAudience).IsRequired();
-            builder.Property(x => x.Status).IsRequired(false);  // Allow NULL
-            builder.Property(x => x.IsDeleted);
+            // Map data properties to correct column names
+            builder.Property(x => x.TrainingName);
+            builder.Property(x => x.TrainingType);
+            builder.Property(x => x.Date).HasColumnName("TrainingDate");  // Date → TrainingDate
+            builder.Property(x => x.ProvinceId);
+            builder.Property(x => x.Venue);
+            builder.Property(x => x.TrainerId);
+            builder.Property(x => x.TargetAudience);
             builder.Property(x => x.NumberOfParticipants);
+            builder.Property(x => x.Status);
+            builder.Property(x => x.IsDeleted);
+            builder.Property(x => x.CreatedBy);
+            builder.Property(x => x.UpdatedBy);
                 
             // Province navigation property
             builder.HasOne(e => e.Province)
