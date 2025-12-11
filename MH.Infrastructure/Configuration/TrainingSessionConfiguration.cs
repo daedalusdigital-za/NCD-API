@@ -28,6 +28,12 @@ namespace MH.Infrastructure.Configuration
                 .WithMany()
                 .HasForeignKey(e => e.ProvinceId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            // Trainer navigation property
+            builder.HasOne(e => e.Trainer)
+                .WithMany()
+                .HasForeignKey(e => e.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
