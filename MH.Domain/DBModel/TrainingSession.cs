@@ -23,9 +23,9 @@ namespace MH.Domain.DBModel
         public int ProvinceId { get; set; }  // Changed from string Province to int ProvinceId
         
         public string Venue { get; set; } = null!;
-        public int TrainerId { get; set; }
+        public int? TrainerId { get; set; }
         public string TargetAudience { get; set; } = null!;
-        public int Status { get; set; } = 1;
+        public int? Status { get; set; } = 1;
         public bool IsDeleted { get; set; }
         public int NumberOfParticipants { get; set; }
 

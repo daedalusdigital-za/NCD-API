@@ -39,7 +39,11 @@ namespace MH.Infrastructure.Configuration
             builder.HasOne(e => e.Trainer)
                 .WithMany()
                 .HasForeignKey(e => e.TrainerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
+            
+            // Make TrainerId nullable
+            builder.Property(x => x.TrainerId).IsRequired(false);
+            builder.Property(x => x.Status).IsRequired(false);
         }
     }
 }
