@@ -18,7 +18,7 @@ namespace MH.Domain.DBModel
         
         public DateTime Date { get; set; }
         
-        public int ProvinceId { get; set; }  // Changed from string Province to int ProvinceId
+        public int? ProvinceId { get; set; }  // Made nullable to handle NULL values in database
         
         public string Venue { get; set; } = null!;
         public int? TrainerId { get; set; }
