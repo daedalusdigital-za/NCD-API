@@ -14,6 +14,8 @@ namespace MH.Infrastructure.Configuration
             // Map base model properties to actual database columns
             builder.Property(x => x.DateCreated).HasColumnName("CreatedAt");
             builder.Property(x => x.LastUpdated).HasColumnName("UpdatedAt");
+            builder.Property(x => x.CreatedBy).HasColumnName("CreatedBy").IsRequired(false);
+            builder.Property(x => x.UpdatedBy).HasColumnName("UpdatedBy").IsRequired(false);
             
             // Configure properties - DO NOT map base properties as they use default conventions
             builder.Property(x => x.TrainingName);

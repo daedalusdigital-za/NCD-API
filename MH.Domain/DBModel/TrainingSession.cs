@@ -11,7 +11,7 @@ namespace MH.Domain.DBModel
         
         public new DateTime? LastUpdated { get; set; }
         
-        public new int CreatedBy { get; set; }
+        public new int? CreatedBy { get; set; }
         
         public new int? UpdatedBy { get; set; }
         
