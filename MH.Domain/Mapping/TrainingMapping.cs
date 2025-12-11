@@ -22,8 +22,9 @@ namespace MH.Domain.Mapping
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
             CreateMap<TrainingSession, TrainingSessionViewModel>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Date))
-                .ForMember(dest => dest.ProvinceName, opt => opt.MapFrom(src => src.Province != null ? src.Province.Name : null))
-                .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.ProvinceName, opt => opt.MapFrom(src => src.Province != null ? src.Province.Name : string.Empty))
+                .ForMember(dest => dest.StatusText, opt => opt.MapFrom(src => src.Status != null ? src.Status.ToString() : "Active"))
+                .ForMember(dest => dest.Trainer, opt => opt.MapFrom(src => src.Trainer))
                 .ForMember(dest => dest.CreatedByUserName, opt => opt.MapFrom(src => string.Empty));
 
             CreateMap<TrainerModel, Trainer>()

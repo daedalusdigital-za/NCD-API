@@ -29,8 +29,9 @@ namespace MH.Domain.DBModel
         public bool IsDeleted { get; set; }
         public int NumberOfParticipants { get; set; }
 
-        // Navigation property
+        // Navigation properties
         public virtual Province? Province { get; set; }
+        public virtual Trainer? Trainer { get; set; }
     }
 
     public enum TrainingStatus
