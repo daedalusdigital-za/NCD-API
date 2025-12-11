@@ -149,12 +149,20 @@ namespace MH.Api.Controllers
         {
             try
             {
+                Console.WriteLine("[TRAINING CONTROLLER] GetAll called");
                 var result = await _trainingSessionService.GetAll();
+                Console.WriteLine($"[TRAINING CONTROLLER] GetAll returned {result.Count} records");
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                Console.WriteLine($"[TRAINING CONTROLLER] GetAll Exception: {ex.Message}");
+                Console.WriteLine($"[TRAINING CONTROLLER] GetAll StackTrace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[TRAINING CONTROLLER] Inner Exception: {ex.InnerException.Message}");
+                }
+                return BadRequest(new { message = ex.Message, stackTrace = ex.StackTrace, innerException = ex.InnerException?.Message });
             }
         }
 
