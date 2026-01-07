@@ -162,7 +162,7 @@ namespace MH.Api.Controllers
             await _userService.Delete(id);
             return Ok();
         }
-        [HttpPatch]
+        [HttpPost]
         [Route("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
