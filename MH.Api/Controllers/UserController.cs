@@ -166,13 +166,29 @@ namespace MH.Api.Controllers
         [Route("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
-            if(!await _userService.CanViewOrEdit(changePasswordModel.UserId))
+            // Only admins can change other users' passwords
+            if(!await _userService.IsAdmin(_currentUser.User.Id))
             {
-                return Forbid("Not authorized to change password");
+                return Forbid("Not authorized to change password - admin access required");
             }
+            
             var user = await _userManager.FindByIdAsync(changePasswordModel.UserId.ToString());
-            await _userManager.ChangePasswordAsync(user, changePasswordModel.CurrentPassword, changePasswordModel.NewPassword);
-            return Ok();
+            if(user == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            // Remove current password and generate reset token for admin password change
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, changePasswordModel.NewPassword);
+            
+            if(!result.Succeeded)
+            {
+                var errors = result.Errors.Select(x => x.Description).ToList();
+                return BadRequest(errors);
+            }
+            
+            return Ok("Password changed successfully");
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
