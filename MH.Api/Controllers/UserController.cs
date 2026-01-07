@@ -197,19 +197,25 @@ namespace MH.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, "Return User data", typeof(string))]
         public async Task<IActionResult> ResetPassword([FromQuery] int userId)
         {
-            if(await _userService.IsAdmin(_currentUser.User.Id))
+            if(!await _userService.IsAdmin(_currentUser.User.Id))
             {
-                var newPassword = "654724135";
-                var user = await _userManager.FindByIdAsync(userId.ToString());
-                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
-                if(!result.Succeeded)
-                {
-                    return BadRequest("Failed to reset password");
-                }
-                return Ok(newPassword);
+                return Forbid("Not authorized to reset password - admin access required");
             }
-            return Forbid("Not authorized to reset password");
+            
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if(user == null)
+            {
+                return NotFound("User not found");
+            }
+            
+            var newPassword = "654724135";
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+            if(!result.Succeeded)
+            {
+                return BadRequest("Failed to reset password");
+            }
+            return Ok(newPassword);
         }
     }
 }
