@@ -176,7 +176,7 @@ namespace MH.Api.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpPatch]
+        [HttpGet]
         [Route("ResetPassword")]
         [SwaggerResponse(StatusCodes.Status200OK, "Return User data", typeof(string))]
         public async Task<IActionResult> ResetPassword([FromQuery] int userId)
