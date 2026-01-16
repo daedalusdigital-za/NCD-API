@@ -27,6 +27,8 @@ namespace MH.Infrastructure.Dependency
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IRepository<Province, int>, Repository<Province, int>>();
             services.AddScoped<IRepository<Clinic, int>, Repository<Clinic, int>>();
+            services.AddScoped<ICreditNoteRepository, CreditNoteRepository>();
+            services.AddScoped<ITrainingDocumentRepository, TrainingDocumentRepository>();
             #endregion
             return services;
         }

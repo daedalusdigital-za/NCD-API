@@ -34,6 +34,7 @@ namespace MH.Application.Dependency
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<ITrainingDocumentService, TrainingDocumentService>();
+            services.AddScoped<ICreditNoteService, CreditNoteService>();
             #endregion
 
             return services;

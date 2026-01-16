@@ -1,11 +1,31 @@
-# Change password for Mandy@promedtechnologies.co.za (UserId: 7)
+# =============================================================================
+# Change Password for Mandy@promedtechnologies.co.za (UserId: 7)
+# =============================================================================
+# This script authenticates via API and changes the password
 # New password: Grace@020983
+# =============================================================================
 
-# Prompt for admin credentials
-Write-Host "Enter admin credentials to authenticate..." -ForegroundColor Cyan
+param(
+    [Parameter(Mandatory=$false)]
+    [int]$UserId = 7,
+    
+    [Parameter(Mandatory=$false)]
+    [string]$TargetEmail = "Mandy@promedtechnologies.co.za",
+    
+    [Parameter(Mandatory=$false)]
+    [string]$NewPassword = "Grace@020983"
+)
+
+Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "  Password Change Tool - NgCandu API" -ForegroundColor Cyan
+Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "`nTarget User: $TargetEmail (UserId: $UserId)" -ForegroundColor White
+
+# Prompt for admin credentials securely
+Write-Host "`nEnter admin credentials to authenticate..." -ForegroundColor Yellow
 $adminEmail = Read-Host "Admin Email"
-$adminPassword = Read-Host "Admin Password" -AsSecureString
-$adminPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($adminPassword))
+$adminSecurePassword = Read-Host "Admin Password" -AsSecureString
+$adminPasswordPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($adminSecurePassword))
 
 # Step 1: Login and get bearer token
 Write-Host "`nAuthenticating..." -ForegroundColor Yellow
@@ -15,16 +35,16 @@ $loginBody = @{
 } | ConvertTo-Json
 
 try {
-    $loginResponse = Invoke-RestMethod -Uri "https://ngcanduapi.azurewebsites.net/api/auth/login" -Method POST -Body $loginBody -ContentType "application/json"
+    $loginResponse = Invoke-RestMethod -Uri "https://ngcanduapi.azurewebsites.net/api/auth/login" -Method POST -Body $loginBody -ContentType "application/json" -ErrorAction Stop
     $token = $loginResponse.token
-    Write-Host "Authentication successful!" -ForegroundColor Green
+    Write-Host "✅ Authentication successful!" -ForegroundColor Green
 } catch {
-    Write-Host "Authentication failed: $_" -ForegroundColor Red
+    Write-Host "❌ Authentication failed: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
 
-# Step 2: Change password for Mandy
-Write-Host "`nChanging password for Mandy@promedtechnologies.co.za..." -ForegroundColor Yellow
+# Step 2: Change password for target user
+Write-Host "`nChanging password for $TargetEmail..." -ForegroundColor Yellow
 
 $headers = @{
     "Authorization" = "Bearer $token"
@@ -32,38 +52,27 @@ $headers = @{
 }
 
 $changePasswordBody = @{
-    userId = 7
-    newPassword = "Grace@020983"
+    userId = $UserId
+    newPassword = $NewPassword
 } | ConvertTo-Json
 
 try {
-    $response = Invoke-RestMethod -Uri "https://ngcanduapi.azurewebsites.net/api/User/ChangePassword" -Method POST -Headers $headers -Body $changePasswordBody
-    Write-Host "`n✅ Password changed successfully!" -ForegroundColor Green
-    Write-Host "Email: Mandy@promedtechnologies.co.za" -ForegroundColor Cyan
-    Write-Host "New Password: Grace@020983" -ForegroundColor Cyan
+    $response = Invoke-RestMethod -Uri "https://ngcanduapi.azurewebsites.net/api/User/ChangePassword" -Method POST -Headers $headers -Body $changePasswordBody -ErrorAction Stop
+    Write-Host "`n═══════════════════════════════════════════════════════════════" -ForegroundColor Green
+    Write-Host "  ✅ Password changed successfully!" -ForegroundColor Green
+    Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
+    Write-Host "Email:        $TargetEmail" -ForegroundColor Cyan
+    Write-Host "New Password: $NewPassword" -ForegroundColor Cyan
+    Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Green
 } catch {
-    Write-Host "Failed to change password: $_" -ForegroundColor Red
+    Write-Host "❌ Failed to change password: $($_.Exception.Message)" -ForegroundColor Red
     if ($_.ErrorDetails.Message) {
-        $errorResponse = $_.ErrorDetails.Message | ConvertFrom-Json
-        Write-Host "Error details: $errorResponse" -ForegroundColor Red
+        try {
+            $errorResponse = $_.ErrorDetails.Message | ConvertFrom-Json
+            Write-Host "Error details: $($errorResponse.message)" -ForegroundColor Red
+        } catch {
+            Write-Host "Error details: $($_.ErrorDetails.Message)" -ForegroundColor Red
+        }
     }
-    
-    # Try with a stronger password that meets all requirements
-    Write-Host "`nThe password might not meet requirements. Trying with uppercase, lowercase, number, and special character..." -ForegroundColor Yellow
-    
-    $strongPasswordBody = @{
-        userId = 7
-        newPassword = "Grace@020983!"
-    } | ConvertTo-Json
-    
-    try {
-        $response2 = Invoke-RestMethod -Uri "https://ngcanduapi.azurewebsites.net/api/User/ChangePassword" -Method POST -Headers $headers -Body $strongPasswordBody
-        Write-Host "`n✅ Password changed successfully with stronger password!" -ForegroundColor Green
-        Write-Host "Email: Mandy@promedtechnologies.co.za" -ForegroundColor Cyan
-        Write-Host "New Password: Grace@020983!" -ForegroundColor Cyan
-    } catch {
-        Write-Host "Still failed: $_" -ForegroundColor Red
-        Write-Host "Error: $($_.ErrorDetails.Message)" -ForegroundColor Red
-        exit 1
-    }
+    exit 1
 }

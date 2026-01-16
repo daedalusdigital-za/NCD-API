@@ -150,5 +150,30 @@ namespace MH.Application.Service
             
             return $"SAL-{year}{month:00}-{sequentialNumber:0000}";
         }
+
+        public async Task<List<SaleViewModel>> GetCreditedSales(string? status = null, DateTime? dateFrom = null, DateTime? dateTo = null)
+        {
+            // Get all sales with credit notes including related data
+            var allSales = await _saleRepository.GetAll();
+            var entities = allSales.Where(x => x.HasCreditNote && !x.IsDeleted).ToList();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(status))
+            {
+                entities = entities.Where(s => s.CreditNotes.Any(cn => cn.Status == status && !cn.IsDeleted)).ToList();
+            }
+
+            if (dateFrom.HasValue)
+            {
+                entities = entities.Where(s => s.SaleDate >= dateFrom.Value).ToList();
+            }
+
+            if (dateTo.HasValue)
+            {
+                entities = entities.Where(s => s.SaleDate <= dateTo.Value).ToList();
+            }
+
+            return _mapper.Map<List<SaleViewModel>>(entities);
+        }
     }
 }

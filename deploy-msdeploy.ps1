@@ -23,9 +23,9 @@ Write-Host "`nStarting deployment..." -ForegroundColor Cyan
 # Run MSDeploy command
 & $msdeployPath `
     -verb:sync `
-    -source:contentPath="$SourcePath" `
-    -dest:contentPath="$MSDeploySite",computerName="https://$PublishUrl/msdeploy.axd?site=$MSDeploySite",userName="$UserName",password="$Password",encryptPassword="False" `
-    -enableRule:DoNotDeleteRule `
+    -source:dirPath="$SourcePath" `
+    -dest:auto,computerName="https://$PublishUrl/msdeploy.axd?site=$MSDeploySite",userName="$UserName",password="$Password",authType="Basic" `
+    -enableRule:AppOffline `
     -verbose
 
 if ($LASTEXITCODE -eq 0) {

@@ -13,6 +13,11 @@ namespace MH.Domain.ViewModel
         public string? Notes { get; set; }
         public List<SaleItemViewModel>? SaleItems { get; set; }
         public DateTime DateCreated { get; set; }
+        
+        // Credit Note tracking
+        public bool HasCreditNote { get; set; }
+        public decimal? CreditedAmount { get; set; }
+        public List<CreditNoteSummaryViewModel>? CreditNotes { get; set; }
     }
 
     public class SaleItemViewModel

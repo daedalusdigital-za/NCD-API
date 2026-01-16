@@ -247,5 +247,27 @@ namespace MH.Api.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        /// <summary>
+        /// Get all sales that have associated credit notes
+        /// </summary>
+        [HttpGet]
+        [Route("Credited")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Credited sales", typeof(List<SaleViewModel>))]
+        public async Task<ActionResult> GetCreditedSales(
+            [FromQuery] string? status = null,
+            [FromQuery] DateTime? dateFrom = null,
+            [FromQuery] DateTime? dateTo = null)
+        {
+            try
+            {
+                var result = await _saleService.GetCreditedSales(status, dateFrom, dateTo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

@@ -20,5 +20,6 @@ namespace MH.Application.IService
         Task<List<SaleViewModel>> GetRecentSales(int limit = 10);
         Task<bool> IsSaleNumberExists(string saleNumber, int? excludeId = null);
         Task<string> GenerateSaleNumber();
+        Task<List<SaleViewModel>> GetCreditedSales(string? status = null, DateTime? dateFrom = null, DateTime? dateTo = null);
     }
 }

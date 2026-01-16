@@ -21,8 +21,13 @@ namespace MH.Domain.DBModel
         public string? Notes { get; set; }
         public bool IsDeleted { get; set; }
 
+        // Credit Note tracking
+        public bool HasCreditNote { get; set; } = false;
+        public decimal? CreditedAmount { get; set; }
+
         // Navigation properties
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+        public virtual ICollection<CreditNote> CreditNotes { get; set; } = new List<CreditNote>();
     }
 
     // SaleItem does NOT inherit from BaseModel because the table lacks audit columns

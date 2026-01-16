@@ -1,9 +1,20 @@
-# Change Mandy's password using provided credentials
-$adminEmail = "welcomeking@outlook.com"
-$adminPassword = "Kingsland"
+# =============================================================================
+# Change Mandy's Password via API
+# =============================================================================
+# SECURITY NOTE: Credentials are now prompted, not hardcoded
+# =============================================================================
+
+# Prompt for admin credentials securely
+Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "  Password Change for Mandy@promedtechnologies.co.za" -ForegroundColor Cyan
+Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+
+$adminEmail = Read-Host "`nEnter Admin Email"
+$adminSecurePassword = Read-Host "Enter Admin Password" -AsSecureString
+$adminPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($adminSecurePassword))
 
 # Step 1: Login and get bearer token
-Write-Host "Authenticating as $adminEmail..." -ForegroundColor Yellow
+Write-Host "`nAuthenticating as $adminEmail..." -ForegroundColor Yellow
 $loginBody = @{
     email = $adminEmail
     password = $adminPassword
