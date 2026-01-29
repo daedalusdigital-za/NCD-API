@@ -45,17 +45,21 @@ namespace MH.Application.Service
 
         public async Task Update(SaleModel model)
         {
-            var existingEntity = await _saleRepository.FindBy(
+            var existingEntity = await _saleRepository.FindByAsTracking(
                 x => x.Id == model.Id.Value,
                 x => x.SaleItems);
                 
             if (existingEntity == null)
                 throw new ArgumentException("Sale not found");
 
-            _mapper.Map(model, existingEntity);
-            // Sale table doesn't have UpdatedBy/LastUpdated columns - removed
+            // Update basic fields
+            existingEntity.SaleNumber = model.SaleNumber;
+            existingEntity.SaleDate = model.SaleDate;
+            existingEntity.CustomerName = model.CustomerName;
+            existingEntity.CustomerPhone = model.CustomerPhone;
+            existingEntity.Notes = model.Notes;
             
-            // Recalculate totals
+            // Recalculate totals from sale items
             if (existingEntity.SaleItems != null)
             {
                 foreach (var item in existingEntity.SaleItems)
@@ -66,6 +70,7 @@ namespace MH.Application.Service
             }
 
             await _saleRepository.Update(existingEntity);
+            await _saleRepository.SaveAsync();
         }
 
         public async Task Delete(int id)

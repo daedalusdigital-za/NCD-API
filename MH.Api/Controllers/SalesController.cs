@@ -42,6 +42,7 @@ namespace MH.Api.Controllers
             }
         }
 
+        [HttpPut]
         [HttpPatch]
         [Route("Update")]
         [SwaggerResponse(StatusCodes.Status200OK, "Sale updated successfully")]
