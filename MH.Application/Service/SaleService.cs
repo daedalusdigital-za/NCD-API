@@ -26,9 +26,30 @@ namespace MH.Application.Service
 
         public async Task Add(SaleModel model)
         {
+            // Validation
+            if (string.IsNullOrWhiteSpace(model.SaleNumber))
+                throw new ArgumentException("Sale number is required");
+
+            if (string.IsNullOrWhiteSpace(model.CustomerName))
+                throw new ArgumentException("Customer name is required");
+
+            if (model.SaleItems == null || !model.SaleItems.Any())
+                throw new ArgumentException("At least one sale item is required");
+
+            // Validate all items
+            foreach (var item in model.SaleItems)
+            {
+                if (item.Quantity <= 0)
+                    throw new ArgumentException("Item quantity must be greater than 0");
+
+                if (item.UnitPrice <= 0)
+                    throw new ArgumentException("Item unit price must be greater than 0");
+            }
+
             var entity = _mapper.Map<Sale>(model);
             entity.CreatedBy = _currentUser.User.Id;
             entity.DateCreated = DateTime.Now;
+            entity.IsDeleted = false;
             
             // Calculate totals from sale items
             if (entity.SaleItems != null)
@@ -36,6 +57,7 @@ namespace MH.Application.Service
                 foreach (var item in entity.SaleItems)
                 {
                     item.TotalPrice = item.Quantity * item.UnitPrice;
+                    item.IsDeleted = false;
                 }
                 entity.Total = entity.SaleItems.Sum(x => x.TotalPrice);
             }
@@ -45,12 +67,25 @@ namespace MH.Application.Service
 
         public async Task Update(SaleModel model)
         {
+            // Validation
+            if (!model.Id.HasValue || model.Id.Value <= 0)
+                throw new ArgumentException("Invalid sale ID");
+
+            if (string.IsNullOrWhiteSpace(model.SaleNumber))
+                throw new ArgumentException("Sale number is required");
+
+            if (string.IsNullOrWhiteSpace(model.CustomerName))
+                throw new ArgumentException("Customer name is required");
+
+            if (model.SaleItems == null || !model.SaleItems.Any())
+                throw new ArgumentException("At least one sale item is required");
+
             var existingEntity = await _saleRepository.FindByAsTracking(
                 x => x.Id == model.Id.Value,
                 x => x.SaleItems);
                 
             if (existingEntity == null)
-                throw new ArgumentException("Sale not found");
+                throw new ArgumentException($"Sale with ID {model.Id.Value} not found");
 
             // Update basic fields
             existingEntity.SaleNumber = model.SaleNumber;
@@ -58,16 +93,62 @@ namespace MH.Application.Service
             existingEntity.CustomerName = model.CustomerName;
             existingEntity.CustomerPhone = model.CustomerPhone;
             existingEntity.Notes = model.Notes;
+
+            // Update audit fields
+            existingEntity.UpdatedBy = _currentUser.User.Id;
+            existingEntity.LastUpdated = DateTime.Now;
+
+            // Handle SaleItems - Remove items not in the new list
+            var existingItemIds = existingEntity.SaleItems.Select(x => x.Id).ToList();
+            var updatedItemIds = model.SaleItems.Where(x => x.Id.HasValue).Select(x => x.Id.Value).ToList();
+            var itemsToRemove = existingEntity.SaleItems.Where(x => !updatedItemIds.Contains(x.Id)).ToList();
             
-            // Recalculate totals from sale items
-            if (existingEntity.SaleItems != null)
+            foreach (var item in itemsToRemove)
             {
-                foreach (var item in existingEntity.SaleItems)
-                {
-                    item.TotalPrice = item.Quantity * item.UnitPrice;
-                }
-                existingEntity.Total = existingEntity.SaleItems.Sum(x => x.TotalPrice);
+                existingEntity.SaleItems.Remove(item);
             }
+
+            // Update existing items and add new ones
+            foreach (var itemModel in model.SaleItems)
+            {
+                if (itemModel.Quantity <= 0)
+                    throw new ArgumentException("Item quantity must be greater than 0");
+
+                if (itemModel.UnitPrice <= 0)
+                    throw new ArgumentException("Item unit price must be greater than 0");
+
+                if (itemModel.Id.HasValue && itemModel.Id.Value > 0)
+                {
+                    // Update existing item
+                    var existingItem = existingEntity.SaleItems.FirstOrDefault(x => x.Id == itemModel.Id.Value);
+                    if (existingItem != null)
+                    {
+                        existingItem.InventoryItemId = itemModel.InventoryItemId;
+                        existingItem.Quantity = itemModel.Quantity;
+                        existingItem.UnitPrice = itemModel.UnitPrice;
+                        existingItem.TotalPrice = itemModel.Quantity * itemModel.UnitPrice;
+                    }
+                }
+                else
+                {
+                    // Add new item
+                    var newItem = new SaleItem
+                    {
+                        SaleId = existingEntity.Id,
+                        InventoryItemId = itemModel.InventoryItemId,
+                        Quantity = itemModel.Quantity,
+                        UnitPrice = itemModel.UnitPrice,
+                        TotalPrice = itemModel.Quantity * itemModel.UnitPrice,
+                        IsDeleted = false
+                    };
+                    existingEntity.SaleItems.Add(newItem);
+                }
+            }
+
+            // Recalculate total from all items
+            existingEntity.Total = existingEntity.SaleItems
+                .Where(x => !x.IsDeleted)
+                .Sum(x => x.TotalPrice);
 
             await _saleRepository.Update(existingEntity);
             await _saleRepository.SaveAsync();
