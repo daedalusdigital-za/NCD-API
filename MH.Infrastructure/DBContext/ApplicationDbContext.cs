@@ -106,6 +106,22 @@ namespace MH.Infrastructure.DBContext
                     continue;
                 }
                 
+                // For CreditNote, only set DateCreated and LastUpdated which map to CreatedDate/LastModifiedDate
+                // Skip CreatedBy and UpdatedBy since they're handled differently in the migration
+                if (item.Entity is CreditNote)
+                {
+                    switch (item.State)
+                    {
+                        case EntityState.Added:
+                            item.Entity.DateCreated = DateTime.Now;
+                            break;
+                        case EntityState.Modified:
+                            item.Entity.LastUpdated = DateTime.Now;
+                            break;
+                    }
+                    continue;
+                }
+                
                 // For all other entities, apply the full audit trail
                 switch (item.State)
                 {

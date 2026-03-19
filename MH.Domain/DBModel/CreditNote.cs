@@ -10,8 +10,7 @@ namespace MH.Domain.DBModel
         [StringLength(50)]
         public string CreditNoteNumber { get; set; } = null!;
 
-        [Required]
-        public int InvoiceId { get; set; }
+        public int? InvoiceId { get; set; }  // Nullable for manual credit note entries
 
         [Required]
         [StringLength(50)]

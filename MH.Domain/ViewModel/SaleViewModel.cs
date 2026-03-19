@@ -27,7 +27,13 @@ namespace MH.Domain.ViewModel
         public int InventoryItemId { get; set; }
         public string? InventoryItemName { get; set; }
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal TotalPrice { get; set; }
+        public decimal UnitPrice { get; set; }  // VAT INCLUSIVE (15%)
+        public decimal TotalPrice { get; set; } // VAT INCLUSIVE (15%)
+        
+        // VAT Breakdown - For display/reference only
+        public decimal UnitPriceExcludingVAT => Math.Round(UnitPrice / 1.15m, 2);
+        public decimal UnitVATAmount => Math.Round(UnitPrice - UnitPriceExcludingVAT, 2);
+        public decimal TotalVATAmount => Math.Round(TotalPrice - (TotalPrice / 1.15m), 2);
+        public decimal VATRate => 0.15m; // 15% South Africa
     }
 }

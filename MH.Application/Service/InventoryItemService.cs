@@ -31,6 +31,7 @@ namespace MH.Application.Service
             entity.CreatedDate = DateTime.Now;
 
             await _inventoryRepository.Insert(entity);
+            await _inventoryRepository.SaveAsync();
         }
 
         public async Task Update(InventoryItemModel model)
@@ -44,6 +45,7 @@ namespace MH.Application.Service
             existingEntity.LastUpdated = DateTime.Now;
 
             await _inventoryRepository.Update(existingEntity);
+            await _inventoryRepository.SaveAsync();
         }
 
         public async Task Delete(int id)
@@ -56,6 +58,7 @@ namespace MH.Application.Service
             existingEntity.UpdatedBy = _currentUser.User.Id;
             existingEntity.LastUpdated = DateTime.Now;
             await _inventoryRepository.Update(existingEntity);
+            await _inventoryRepository.SaveAsync();
         }
 
         public async Task<InventoryItemViewModel?> GetById(int id)
@@ -123,6 +126,7 @@ namespace MH.Application.Service
             existingEntity.LastUpdated = DateTime.Now;
 
             await _inventoryRepository.Update(existingEntity);
+            await _inventoryRepository.SaveAsync();
         }
 
         public async Task<InventoryStatsModel> GetInventoryStats()

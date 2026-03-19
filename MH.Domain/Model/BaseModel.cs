@@ -13,7 +13,7 @@ namespace MH.Domain.Model
             LastUpdated = DateTime.Now;
         }
         public TId Id { get; set; }
-        [Column("CreatedDate", TypeName = DbDataType.DateTime)]
+        [Column("DateCreated", TypeName = DbDataType.DateTime)]
         public DateTime DateCreated { get; set; }
         [Column("CreatedBy")]
         public int CreatedBy { get; set; }

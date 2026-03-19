@@ -74,6 +74,7 @@ namespace MH.Application.Service
             };
 
             await _creditNoteRepository.Insert(creditNote);
+            await _creditNoteRepository.SaveAsync();
 
             return _mapper.Map<CreditNoteViewModel>(creditNote);
         }
@@ -92,9 +93,12 @@ namespace MH.Application.Service
             if (dto.CreditAmount.HasValue)
             {
                 // Validate new credit amount
-                var sale = await _saleRepository.GetById(creditNote.InvoiceId);
-                if (sale != null && dto.CreditAmount.Value > sale.Total)
-                    throw new ArgumentException("Credit amount cannot exceed original amount");
+                if (creditNote.InvoiceId.HasValue)
+                {
+                    var sale = await _saleRepository.GetById(creditNote.InvoiceId.Value);
+                    if (sale != null && dto.CreditAmount.Value > sale.Total)
+                        throw new ArgumentException("Credit amount cannot exceed original amount");
+                }
 
                 creditNote.CreditAmount = dto.CreditAmount.Value;
             }
@@ -139,6 +143,7 @@ namespace MH.Application.Service
             creditNote.LastUpdated = DateTime.UtcNow;
 
             await _creditNoteRepository.Update(creditNote);
+            await _creditNoteRepository.SaveAsync();
 
             return _mapper.Map<CreditNoteViewModel>(creditNote);
         }
@@ -158,6 +163,7 @@ namespace MH.Application.Service
             creditNote.LastUpdated = DateTime.UtcNow;
 
             await _creditNoteRepository.Update(creditNote);
+            await _creditNoteRepository.SaveAsync();
         }
 
         public async Task<CreditNoteViewModel?> GetById(int id)
@@ -212,6 +218,7 @@ namespace MH.Application.Service
             creditNote.LastUpdated = DateTime.UtcNow;
 
             await _creditNoteRepository.Update(creditNote);
+            await _creditNoteRepository.SaveAsync();
 
             // Execute reversals
             if (creditNote.ReverseStock)
@@ -236,6 +243,7 @@ namespace MH.Application.Service
             creditNote.LastUpdated = DateTime.UtcNow;
 
             await _creditNoteRepository.Update(creditNote);
+            await _creditNoteRepository.SaveAsync();
         }
 
         public async Task<DocumentUploadResult> UploadDocument(int id, IFormFile file)
@@ -275,6 +283,7 @@ namespace MH.Application.Service
             creditNote.LastUpdated = DateTime.UtcNow;
 
             await _creditNoteRepository.Update(creditNote);
+            await _creditNoteRepository.SaveAsync();
 
             return new DocumentUploadResult
             {

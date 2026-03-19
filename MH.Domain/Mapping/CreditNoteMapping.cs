@@ -19,7 +19,8 @@ namespace MH.Domain.Mapping
                             FileUrl = src.DocumentFileUrl ?? string.Empty,
                             UploadedDate = src.DocumentUploadedDate ?? DateTime.MinValue
                         }
-                        : null));
+                        : null))
+                .ForMember(dest => dest.LastUpdated, opt => opt.MapFrom(src => src.LastUpdated ?? DateTime.MinValue));
 
             CreateMap<CreditNote, CreditNoteSummaryViewModel>();
 

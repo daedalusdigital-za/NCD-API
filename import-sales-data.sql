@@ -1,0 +1,683 @@
+-- =====================================================
+-- Sales Import Script for Azure Data Studio
+-- Run this script against your NCD database
+-- It will skip any sales that already exist (by SaleNumber)
+-- =====================================================
+
+SET NOCOUNT ON;
+
+-- Create temp table to hold our import data
+IF OBJECT_ID('tempdb..#SalesImport') IS NOT NULL DROP TABLE #SalesImport;
+IF OBJECT_ID('tempdb..#SaleItemsImport') IS NOT NULL DROP TABLE #SaleItemsImport;
+
+CREATE TABLE #SalesImport (
+    InvNo NVARCHAR(50),
+    SaleDate DATE,
+    CustomerName NVARCHAR(255),
+    CustomerPhone NVARCHAR(50),
+    Notes NVARCHAR(500)
+);
+
+CREATE TABLE #SaleItemsImport (
+    InvNo NVARCHAR(50),
+    ItemCode NVARCHAR(50),
+    Quantity DECIMAL(18,2),
+    UnitPrice DECIMAL(18,2)
+);
+
+-- =====================================================
+-- INSERT SALES DATA
+-- =====================================================
+
+INSERT INTO #SalesImport (InvNo, SaleDate, CustomerName, CustomerPhone, Notes) VALUES
+('IN162476', '2026-01-15', 'MOHAMED RANGILA', '', 'Imported from sales data'),
+('IN162666', '2026-01-15', 'ZAMA RADEBE', '', 'Imported from sales data'),
+('IN162941', '2026-01-15', 'OSINDISWENI HOSPITAL', '', 'Imported from sales data'),
+('IN162394', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162398', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162399', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162469', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162473', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162474', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162535', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162565', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162624', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162659', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162727', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162730', '2026-01-15', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162733', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162802', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162803', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162805', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162806', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162810', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162940', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162945', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163126', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163127', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163204', '2026-01-19', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163205', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163207', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163252', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163284', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162395', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162397', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162392', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162393', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162396', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162468', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162470', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162564', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162657', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162660', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162728', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162729', '2026-01-20', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162732', '2026-01-21', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162734', '2026-01-21', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162735', '2026-01-21', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162736', '2026-01-21', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162807', '2026-01-22', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162808', '2026-01-22', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162811', '2026-01-22', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162937', '2026-01-22', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162938', '2026-01-22', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162939', '2026-01-23', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162944', '2026-01-23', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163123', '2026-01-23', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163206', '2026-01-23', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163253', '2026-01-23', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163285', '2026-01-26', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162400', '2026-01-26', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162809', '2026-01-26', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162936', '2026-01-26', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN163203', '2026-01-26', 'PROVINCIAL PHARM SUPPLY DEPOT', '', 'Imported from sales data'),
+('IN162738', '2026-01-28', 'DEPARTMENT OF HEALTH LIMPOPO', '', 'Imported from sales data'),
+('IN162737', '2026-01-28', 'DEPARTMENT OF HEALTH LIMPOPO', '', 'Imported from sales data'),
+('IN162943', '2026-01-28', 'DEPARTMENT OF HEALTH NORTH WEST', '', 'Imported from sales data'),
+('IN162942', '2026-01-28', 'DEPARTMENT OF HEALTH NORTH WEST', '', 'Imported from sales data'),
+('IN162533', '2026-01-28', 'TSWAING SUB DISTRICT', '', 'Imported from sales data'),
+('IN163202', '2026-01-28', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN163250', '2026-01-28', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN162519', '2026-01-28', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN162563', '2026-01-28', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN162801', '2026-01-29', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN163254', '2026-01-29', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN163255', '2026-01-29', 'BLOEMFONTEIN MEDICAL DEPOT', '', 'Imported from sales data'),
+('IN162739', '2026-01-29', 'FS HEALTH EMBEKWENI COMPLEX', '', 'Imported from sales data'),
+('IN162843', '2026-01-29', 'FS HEALTH FEZI NGOBENTOMBI HOSPITAL', '', 'Imported from sales data'),
+('IN163208', '2026-01-29', 'FS HEALTH FEZILE DABI DISTRICT', '', 'Imported from sales data'),
+('IN162475', '2026-01-29', 'FS HEALTH MOFUMAHADI MANAPO HOSPITAL', '', 'Imported from sales data'),
+('IN163283', '2026-01-29', 'FS HEALTH THABO MOFUTSANYANA DISTRICT', '', 'Imported from sales data'),
+('IN163256', '2026-01-29', 'EC HEALTH BCM DISTR HUB', '', 'Imported from sales data'),
+('IN163037', '2026-01-30', 'DOCTORS WITHOUT BORDERS', '', 'Imported from sales data'),
+('IN162518', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162839', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162840', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162841', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162842', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162844', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162845', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162846', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162847', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162850', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162851', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN162946', '2026-01-30', 'HILLBROW CHC', '', 'Imported from sales data'),
+('IN163125', '2026-02-04', 'FAR EAST RAND HOSPITAL', '', 'Imported from sales data'),
+('IN163121', '2026-02-06', 'FAR EAST RAND HOSPITAL', '', 'Imported from sales data'),
+('IN162534', '2026-02-06', 'BHEKI MLANGENI DISTRICT HOSPITAL', '', 'Imported from sales data'),
+('IN162467', '2026-02-06', 'KALAFONG HOSPITAL', '', 'Imported from sales data'),
+('IN162472', '2026-02-06', 'HEIDELBURG HOSPITAL', '', 'Imported from sales data'),
+('IN162658', '2026-02-06', 'RAHIMA MOOSA MOTHER & CHILD HOSPITAL', '', 'Imported from sales data'),
+('IN162390', '2026-02-06', 'PHOLOSONG HOSPITAL', '', 'Imported from sales data'),
+('IN162625', '2026-02-06', 'HELEN JOSEPH HOSPITAL', '', 'Imported from sales data'),
+('IN162623', '2026-02-06', 'HELEN JOSEPH HOSPITAL', '', 'Imported from sales data'),
+('IN162934', '2026-02-06', 'TAMBO MEMORIAL HOSPITAL', '', 'Imported from sales data'),
+('IN163120', '2026-02-10', 'MAMELODI HOSPITAL', '', 'Imported from sales data'),
+('IN163289', '2026-02-10', 'LERATONG HOSPITAL', '', 'Imported from sales data'),
+('IN163282', '2026-02-10', 'JUBILEE DISTRICT HOSPITAL', '', 'Imported from sales data'),
+('IN162388', '2026-02-10', 'JUBILEE DISTRICT HOSPITAL', '', 'Imported from sales data'),
+('IN162391', '2026-02-12', 'PRETORIA WEST HOSPITAL', '', 'Imported from sales data'),
+('IN162804', '2026-02-12', 'EDENVALE GENERAL HOSPITAL', '', 'Imported from sales data'),
+('IN163287', '2026-02-12', 'STEVE BIKO ACADEMIC HOSPITAL', '', 'Imported from sales data'),
+('IN162935', '2026-02-12', 'STEVE BIKO ACADEMIC HOSPITAL', '', 'Imported from sales data'),
+('IN163288', '2026-02-12', 'STEVE BIKO ACADEMIC HOSPITAL', '', 'Imported from sales data'),
+('IN162389', '2026-02-12', 'EKURHULENI HEALTH DISTRICT', '', 'Imported from sales data'),
+('IN163122', '2026-02-12', 'EKURHULENI HEALTH DISTRICT', '', 'Imported from sales data'),
+('IN163124', '2026-02-12', 'EKURHULENI HEALTH DISTRICT', '', 'Imported from sales data'),
+('IN162848', '2026-02-12', 'EKURHULENI HEALTH DISTRICT', '', 'Imported from sales data'),
+('IN162471', '2026-02-13', 'STERKFONTEIN HOSPITAL', '', 'Imported from sales data'),
+('IN162626', '2026-02-13', 'HEALTH REGION B', '', 'Imported from sales data'),
+('IN162627', '2026-02-13', 'HEALTH REGION B', '', 'Imported from sales data'),
+('IN162554', '2026-02-13', 'WEST RAND HEALTH DISTRICT OFFICE', '', 'Imported from sales data'),
+('IN163249', '2026-02-13', 'MEDICAL SUPPLY DEPOT TRANSITO -IN', '', 'Imported from sales data'),
+('IN163251', '2026-02-13', 'MEDICAL SUPPLY DEPOT TRANSITO -IN', '', 'Imported from sales data'),
+('IN163286', '2026-02-13', 'MEDICAL SUPPLY DEPOT TRANSITO -IN', '', 'Imported from sales data'),
+('IN162849', '2026-02-13', 'WITKOPPEN HEALTH & WELFARE CENTRE', '', 'Imported from sales data');
+
+-- =====================================================
+-- INSERT SALE ITEMS DATA
+-- =====================================================
+
+INSERT INTO #SaleItemsImport (InvNo, ItemCode, Quantity, UnitPrice) VALUES
+-- IN162476 - MOHAMED RANGILA
+('IN162476', 'NDOH35017', 1.00, 44.84),
+-- IN162666 - ZAMA RADEBE
+('IN162666', 'NDOH35005', 1.00, 527.91),
+('IN162666', 'NDOH35021', 1.00, 688.57),
+-- IN162941 - OSINDISWENI HOSPITAL
+('IN162941', 'NDOH35004', 650.00, 136.53),
+-- IN162394 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162394', 'NDOH35004', 30.00, 136.53),
+-- IN162398 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162398', 'NDOH35004', 300.00, 136.53),
+-- IN162399 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162399', 'NDOH35004', 83.00, 136.53),
+-- IN162469 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162469', 'NDOH35004', 5.00, 136.53),
+-- IN162473 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162473', 'NDOH35004', 10.00, 136.53),
+-- IN162474 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162474', 'NDOH35004', 22.00, 136.53),
+-- IN162535 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162535', 'NDOH35004', 1000.00, 136.53),
+-- IN162565 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162565', 'NDOH35004', 50.00, 136.53),
+-- IN162624 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162624', 'NDOH35004', 90.00, 136.53),
+-- IN162659 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162659', 'NDOH35004', 100.00, 136.53),
+-- IN162727 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162727', 'NDOH35004', 270.00, 136.53),
+-- IN162730 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162730', 'NDOH35004', 167.00, 136.53),
+-- IN162733 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162733', 'NDOH35004', 216.00, 136.53),
+-- IN162802 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162802', 'NDOH35004', 550.00, 136.53),
+-- IN162803 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162803', 'NDOH35004', 30.00, 136.53),
+-- IN162805 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162805', 'NDOH35004', 100.00, 136.53),
+-- IN162806 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162806', 'NDOH35004', 200.00, 136.53),
+-- IN162810 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162810', 'NDOH35004', 300.00, 136.53),
+-- IN162940 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162940', 'NDOH35004', 50.00, 136.53),
+-- IN162945 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162945', 'NDOH35004', 30.00, 136.53),
+-- IN163126 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163126', 'NDOH35004', 38.00, 136.53),
+-- IN163127 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163127', 'NDOH35004', 300.00, 136.53),
+-- IN163204 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163204', 'NDOH35004', 180.00, 136.53),
+-- IN163205 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163205', 'NDOH35004', 108.00, 136.53),
+-- IN163207 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163207', 'NDOH35004', 20.00, 136.53),
+-- IN163252 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163252', 'NDOH35004', 82.00, 136.53),
+-- IN163284 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163284', 'NDOH35004', 200.00, 136.53),
+-- IN162395 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162395', 'NDOH35006', 1.00, 2198.24),
+-- IN162397 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162397', 'NDOH35006', 3.00, 1763.70),
+-- IN162392 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162392', 'NDOH35017', 50.00, 44.84),
+-- IN162393 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162393', 'NDOH35017', 800.00, 44.84),
+-- IN162396 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162396', 'NDOH35017', 1000.00, 44.84),
+-- IN162468 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162468', 'NDOH35017', 250.00, 44.84),
+-- IN162470 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162470', 'NDOH35017', 100.00, 44.84),
+-- IN162564 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162564', 'NDOH35017', 1000.00, 44.84),
+-- IN162657 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162657', 'NDOH35017', 300.00, 44.84),
+-- IN162660 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162660', 'NDOH35017', 1000.00, 44.84),
+-- IN162728 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162728', 'NDOH35017', 1000.00, 44.84),
+-- IN162729 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162729', 'NDOH35017', 500.00, 44.84),
+-- IN162732 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162732', 'NDOH35017', 3000.00, 44.84),
+-- IN162734 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162734', 'NDOH35017', 1000.00, 44.84),
+-- IN162735 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162735', 'NDOH35017', 3000.00, 44.84),
+-- IN162736 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162736', 'NDOH35017', 20000.00, 44.84),
+-- IN162807 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162807', 'NDOH35017', 370.00, 44.84),
+-- IN162808 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162808', 'NDOH35017', 600.00, 44.84),
+-- IN162811 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162811', 'NDOH35017', 1100.00, 44.84),
+-- IN162937 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162937', 'NDOH35017', 200.00, 44.84),
+-- IN162938 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162938', 'NDOH35017', 180.00, 44.84),
+-- IN162939 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162939', 'NDOH35017', 200.00, 44.84),
+-- IN162944 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162944', 'NDOH35017', 200.00, 44.84),
+-- IN163123 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163123', 'NDOH35017', 1500.00, 44.84),
+-- IN163206 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163206', 'NDOH35017', 950.00, 44.84),
+-- IN163253 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163253', 'NDOH35017', 450.00, 44.84),
+-- IN163285 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163285', 'NDOH35017', 600.00, 44.84),
+-- IN162400 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162400', 'NDOH35034', 14.00, 1763.70),
+-- IN162809 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162809', 'NDOH35034', 4.00, 1763.71),
+-- IN162936 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN162936', 'NDOH35034', 2.00, 2198.25),
+-- IN163203 - PROVINCIAL PHARM SUPPLY DEPOT
+('IN163203', 'NDOH35034', 7.00, 1763.70),
+-- IN162738 - DEPARTMENT OF HEALTH LIMPOPO
+('IN162738', 'NDOH35002', 10900.00, 395.69),
+-- IN162737 - DEPARTMENT OF HEALTH LIMPOPO
+('IN162737', 'NDOH35003', 4600.00, 139.35),
+-- IN162943 - DEPARTMENT OF HEALTH NORTH WEST
+('IN162943', 'NDOH35004', 5000.00, 136.53),
+-- IN162942 - DEPARTMENT OF HEALTH NORTH WEST
+('IN162942', 'NDOH35017', 18000.00, 44.84),
+-- IN162533 - TSWAING SUB DISTRICT
+('IN162533', 'NDOH35005', 13.00, 527.91),
+('IN162533', 'NDOH35021', 26.00, 688.57),
+-- IN163202 - BLOEMFONTEIN MEDICAL DEPOT
+('IN163202', 'NDOH35004', 10.00, 136.53),
+-- IN163250 - BLOEMFONTEIN MEDICAL DEPOT
+('IN163250', 'NDOH35004', 100.00, 136.53),
+-- IN162519 - BLOEMFONTEIN MEDICAL DEPOT
+('IN162519', 'NDOH35017', 150.00, 44.84),
+-- IN162563 - BLOEMFONTEIN MEDICAL DEPOT
+('IN162563', 'NDOH35017', 1000.00, 44.84),
+-- IN162801 - BLOEMFONTEIN MEDICAL DEPOT
+('IN162801', 'NDOH35017', 1200.00, 44.84),
+-- IN163254 - BLOEMFONTEIN MEDICAL DEPOT
+('IN163254', 'NDOH35017', 200.00, 44.84),
+-- IN163255 - BLOEMFONTEIN MEDICAL DEPOT
+('IN163255', 'NDOH35017', 100.00, 44.84),
+-- IN162739 - FS HEALTH EMBEKWENI COMPLEX
+('IN162739', 'NDOH35003', 170.00, 139.35),
+-- IN162843 - FS HEALTH FEZI NGOBENTOMBI HOSPITAL
+('IN162843', 'NDOH35016', 240.00, 7.23),
+-- IN163208 - FS HEALTH FEZILE DABI DISTRICT
+('IN163208', 'NDOH35004', 250.00, 136.53),
+('IN163208', 'NDOH35017', 1100.00, 44.84),
+-- IN162475 - FS HEALTH MOFUMAHADI MANAPO HOSPITAL
+('IN162475', 'NDOH35018', 19.00, 24.10),
+-- IN163283 - FS HEALTH THABO MOFUTSANYANA DISTRICT
+('IN163283', 'NDOH35040', 22.00, 31.33),
+-- IN163256 - EC HEALTH BCM DISTR HUB
+('IN163256', 'NDOH35005', 14.00, 527.91),
+('IN163256', 'NDOH35006', 67.00, 2198.24),
+('IN163256', 'NDOH35021', 73.00, 688.57),
+('IN163256', 'NDOH35034', 12.00, 1763.70),
+('IN163256', 'NDOH35040', 68.00, 31.33),
+-- IN163037 - DOCTORS WITHOUT BORDERS
+('IN163037', 'NDOH35006', 180.00, 1787.72),
+('IN163037', 'NDOH35017', 800.00, 44.84),
+('IN163037', 'NDOH35018', 180.00, 12.05),
+('IN163037', 'NDOH35034', 630.00, 1564.60),
+-- IN162518 - HILLBROW CHC (large order with many items)
+('IN162518', 'NDOH35002', 40.00, 395.69),
+('IN162518', 'NDOH35003', 40.00, 139.35),
+('IN162518', 'NDOH35004', 2300.00, 136.53),
+('IN162518', 'NDOH35005', 40.00, 527.91),
+('IN162518', 'NDOH35006', 40.00, 2198.24),
+('IN162518', 'NDOH35007', 40.00, 517.36),
+('IN162518', 'NDOH35015', 4000.00, 0.49),
+('IN162518', 'NDOH35017', 2300.00, 44.84),
+('IN162518', 'NDOH35018', 2300.00, 24.10),
+('IN162518', 'NDOH35019', 40.00, 400.68),
+('IN162518', 'NDOH35020', 40.00, 275.43),
+('IN162518', 'NDOH35021', 40.00, 688.57),
+('IN162518', 'NDOH35034', 40.00, 1763.70),
+('IN162518', 'NDOH35040', 10.00, 31.33),
+-- IN162839 - HILLBROW CHC
+('IN162839', 'NDOH35002', 4.00, 395.69),
+('IN162839', 'NDOH35003', 4.00, 139.35),
+('IN162839', 'NDOH35006', 4.00, 2198.24),
+('IN162839', 'NDOH35007', 4.00, 517.36),
+('IN162839', 'NDOH35017', 5.00, 44.84),
+('IN162839', 'NDOH35021', 4.00, 688.57),
+('IN162839', 'NDOH35034', 4.00, 1763.71),
+-- IN162840 - HILLBROW CHC
+('IN162840', 'NDOH35002', 6.00, 395.69),
+('IN162840', 'NDOH35003', 6.00, 139.35),
+-- IN162841 - HILLBROW CHC
+('IN162841', 'NDOH35002', 2.00, 395.69),
+('IN162841', 'NDOH35003', 2.00, 139.35),
+('IN162841', 'NDOH35006', 2.00, 2198.25),
+('IN162841', 'NDOH35007', 2.00, 517.36),
+('IN162841', 'NDOH35017', 15.00, 44.84),
+('IN162841', 'NDOH35021', 2.00, 688.57),
+('IN162841', 'NDOH35034', 2.00, 1763.71),
+-- IN162842 - HILLBROW CHC
+('IN162842', 'NDOH35002', 4.00, 395.69),
+('IN162842', 'NDOH35003', 4.00, 139.35),
+('IN162842', 'NDOH35006', 4.00, 2198.24),
+('IN162842', 'NDOH35007', 4.00, 517.36),
+('IN162842', 'NDOH35017', 4.00, 44.84),
+('IN162842', 'NDOH35021', 4.00, 688.57),
+('IN162842', 'NDOH35034', 4.00, 1763.71),
+-- IN162844 - HILLBROW CHC
+('IN162844', 'NDOH35002', 4.00, 395.69),
+('IN162844', 'NDOH35003', 4.00, 139.35),
+('IN162844', 'NDOH35006', 4.00, 2198.24),
+('IN162844', 'NDOH35007', 4.00, 517.36),
+('IN162844', 'NDOH35017', 21.00, 44.84),
+('IN162844', 'NDOH35021', 4.00, 688.57),
+('IN162844', 'NDOH35034', 4.00, 1763.71),
+-- IN162845 - HILLBROW CHC
+('IN162845', 'NDOH35002', 4.00, 395.69),
+('IN162845', 'NDOH35003', 4.00, 139.35),
+('IN162845', 'NDOH35006', 4.00, 2198.24),
+('IN162845', 'NDOH35007', 4.00, 517.36),
+('IN162845', 'NDOH35017', 15.00, 44.84),
+('IN162845', 'NDOH35021', 4.00, 688.57),
+('IN162845', 'NDOH35034', 4.00, 1763.71),
+-- IN162846 - HILLBROW CHC
+('IN162846', 'NDOH35002', 4.00, 395.69),
+('IN162846', 'NDOH35003', 4.00, 139.35),
+('IN162846', 'NDOH35006', 4.00, 2198.24),
+('IN162846', 'NDOH35007', 4.00, 517.36),
+('IN162846', 'NDOH35017', 11.00, 44.84),
+('IN162846', 'NDOH35021', 4.00, 688.57),
+('IN162846', 'NDOH35034', 4.00, 1763.71),
+-- IN162847 - HILLBROW CHC
+('IN162847', 'NDOH35002', 4.00, 395.69),
+('IN162847', 'NDOH35003', 4.00, 139.35),
+('IN162847', 'NDOH35006', 4.00, 2198.24),
+('IN162847', 'NDOH35007', 4.00, 517.36),
+('IN162847', 'NDOH35017', 11.00, 44.84),
+('IN162847', 'NDOH35021', 4.00, 688.57),
+('IN162847', 'NDOH35034', 4.00, 1763.71),
+-- IN162850 - HILLBROW CHC
+('IN162850', 'NDOH35002', 4.00, 395.69),
+('IN162850', 'NDOH35003', 4.00, 139.35),
+('IN162850', 'NDOH35006', 4.00, 2198.24),
+('IN162850', 'NDOH35007', 4.00, 517.36),
+('IN162850', 'NDOH35017', 10.00, 44.84),
+('IN162850', 'NDOH35021', 4.00, 688.57),
+('IN162850', 'NDOH35034', 4.00, 1763.71),
+-- IN162851 - HILLBROW CHC
+('IN162851', 'NDOH35002', 5.00, 395.69),
+('IN162851', 'NDOH35003', 5.00, 139.35),
+('IN162851', 'NDOH35004', 25.00, 136.53),
+('IN162851', 'NDOH35006', 5.00, 2198.24),
+('IN162851', 'NDOH35007', 5.00, 517.36),
+('IN162851', 'NDOH35021', 5.00, 688.57),
+('IN162851', 'NDOH35034', 5.00, 1763.70),
+-- IN162946 - HILLBROW CHC
+('IN162946', 'NDOH35002', 4.00, 395.69),
+('IN162946', 'NDOH35003', 4.00, 139.35),
+('IN162946', 'NDOH35006', 4.00, 2198.24),
+('IN162946', 'NDOH35007', 4.00, 517.36),
+('IN162946', 'NDOH35017', 5.00, 44.84),
+('IN162946', 'NDOH35021', 4.00, 688.57),
+('IN162946', 'NDOH35034', 4.00, 1763.71),
+-- IN163125 - FAR EAST RAND HOSPITAL
+('IN163125', 'NDOH35004', 540.00, 136.53),
+-- IN163121 - FAR EAST RAND HOSPITAL
+('IN163121', 'NDOH35017', 120.00, 44.84),
+-- IN162534 - BHEKI MLANGENI DISTRICT HOSPITAL
+('IN162534', 'NDOH35003', 100.00, 139.35),
+-- IN162467 - KALAFONG HOSPITAL
+('IN162467', 'NDOH35004', 1890.00, 136.53),
+-- IN162472 - HEIDELBURG HOSPITAL
+('IN162472', 'NDOH35004', 216.00, 136.53),
+('IN162472', 'NDOH35017', 1800.00, 44.84),
+-- IN162658 - RAHIMA MOOSA MOTHER & CHILD HOSPITAL
+('IN162658', 'NDOH35004', 500.00, 136.53),
+-- IN162390 - PHOLOSONG HOSPITAL
+('IN162390', 'NDOH35004', 162.00, 136.53),
+('IN162390', 'NDOH35017', 1200.00, 44.84),
+-- IN162625 - HELEN JOSEPH HOSPITAL
+('IN162625', 'NDOH35004', 500.00, 136.53),
+-- IN162623 - HELEN JOSEPH HOSPITAL
+('IN162623', 'NDOH35017', 4000.00, 44.84),
+-- IN162934 - TAMBO MEMORIAL HOSPITAL
+('IN162934', 'NDOH35004', 1500.00, 136.53),
+('IN162934', 'NDOH35017', 3000.00, 44.84),
+('IN162934', 'NDOH35018', 1500.00, 24.10),
+-- IN163120 - MAMELODI HOSPITAL
+('IN163120', 'NDOH35017', 3300.00, 44.84),
+-- IN163289 - LERATONG HOSPITAL
+('IN163289', 'NDOH35004', 150.00, 136.53),
+('IN163289', 'NDOH35017', 6000.00, 44.84),
+-- IN163282 - JUBILEE DISTRICT HOSPITAL
+('IN163282', 'NDOH35002', 100.00, 395.69),
+('IN163282', 'NDOH35003', 1000.00, 139.35),
+-- IN162388 - JUBILEE DISTRICT HOSPITAL
+('IN162388', 'NDOH35004', 400.00, 136.53),
+('IN162388', 'NDOH35017', 4000.00, 44.84),
+-- IN162391 - PRETORIA WEST HOSPITAL
+('IN162391', 'NDOH35017', 1500.00, 44.84),
+-- IN162804 - EDENVALE GENERAL HOSPITAL
+('IN162804', 'NDOH35004', 500.00, 136.53),
+('IN162804', 'NDOH35017', 1000.00, 44.84),
+-- IN163287 - STEVE BIKO ACADEMIC HOSPITAL
+('IN163287', 'NDOH35004', 1000.00, 136.53),
+-- IN162935 - STEVE BIKO ACADEMIC HOSPITAL
+('IN162935', 'NDOH35017', 5000.00, 44.84),
+-- IN163288 - STEVE BIKO ACADEMIC HOSPITAL
+('IN163288', 'NDOH35017', 5000.00, 44.84),
+-- IN162389 - EKURHULENI HEALTH DISTRICT
+('IN162389', 'NDOH35004', 1000.00, 136.53),
+('IN162389', 'NDOH35017', 6000.00, 44.84),
+-- IN163122 - EKURHULENI HEALTH DISTRICT
+('IN163122', 'NDOH35004', 1000.00, 136.53),
+('IN163122', 'NDOH35017', 6000.00, 44.84),
+-- IN163124 - EKURHULENI HEALTH DISTRICT
+('IN163124', 'NDOH35017', 6000.00, 44.84),
+-- IN162848 - EKURHULENI HEALTH DISTRICT
+('IN162848', 'NDOH35034', 210.00, 1763.70),
+-- IN162471 - STERKFONTEIN HOSPITAL
+('IN162471', 'NDOH35017', 500.00, 44.84),
+-- IN162626 - HEALTH REGION B
+('IN162626', 'NDOH35004', 300.00, 136.53),
+-- IN162627 - HEALTH REGION B
+('IN162627', 'NDOH35017', 3000.00, 44.84),
+-- IN162554 - WEST RAND HEALTH DISTRICT OFFICE
+('IN162554', 'NDOH35002', 8.00, 395.69),
+('IN162554', 'NDOH35003', 30.00, 139.35),
+-- IN163249 - MEDICAL SUPPLY DEPOT TRANSITO -IN
+('IN163249', 'NDOH35017', 1000.00, 44.84),
+-- IN163251 - MEDICAL SUPPLY DEPOT TRANSITO -IN
+('IN163251', 'NDOH35017', 2000.00, 44.84),
+-- IN163286 - MEDICAL SUPPLY DEPOT TRANSITO -IN
+('IN163286', 'NDOH35017', 2000.00, 44.84),
+-- IN162849 - WITKOPPEN HEALTH & WELFARE CENTRE
+('IN162849', 'NDOH35034', 3.00, 1763.70);
+
+-- =====================================================
+-- CHECK EXISTING INVENTORY ITEMS AND CREATE MISSING ONES
+-- =====================================================
+
+PRINT '========================================';
+PRINT 'Step 1: Checking Inventory Items';
+PRINT '========================================';
+
+-- Check for NDOH35002 (HEMOGLOBIN METER - BIO AID HB METER)
+IF NOT EXISTS (SELECT 1 FROM InventoryItem WHERE SKU = 'NDOH35002')
+BEGIN
+    INSERT INTO InventoryItem (Name, Description, Category, SKU, UnitOfMeasure, UnitPrice, StockAvailable, ReorderLevel, Status, CreatedDate, IsDeleted)
+    VALUES ('HEMOGLOBIN METER - BIO AID HB METER', 'Bio Aid HB Meter for hemoglobin testing', 1, 'NDOH35002', 'EACH', 455.04, 0, 0, 1, GETDATE(), 0);
+    PRINT 'Created: NDOH35002 - HEMOGLOBIN METER - BIO AID HB METER';
+END
+
+-- Check for NDOH35007 (CHOLESTEROL MACHINE/METER)
+IF NOT EXISTS (SELECT 1 FROM InventoryItem WHERE SKU = 'NDOH35007')
+BEGIN
+    INSERT INTO InventoryItem (Name, Description, Category, SKU, UnitOfMeasure, UnitPrice, StockAvailable, ReorderLevel, Status, CreatedDate, IsDeleted)
+    VALUES ('CHOLESTEROL MACHINE/METER', 'Cholesterol testing meter', 1, 'NDOH35007', 'EACH', 594.96, 0, 0, 1, GETDATE(), 0);
+    PRINT 'Created: NDOH35007 - CHOLESTEROL MACHINE/METER';
+END
+
+-- =====================================================
+-- REPORT: Show what will be imported
+-- =====================================================
+
+PRINT '';
+PRINT '========================================';
+PRINT 'Step 2: Checking for Duplicates';
+PRINT '========================================';
+
+DECLARE @TotalToImport INT, @Duplicates INT, @NewSales INT;
+
+SELECT @TotalToImport = COUNT(*) FROM #SalesImport;
+SELECT @Duplicates = COUNT(*) FROM #SalesImport si WHERE EXISTS (SELECT 1 FROM Sale s WHERE s.SaleNumber = si.InvNo AND s.IsDeleted = 0);
+SET @NewSales = @TotalToImport - @Duplicates;
+
+PRINT 'Total sales in import file: ' + CAST(@TotalToImport AS VARCHAR(10));
+PRINT 'Already exist (will be skipped): ' + CAST(@Duplicates AS VARCHAR(10));
+PRINT 'New sales to import: ' + CAST(@NewSales AS VARCHAR(10));
+
+-- Show which ones already exist
+IF @Duplicates > 0
+BEGIN
+    PRINT '';
+    PRINT 'Existing sales that will be SKIPPED:';
+    SELECT si.InvNo AS 'Invoice', si.CustomerName AS 'Customer', s.Total AS 'Existing Total'
+    FROM #SalesImport si
+    INNER JOIN Sale s ON s.SaleNumber = si.InvNo AND s.IsDeleted = 0;
+END
+
+-- =====================================================
+-- INSERT NEW SALES
+-- =====================================================
+
+PRINT '';
+PRINT '========================================';
+PRINT 'Step 3: Inserting New Sales';
+PRINT '========================================';
+
+BEGIN TRANSACTION;
+
+BEGIN TRY
+    -- Insert Sales (only new ones)
+    INSERT INTO Sale (SaleNumber, SaleDate, CustomerName, CustomerPhone, Notes, Total, CreatedDate, IsDeleted, CreatedBy)
+    SELECT 
+        si.InvNo,
+        si.SaleDate,
+        si.CustomerName,
+        si.CustomerPhone,
+        si.Notes,
+        0, -- Total will be updated after items are inserted
+        GETDATE(),
+        0,
+        1 -- CreatedBy = 1 (admin)
+    FROM #SalesImport si
+    WHERE NOT EXISTS (SELECT 1 FROM Sale s WHERE s.SaleNumber = si.InvNo AND s.IsDeleted = 0);
+
+    DECLARE @SalesInserted INT = @@ROWCOUNT;
+    PRINT 'Sales records inserted: ' + CAST(@SalesInserted AS VARCHAR(10));
+
+    -- Insert Sale Items
+    INSERT INTO SaleItem (SaleId, InventoryItemId, Quantity, UnitPrice, TotalPrice, IsDeleted)
+    SELECT 
+        s.Id,
+        i.Id,
+        sii.Quantity,
+        sii.UnitPrice,
+        sii.Quantity * sii.UnitPrice,
+        0
+    FROM #SaleItemsImport sii
+    INNER JOIN Sale s ON s.SaleNumber = sii.InvNo AND s.IsDeleted = 0
+    INNER JOIN InventoryItem i ON i.SKU = sii.ItemCode
+    WHERE NOT EXISTS (
+        SELECT 1 FROM SaleItem si2 
+        WHERE si2.SaleId = s.Id AND si2.InventoryItemId = i.Id
+    );
+
+    DECLARE @ItemsInserted INT = @@ROWCOUNT;
+    PRINT 'Sale item records inserted: ' + CAST(@ItemsInserted AS VARCHAR(10));
+
+    -- Update Sale totals based on items
+    UPDATE s
+    SET s.Total = (
+        SELECT ISNULL(SUM(si.TotalPrice), 0) 
+        FROM SaleItem si 
+        WHERE si.SaleId = s.Id AND si.IsDeleted = 0
+    )
+    FROM Sale s
+    INNER JOIN #SalesImport sim ON s.SaleNumber = sim.InvNo
+    WHERE s.IsDeleted = 0;
+
+    PRINT 'Sale totals updated.';
+
+    COMMIT TRANSACTION;
+    PRINT '';
+    PRINT '========================================';
+    PRINT 'IMPORT COMPLETED SUCCESSFULLY!';
+    PRINT '========================================';
+
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    PRINT '';
+    PRINT '========================================';
+    PRINT 'ERROR - IMPORT ROLLED BACK!';
+    PRINT '========================================';
+    PRINT 'Error: ' + ERROR_MESSAGE();
+END CATCH;
+
+-- =====================================================
+-- FINAL VERIFICATION
+-- =====================================================
+
+PRINT '';
+PRINT '========================================';
+PRINT 'Step 4: Verification';
+PRINT '========================================';
+
+SELECT 
+    'Total Sales in Database' AS Metric,
+    COUNT(*) AS Value
+FROM Sale WHERE IsDeleted = 0
+UNION ALL
+SELECT 
+    'Newly Imported Sales' AS Metric,
+    COUNT(*) AS Value
+FROM Sale s
+INNER JOIN #SalesImport si ON s.SaleNumber = si.InvNo
+WHERE s.IsDeleted = 0
+UNION ALL
+SELECT 
+    'Total Revenue from New Sales' AS Metric,
+    CAST(ISNULL(SUM(s.Total), 0) AS INT) AS Value
+FROM Sale s
+INNER JOIN #SalesImport si ON s.SaleNumber = si.InvNo
+WHERE s.IsDeleted = 0;
+
+-- Show sample of imported sales
+PRINT '';
+PRINT 'Sample of newly imported sales:';
+SELECT TOP 10
+    s.SaleNumber,
+    s.CustomerName,
+    s.SaleDate,
+    s.Total,
+    (SELECT COUNT(*) FROM SaleItem si WHERE si.SaleId = s.Id) AS ItemCount
+FROM Sale s
+INNER JOIN #SalesImport sim ON s.SaleNumber = sim.InvNo
+WHERE s.IsDeleted = 0
+ORDER BY s.Total DESC;
+
+-- Cleanup
+DROP TABLE #SalesImport;
+DROP TABLE #SaleItemsImport;
+
+PRINT '';
+PRINT 'Script completed. Check results above.';

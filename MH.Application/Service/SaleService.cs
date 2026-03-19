@@ -63,6 +63,7 @@ namespace MH.Application.Service
             }
 
             await _saleRepository.Insert(entity);
+            await _saleRepository.SaveAsync(); // Save changes to database
         }
 
         public async Task Update(SaleModel model)
@@ -163,6 +164,7 @@ namespace MH.Application.Service
             existingEntity.IsDeleted = true;
             // Sale table doesn't have UpdatedBy/LastUpdated columns - removed
             await _saleRepository.Update(existingEntity);
+            await _saleRepository.SaveAsync(); // Save changes to database
         }
 
         public async Task<SaleViewModel?> GetById(int id)

@@ -1,32 +1,55 @@
-# Credit Notes System - Quick Start Guide
+# 🚀 Credit Notes - Quick Start (5 Minutes)
 
-## 🚀 Getting Started (5 Minutes)
-
-### Step 1: Run Database Migration
-Open SQL Server Management Studio and execute:
-```bash
-DatabaseManagement\create-creditnotes-table.sql
-```
-
-This will:
-- Create the `CreditNotes` table
-- Add `HasCreditNote` and `CreditedAmount` columns to `Sales` table
-- Create all necessary indexes
+## The One-Page Deployment Guide
 
 ---
 
-### Step 2: Build the Project
-```bash
-cd "c:\Users\IT Department\Desktop\NCD-API"
-dotnet build
+## ⚡ Fastest Path to Deployment
+
+### Step 1: Apply Database Migration (2 minutes)
+```powershell
+# Open Package Manager Console in Visual Studio
+# Tools > NuGet Package Manager > Package Manager Console
+
+Set-DefaultProject MH.Infrastructure
+Update-Database
 ```
+
+**Expected:** ✅ "Applying migration 20260202000001_AddCreditNotesTable..."
 
 ---
 
-### Step 3: Run the Application
+### Step 2: Build & Run Locally (3 minutes)
 ```bash
-dotnet run --project MH.Api
+cd C:\Users\IT Department\Desktop\NCD-API\MH.Api
+dotnet run
 ```
+
+**Expected:** ✅ "Now listening on: https://localhost:5001"
+
+---
+
+### Step 3: Test One Endpoint (3 minutes)
+
+**Open Postman and run:**
+```
+POST http://localhost:5000/api/CreditNotes
+Content-Type: application/json
+
+{
+  "invoiceId": 1,
+  "invoiceNumber": "SAL-2026-001",
+  "customerId": 1,
+  "customerName": "Test Hospital",
+  "originalAmount": 10000.00,
+  "creditAmount": 2500.00,
+  "reason": "Test",
+  "reverseStock": true,
+  "reverseSale": true
+}
+```
+
+**Expected:** ✅ Status 201 + Credit Note created with "CN-2026-001"
 
 The API will start at: `https://localhost:7295`
 
