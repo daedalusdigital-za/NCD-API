@@ -29,6 +29,7 @@ namespace MH.Infrastructure.Dependency
             services.AddScoped<IRepository<Clinic, int>, Repository<Clinic, int>>();
             services.AddScoped<ICreditNoteRepository, CreditNoteRepository>();
             services.AddScoped<ITrainingDocumentRepository, TrainingDocumentRepository>();
+            services.AddScoped<IDeliveryRepository, DeliveryRepository>();
             #endregion
             return services;
         }

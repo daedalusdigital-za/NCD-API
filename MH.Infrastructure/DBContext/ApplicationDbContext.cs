@@ -30,6 +30,7 @@ namespace MH.Infrastructure.DBContext
         public DbSet<TrainingSession> TrainingSession { get; set; } // Match table name
         public DbSet<TrainingDocument> TrainingDocuments { get; set; }
         public DbSet<CreditNote> CreditNotes { get; set; }
+        public DbSet<Delivery> Deliveries { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

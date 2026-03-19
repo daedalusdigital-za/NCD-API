@@ -350,7 +350,113 @@ All endpoints (except Auth endpoints) require **JWT Bearer token authentication*
 
 ---
 
-### 📊 Dashboard Controller (`/api/Dashboard`)
+### � Delivery Controller (`/api/Delivery`)
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/Delivery/Add` | Create new delivery record | Yes |
+| PATCH | `/api/Delivery/Update` | Update delivery details | Yes |
+| PATCH | `/api/Delivery/UpdateStatus` | Update delivery status only | Yes |
+| DELETE | `/api/Delivery/Delete` | Delete delivery (soft delete) | Yes |
+| GET | `/api/Delivery/GetById` | Get delivery by ID | Yes |
+| GET | `/api/Delivery/GetAll` | Get all deliveries | Yes |
+| GET | `/api/Delivery/GetBySaleId` | Get deliveries for a sale | Yes |
+| GET | `/api/Delivery/GetByProvince` | Get deliveries by province | Yes |
+| GET | `/api/Delivery/GetByStatus` | Get deliveries by status | Yes |
+| GET | `/api/Delivery/GetByDateRange` | Get deliveries within date range | Yes |
+| GET | `/api/Delivery/GetByEquipmentType` | Get deliveries by equipment type | Yes |
+| GET | `/api/Delivery/GetStats` | Get delivery statistics | Yes |
+| GET | `/api/Delivery/GetStatsByEquipmentType` | Get stats by equipment type | Yes |
+| GET | `/api/Delivery/GetStatsByProvince` | Get stats by province | Yes |
+
+**Query Parameters:**
+- `GetById`: `id` (int)
+- `GetBySaleId`: `saleId` (int)
+- `GetByProvince`: `province` (string)
+- `GetByStatus`: `status` (DeliveryTrackingStatus enum)
+- `GetByDateRange`: `startDate` (DateTime), `endDate` (DateTime)
+- `GetByEquipmentType`: `itemDescription` (string)
+
+**DeliveryTrackingStatus Values:**
+| Value | Status | Description |
+|-------|--------|-------------|
+| 1 | `Pending` | Delivery not yet started |
+| 2 | `InTransit` | Delivery in progress |
+| 3 | `Delivered` | Successfully delivered |
+| 4 | `Failed` | Delivery failed |
+| 5 | `Returned` | Items returned |
+
+**Create Delivery:**
+```json
+{
+  "saleId": 123,
+  "institutionName": "Provincial Pharmacy Depot",
+  "province": "Gauteng",
+  "itemDescription": "HGT Meters",
+  "quantity": 50,
+  "deliveryDate": "2026-03-20",
+  "invoiceNumber": "IN163336",
+  "status": 1,
+  "driverName": "John Doe",
+  "vehicleNumber": "GP 123 ABC",
+  "notes": "Fragile medical equipment"
+}
+```
+
+**Update Delivery Status:**
+```json
+{
+  "deliveryId": 1,
+  "status": 3,
+  "recipientName": "Jane Smith",
+  "recipientSignature": "base64_signature_string",
+  "receivedDate": "2026-03-20T14:30:00",
+  "notes": "Received in good condition"
+}
+```
+
+**Delivery Statistics Response:**
+```json
+{
+  "totalDeliveries": 150,
+  "pending": 25,
+  "inTransit": 30,
+  "delivered": 85,
+  "failed": 5,
+  "returned": 5,
+  "deliveryRate": 56.67
+}
+```
+
+**Delivery By Equipment Type Response:**
+```json
+[
+  {
+    "equipmentType": "HGT Meters",
+    "totalOrdered": 500,
+    "pending": 50,
+    "inTransit": 75,
+    "delivered": 350,
+    "failed": 15,
+    "returned": 10,
+    "deliveryRate": 70.0
+  },
+  {
+    "equipmentType": "HGT Strips",
+    "totalOrdered": 10000,
+    "pending": 1000,
+    "inTransit": 1500,
+    "delivered": 7000,
+    "failed": 300,
+    "returned": 200,
+    "deliveryRate": 70.0
+  }
+]
+```
+
+---
+
+### �📊 Dashboard Controller (`/api/Dashboard`)
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
@@ -438,6 +544,29 @@ All endpoints (except Auth endpoints) require **JWT Bearer token authentication*
 | ApprovedBy | string | User who approved |
 | ApprovedDate | DateTime | Approval date |[:
 | CreatedDate | DateTime | Creation date |
+
+### Delivery
+| Field | Type | Description |
+|-------|------|-------------|
+| Id | int | Primary key |
+| DeliveryNumber | string | Unique delivery number (e.g., "DEL000001") |
+| SaleId | int | Foreign key to Sale |
+| InstitutionName | string | Destination facility name |
+| Province | string | Province name |
+| ItemDescription | string | Description of items being delivered |
+| Quantity | int | Number of items |
+| DeliveryDate | DateTime | Scheduled delivery date |
+| InvoiceNumber | string | Related invoice number |
+| Status | DeliveryTrackingStatus | Pending/InTransit/Delivered/Failed/Returned |
+| DriverName | string | Delivery driver name |
+| VehicleNumber | string | Vehicle registration number |
+| RecipientName | string | Person who received delivery |
+| RecipientSignature | string | Signature confirmation |
+| ReceivedDate | DateTime | Actual receipt date |
+| Notes | string | Additional notes |
+| IsDeleted | bool | Soft delete flag |
+| DateCreated | DateTime | Record creation date |
+| LastUpdated | DateTime | Last update date |
 
 ### TrainingSession
 | Field | Type | Description |
