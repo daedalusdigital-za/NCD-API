@@ -20,6 +20,7 @@ namespace MH.Application.IService
         Task<DeliveryStatsModel> GetDeliveryStats();
         Task<List<DeliveryByEquipmentTypeModel>> GetDeliveryStatsByEquipmentType();
         Task<List<DeliveryByProvinceModel>> GetDeliveryStatsByProvince();
+        Task<AllEquipmentOrderStats> GetAllEquipmentOrderStats();
         Task<string> GenerateDeliveryNumber();
     }
 }

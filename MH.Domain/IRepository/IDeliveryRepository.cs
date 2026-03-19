@@ -15,5 +15,6 @@ namespace MH.Domain.IRepository
         Task<DeliveryStatsModel> GetDeliveryStats();
         Task<List<DeliveryByEquipmentTypeModel>> GetDeliveryStatsByEquipmentType();
         Task<List<DeliveryByProvinceModel>> GetDeliveryStatsByProvince();
+        Task<AllEquipmentOrderStats> GetAllEquipmentOrderStats();
     }
 }

@@ -250,5 +250,21 @@ namespace MH.Api.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetAllEquipmentOrderStats")]
+        [SwaggerResponse(StatusCodes.Status200OK, "All equipment order vs delivery statistics from Sales data", typeof(AllEquipmentOrderStats))]
+        public async Task<ActionResult> GetAllEquipmentOrderStats()
+        {
+            try
+            {
+                var result = await _deliveryService.GetAllEquipmentOrderStats();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

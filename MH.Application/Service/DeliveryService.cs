@@ -193,6 +193,11 @@ namespace MH.Application.Service
             return await _deliveryRepository.GetDeliveryStatsByProvince();
         }
 
+        public async Task<AllEquipmentOrderStats> GetAllEquipmentOrderStats()
+        {
+            return await _deliveryRepository.GetAllEquipmentOrderStats();
+        }
+
         public async Task<string> GenerateDeliveryNumber()
         {
             var count = await _deliveryRepository.Count(x => true);

@@ -73,4 +73,37 @@ namespace MH.Domain.ViewModel
         public int Returned { get; set; }
         public decimal DeliveryRate { get; set; }
     }
+
+    // Order vs Delivery stats - pulls from Sales data
+    public class OrderDeliveryStatsModel
+    {
+        public string EquipmentType { get; set; } = null!;
+        public string Category { get; set; } = null!;
+        public int TotalOrdered { get; set; }
+        public int TotalDelivered { get; set; }
+        public int PendingDelivery { get; set; }
+        public decimal DeliveryRate { get; set; }
+        public decimal TotalOrderValue { get; set; }
+        public decimal DeliveredValue { get; set; }
+        public List<OrderProvinceBreakdown> ProvinceDistribution { get; set; } = new();
+    }
+
+    public class OrderProvinceBreakdown
+    {
+        public string Province { get; set; } = null!;
+        public int Ordered { get; set; }
+        public int Delivered { get; set; }
+        public decimal Percentage { get; set; }
+        public decimal OrderValue { get; set; }
+    }
+
+    public class AllEquipmentOrderStats
+    {
+        public int TotalEquipmentTypes { get; set; }
+        public int TotalItemsOrdered { get; set; }
+        public int TotalItemsDelivered { get; set; }
+        public decimal OverallDeliveryRate { get; set; }
+        public decimal TotalOrderValue { get; set; }
+        public List<OrderDeliveryStatsModel> EquipmentBreakdown { get; set; } = new();
+    }
 }

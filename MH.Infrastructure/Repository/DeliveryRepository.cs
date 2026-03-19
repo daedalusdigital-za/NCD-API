@@ -175,5 +175,109 @@ namespace MH.Infrastructure.Repository
                 .OrderBy(x => x.Province)
                 .ToList();
         }
+
+        public async Task<AllEquipmentOrderStats> GetAllEquipmentOrderStats()
+        {
+            // Get all sales with their items and inventory
+            var saleItems = await _context.SaleItems
+                .Include(si => si.Sale)
+                .Include(si => si.InventoryItem)
+                .Where(si => !si.IsDeleted && si.Sale != null && !si.Sale.IsDeleted)
+                .ToListAsync();
+
+            // Get all deliveries
+            var deliveries = await _context.Deliveries
+                .Where(d => !d.IsDeleted && d.Status == DeliveryTrackingStatus.Delivered)
+                .ToListAsync();
+
+            // Group by inventory item (equipment type)
+            var equipmentStats = saleItems
+                .Where(si => si.InventoryItem != null)
+                .GroupBy(si => new { 
+                    Name = si.InventoryItem!.Name, 
+                    Category = si.InventoryItem.Category.ToString() 
+                })
+                .Select(g => {
+                    var itemName = g.Key.Name;
+                    var totalOrdered = g.Sum(si => si.Quantity);
+                    var totalOrderValue = g.Sum(si => si.TotalPrice);
+                    
+                    // Find matching deliveries by item description
+                    var matchingDeliveries = deliveries
+                        .Where(d => d.ItemDescription.Contains(itemName, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    
+                    var totalDelivered = matchingDeliveries.Sum(d => d.Quantity);
+                    var deliveredValue = matchingDeliveries.Sum(d => d.Quantity * (totalOrderValue / (totalOrdered > 0 ? totalOrdered : 1)));
+                    
+                    // Province breakdown from sales (using CustomerName as proxy for institution)
+                    var provinceBreakdown = g
+                        .Where(si => si.Sale != null)
+                        .GroupBy(si => ExtractProvince(si.Sale!.CustomerName))
+                        .Select(pg => {
+                            var ordered = pg.Sum(si => si.Quantity);
+                            var provinceDeliveries = matchingDeliveries
+                                .Where(d => d.Province.Equals(pg.Key, StringComparison.OrdinalIgnoreCase))
+                                .Sum(d => d.Quantity);
+                            
+                            return new OrderProvinceBreakdown
+                            {
+                                Province = pg.Key,
+                                Ordered = ordered,
+                                Delivered = provinceDeliveries,
+                                Percentage = ordered > 0 ? Math.Round((decimal)provinceDeliveries / ordered * 100, 1) : 0,
+                                OrderValue = pg.Sum(si => si.TotalPrice)
+                            };
+                        })
+                        .OrderBy(p => p.Province)
+                        .ToList();
+                    
+                    return new OrderDeliveryStatsModel
+                    {
+                        EquipmentType = itemName,
+                        Category = g.Key.Category,
+                        TotalOrdered = totalOrdered,
+                        TotalDelivered = totalDelivered,
+                        PendingDelivery = totalOrdered - totalDelivered,
+                        DeliveryRate = totalOrdered > 0 ? Math.Round((decimal)totalDelivered / totalOrdered * 100, 2) : 0,
+                        TotalOrderValue = totalOrderValue,
+                        DeliveredValue = deliveredValue,
+                        ProvinceDistribution = provinceBreakdown
+                    };
+                })
+                .OrderBy(e => e.Category)
+                .ThenBy(e => e.EquipmentType)
+                .ToList();
+
+            var totalItemsOrdered = equipmentStats.Sum(e => e.TotalOrdered);
+            var totalItemsDelivered = equipmentStats.Sum(e => e.TotalDelivered);
+
+            return new AllEquipmentOrderStats
+            {
+                TotalEquipmentTypes = equipmentStats.Count,
+                TotalItemsOrdered = totalItemsOrdered,
+                TotalItemsDelivered = totalItemsDelivered,
+                OverallDeliveryRate = totalItemsOrdered > 0 
+                    ? Math.Round((decimal)totalItemsDelivered / totalItemsOrdered * 100, 2) 
+                    : 0,
+                TotalOrderValue = equipmentStats.Sum(e => e.TotalOrderValue),
+                EquipmentBreakdown = equipmentStats
+            };
+        }
+
+        private static string ExtractProvince(string customerName)
+        {
+            // Try to extract province from customer name
+            var provinces = new[] { "Gauteng", "KwaZulu-Natal", "Western Cape", "Eastern Cape", 
+                                   "Limpopo", "Mpumalanga", "North West", "Free State", "Northern Cape" };
+            
+            foreach (var province in provinces)
+            {
+                if (customerName.Contains(province, StringComparison.OrdinalIgnoreCase))
+                    return province;
+            }
+            
+            return "Unknown";
+        }
     }
 }
