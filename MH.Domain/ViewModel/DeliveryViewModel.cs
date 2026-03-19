@@ -41,12 +41,25 @@ namespace MH.Domain.ViewModel
     {
         public string EquipmentType { get; set; } = null!;
         public int TotalOrdered { get; set; }
-        public int Pending { get; set; }
-        public int InTransit { get; set; }
-        public int Delivered { get; set; }
-        public int Failed { get; set; }
-        public int Returned { get; set; }
+        public int TotalDelivered { get; set; }
         public decimal DeliveryRate { get; set; }
+        public List<ProvinceDistributionModel> ProvinceDistribution { get; set; } = new();
+        public List<ItemBreakdownModel> ItemBreakdown { get; set; } = new();
+    }
+
+    public class ProvinceDistributionModel
+    {
+        public string Province { get; set; } = null!;
+        public int Ordered { get; set; }
+        public int Delivered { get; set; }
+        public decimal Percentage { get; set; }
+    }
+
+    public class ItemBreakdownModel
+    {
+        public string ItemType { get; set; } = null!;
+        public int Quantity { get; set; }
+        public decimal Value { get; set; }
     }
 
     public class DeliveryByProvinceModel

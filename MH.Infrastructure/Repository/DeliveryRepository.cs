@@ -103,23 +103,49 @@ namespace MH.Infrastructure.Repository
         public async Task<List<DeliveryByEquipmentTypeModel>> GetDeliveryStatsByEquipmentType()
         {
             var deliveries = await _context.Deliveries
+                .Include(x => x.Sale)
                 .Where(x => !x.IsDeleted)
                 .ToListAsync();
 
             return deliveries
                 .GroupBy(x => x.ItemDescription)
-                .Select(g => new DeliveryByEquipmentTypeModel
-                {
-                    EquipmentType = g.Key,
-                    TotalOrdered = g.Sum(x => x.Quantity),
-                    Pending = g.Count(x => x.Status == DeliveryTrackingStatus.Pending),
-                    InTransit = g.Count(x => x.Status == DeliveryTrackingStatus.InTransit),
-                    Delivered = g.Count(x => x.Status == DeliveryTrackingStatus.Delivered),
-                    Failed = g.Count(x => x.Status == DeliveryTrackingStatus.Failed),
-                    Returned = g.Count(x => x.Status == DeliveryTrackingStatus.Returned),
-                    DeliveryRate = g.Count() > 0 
-                        ? Math.Round((decimal)g.Count(x => x.Status == DeliveryTrackingStatus.Delivered) / g.Count() * 100, 2) 
-                        : 0
+                .Select(g => {
+                    var totalOrdered = g.Sum(x => x.Quantity);
+                    var totalDelivered = g.Where(x => x.Status == DeliveryTrackingStatus.Delivered).Sum(x => x.Quantity);
+                    
+                    return new DeliveryByEquipmentTypeModel
+                    {
+                        EquipmentType = g.Key,
+                        TotalOrdered = totalOrdered,
+                        TotalDelivered = totalDelivered,
+                        DeliveryRate = totalOrdered > 0 
+                            ? Math.Round((decimal)totalDelivered / totalOrdered * 100, 2) 
+                            : 0,
+                        ProvinceDistribution = g
+                            .GroupBy(d => d.Province)
+                            .Select(pg => {
+                                var ordered = pg.Sum(x => x.Quantity);
+                                var delivered = pg.Where(x => x.Status == DeliveryTrackingStatus.Delivered).Sum(x => x.Quantity);
+                                return new ProvinceDistributionModel
+                                {
+                                    Province = pg.Key,
+                                    Ordered = ordered,
+                                    Delivered = delivered,
+                                    Percentage = ordered > 0 ? Math.Round((decimal)delivered / ordered * 100, 1) : 0
+                                };
+                            })
+                            .OrderBy(p => p.Province)
+                            .ToList(),
+                        ItemBreakdown = g
+                            .GroupBy(d => d.ItemDescription)
+                            .Select(ig => new ItemBreakdownModel
+                            {
+                                ItemType = ig.Key,
+                                Quantity = ig.Sum(x => x.Quantity),
+                                Value = ig.Sum(x => x.Sale != null ? x.Sale.Total : 0)
+                            })
+                            .ToList()
+                    };
                 })
                 .OrderBy(x => x.EquipmentType)
                 .ToList();
